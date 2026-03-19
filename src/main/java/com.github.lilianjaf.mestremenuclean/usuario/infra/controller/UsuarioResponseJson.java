@@ -1,0 +1,13 @@
+package com.github.lilianjaf.mestremenuclean.usuario.infra.controller;
+
+import java.util.UUID;
+
+public record UsuarioResponseJson(
+        UUID id,
+        String nome,
+        String email,
+        String login,
+        String tipoPerfil,
+        Boolean ativo
+) {
+}
