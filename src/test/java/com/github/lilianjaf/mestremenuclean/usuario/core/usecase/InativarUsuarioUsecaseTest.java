@@ -38,7 +38,7 @@ class InativarUsuarioUsecaseTest {
     @BeforeEach
     void setUp() {
         usuarioId = UUID.randomUUID();
-        TipoUsuario tipo = new TipoUsuario("Cliente Padrão", TipoNativo.CLIENTE, null);
+        TipoUsuario tipo = new TipoUsuario("Cliente Padrão", TipoNativo.CLIENTE);
         Endereco endereco = new Endereco("Rua A", "123", null, "Bairro", "Cidade", "12345-678", "SP");
 
         usuarioMock = new Cliente(usuarioId, "Lilian", "lilian@email.com", "lilian.login", "senha123", tipo, endereco, LocalDateTime.now(), true);
