@@ -1,16 +1,16 @@
 package com.github.lilianjaf.mestremenuclean.usuario.infra.gateway.entity;
 
 import jakarta.persistence.*;
+import org.springframework.data.domain.Persistable;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "usuario")
-public class UsuarioEntity {
+public class UsuarioEntity implements Persistable<UUID> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
     @Column(nullable = false)
@@ -37,6 +37,9 @@ public class UsuarioEntity {
 
     @Column(nullable = false)
     private Boolean ativo;
+
+    @Transient
+    private boolean isNew = true;
 
     protected UsuarioEntity() {
     }
@@ -71,4 +74,16 @@ public class UsuarioEntity {
     public void setDataUltimaAlteracao(LocalDateTime dataUltimaAlteracao) { this.dataUltimaAlteracao = dataUltimaAlteracao; }
     public Boolean getAtivo() { return ativo; }
     public void setAtivo(Boolean ativo) { this.ativo = ativo; }
+
+
+    @Override
+    public boolean isNew() {
+        return this.isNew;
+    }
+
+    @PostLoad
+    @PostPersist
+    void markNotNew() {
+        this.isNew = false;
+    }
 }

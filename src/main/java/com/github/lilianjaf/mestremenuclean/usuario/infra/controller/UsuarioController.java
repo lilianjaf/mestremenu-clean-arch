@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -32,8 +33,8 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> criarUsuario(@RequestBody CriarUsuarioJson json) {
-        criarUsuarioUsecase.criar(
+    public ResponseEntity<Map<String, UUID>> criarUsuario(@RequestBody CriarUsuarioJson json) {
+        UUID idGerado = criarUsuarioUsecase.criar(
                 json.nome(),
                 json.email(),
                 json.login(),
@@ -49,17 +50,13 @@ public class UsuarioController {
                 json.endereco().uf()
         );
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("id", idGerado));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponseJson> buscarUsuario(@PathVariable UUID id) {
-
-        // O Use Case agora devolve um DTO (UsuarioOutput) em vez da entidade UsuarioBase.
-        // O domínio está completamente protegido contra alterações indevidas pelo Controller.
         UsuarioOutput dadosUsuario = buscarUsuarioUsecase.buscarPorId(id);
 
-        // O Controller converte o DTO do Core para o DTO da Web (JSON)
         UsuarioResponseJson response = new UsuarioResponseJson(
                 dadosUsuario.id(),
                 dadosUsuario.nome(),
@@ -74,8 +71,6 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> atualizarUsuario(@PathVariable UUID id, @RequestBody AtualizarUsuarioJson json) {
-
-        // Tratamento elegante para endereço opcional na atualização
         if (json.endereco() != null) {
             atualizarUsuarioUsecase.atualizarComEndereco(
                     id,

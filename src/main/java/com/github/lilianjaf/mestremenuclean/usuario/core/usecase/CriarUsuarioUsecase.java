@@ -7,6 +7,8 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.CodificadorDeSe
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TipoUsuarioRepository;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
 
+import java.util.UUID;
+
 public class CriarUsuarioUsecase {
 
     private final UsuarioRepository usuarioRepository;
@@ -19,9 +21,9 @@ public class CriarUsuarioUsecase {
         this.codificadorDeSenha = codificadorDeSenha;
     }
 
-    public void criar(
+    public UUID criar(
             String nome, String email, String login, String senhaPura,
-            String nomeTipoDesejado, TipoNativo tipoNativoDesejado, // Recebe o TipoNativo caso precise criar
+            String nomeTipoDesejado, TipoNativo tipoNativoDesejado,
             String logradouro, String numero, String complemento, String bairro, String cidade, String cep, String uf) {
 
         Endereco endereco = new Endereco(logradouro, numero, complemento, bairro, cidade, cep, uf);
@@ -40,6 +42,7 @@ public class CriarUsuarioUsecase {
         var dadosCriacao = new DadosCriacaoUsuario(nome, email, login, senhaCriptografada, tipoCustomizado, endereco);
         UsuarioBase novoUsuario = UsuarioFactory.criar(dadosCriacao);
 
-        usuarioRepository.salvar(novoUsuario);
+        UsuarioBase usuarioSalvo = usuarioRepository.salvar(novoUsuario);
+        return usuarioSalvo.getId();
     }
 }

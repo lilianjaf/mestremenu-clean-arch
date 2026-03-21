@@ -10,6 +10,7 @@ public class TipoUsuario {
     private TipoNativo tipoNativo;
 
     public TipoUsuario(String nome, TipoNativo tipoNativo) {
+        this.id = UUID.randomUUID();
         this.nome = nome;
         this.tipoNativo = tipoNativo;
         validar();
