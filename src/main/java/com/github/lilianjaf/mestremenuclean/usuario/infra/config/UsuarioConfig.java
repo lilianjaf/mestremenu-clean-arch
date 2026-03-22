@@ -44,13 +44,33 @@ public class UsuarioConfig {
                 tipoUsuarioRepository,
                 codificadorDeSenha,
                 transactionGateway,
-                List.of(new ValidarPermissaoDonoRule())
+                List.of(
+                        new UsuarioDeveEstarAutenticadoRule(),
+                        new ValidarPermissaoDonoRule()
+                )
         );
     }
 
     @Bean
-    public BuscarUsuarioUsecase buscarUsuarioUsecase(UsuarioRepository usuarioRepository) {
-        return new BuscarUsuarioUsecaseImpl(usuarioRepository);
+    public BuscarUsuarioUsecase buscarUsuarioUsecase(
+            UsuarioRepository usuarioRepository,
+            ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
+
+        List<ValidadorConsultaUsuarioRule> permissaoRules = List.of(
+                new UsuarioDeveEstarAutenticadoRule(),
+                new ApenasDonoOuProprioUsuarioPodeConsultarRule()
+        );
+
+        List<ValidadorConsultaUsuarioRule> rules = List.of(
+                new ConsultaUsuarioDeveExistirRule()
+        );
+
+        return new BuscarUsuarioUsecaseImpl(
+                usuarioRepository,
+                obterUsuarioLogadoGateway,
+                permissaoRules,
+                rules
+        );
     }
 
     @Bean
@@ -60,6 +80,7 @@ public class UsuarioConfig {
             ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
 
         List<ValidadorPermissaoAtualizacaoUsuarioRule> permissaoRules = List.of(
+                new UsuarioDeveEstarAutenticadoRule(),
                 new ApenasDonoOuProprioUsuarioPodeEditarRule()
         );
 

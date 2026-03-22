@@ -28,8 +28,7 @@ public class CriarTipoUsuarioUsecaseImpl implements CriarTipoUsuarioUsecase {
 
     @Override
     public TipoUsuario criar(String loginUsuarioLogado, String nome, TipoNativo tipoNativo) {
-        UsuarioBase usuarioLogado = usuarioRepository.findByLogin(loginUsuarioLogado)
-                .orElseThrow(() -> new RegistroNaoEncontradoException("Usuário logado não encontrado: " + loginUsuarioLogado));
+        UsuarioBase usuarioLogado = usuarioRepository.findByLogin(loginUsuarioLogado).orElse(null);
 
         rules.forEach(rule -> rule.validar(usuarioLogado));
 

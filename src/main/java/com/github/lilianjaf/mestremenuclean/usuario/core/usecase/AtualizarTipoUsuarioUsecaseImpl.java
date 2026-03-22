@@ -35,8 +35,7 @@ public class AtualizarTipoUsuarioUsecaseImpl implements AtualizarTipoUsuarioUsec
 
     @Override
     public void atualizar(UUID id, String novoNome) {
-        UsuarioBase usuarioLogado = obterUsuarioLogadoGateway.obterUsuarioLogado()
-                .orElseThrow(() -> new UsuarioNaoAutenticadoException("Usuário logado não encontrado"));
+        UsuarioBase usuarioLogado = obterUsuarioLogadoGateway.obterUsuarioLogado().orElse(null);
 
         permissaoRules.forEach(rule -> rule.validar(usuarioLogado));
 

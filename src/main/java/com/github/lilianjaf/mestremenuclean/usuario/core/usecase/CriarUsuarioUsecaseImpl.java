@@ -36,8 +36,7 @@ public class CriarUsuarioUsecaseImpl implements CriarUsuarioUsecase {
             String nomeTipoDesejado, TipoNativo tipoNativoDesejado,
             String logradouro, String numero, String complemento, String bairro, String cidade, String cep, String uf) {
 
-        UsuarioBase usuarioLogado = usuarioRepository.findByLogin(loginUsuarioLogado)
-                .orElseThrow(() -> new RegistroNaoEncontradoException("Usuário logado não encontrado: " + loginUsuarioLogado));
+        UsuarioBase usuarioLogado = usuarioRepository.findByLogin(loginUsuarioLogado).orElse(null);
 
         rules.forEach(rule -> rule.validar(usuarioLogado));
 

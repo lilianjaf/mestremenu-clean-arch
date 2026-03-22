@@ -5,6 +5,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TipoUsuarioRepo
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
 import com.github.lilianjaf.mestremenuclean.usuario.core.rules.NomeTipoUsuarioDeveSerUnicoRule;
+import com.github.lilianjaf.mestremenuclean.usuario.core.rules.UsuarioDeveEstarAutenticadoRule;
 import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidadorAtualizacaoTipoUsuarioRule;
 import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidadorPermissaoRule;
 import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidarPermissaoDonoRule;
@@ -26,7 +27,10 @@ public class TipoUsuarioConfig {
                 tipoUsuarioRepository,
                 usuarioRepository,
                 transactionGateway,
-                List.of(new ValidarPermissaoDonoRule())
+                List.of(
+                        new UsuarioDeveEstarAutenticadoRule(),
+                        new ValidarPermissaoDonoRule()
+                )
         );
     }
 
@@ -41,7 +45,10 @@ public class TipoUsuarioConfig {
                 tipoUsuarioRepository,
                 transactionGateway,
                 List.of(new NomeTipoUsuarioDeveSerUnicoRule()),
-                List.of(new ValidarPermissaoDonoRule()),
+                List.of(
+                        new UsuarioDeveEstarAutenticadoRule(),
+                        new ValidarPermissaoDonoRule()
+                ),
                 obterUsuarioLogadoGateway
         );
     }

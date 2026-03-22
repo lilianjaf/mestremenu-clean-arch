@@ -37,8 +37,7 @@ public class AtualizarUsuarioUsecaseImpl implements AtualizarUsuarioUsecase {
             UUID id, String novoNome, String novoEmail,
             String logradouro, String numero, String complemento, String bairro, String cidade, String cep, String uf) {
 
-        UsuarioBase usuarioLogado = obterUsuarioLogadoGateway.obterUsuarioLogado()
-                .orElseThrow(() -> new UsuarioNaoAutenticadoException("Usuário logado não encontrado"));
+        UsuarioBase usuarioLogado = obterUsuarioLogadoGateway.obterUsuarioLogado().orElse(null);
 
         transactionGateway.execute(() -> {
             UsuarioBase usuarioSendoEditado = repository.findById(id).orElse(null);
@@ -65,8 +64,7 @@ public class AtualizarUsuarioUsecaseImpl implements AtualizarUsuarioUsecase {
 
     @Override
     public void atualizarSemEndereco(UUID id, String novoNome, String novoEmail) {
-        UsuarioBase usuarioLogado = obterUsuarioLogadoGateway.obterUsuarioLogado()
-                .orElseThrow(() -> new UsuarioNaoAutenticadoException("Usuário logado não encontrado"));
+        UsuarioBase usuarioLogado = obterUsuarioLogadoGateway.obterUsuarioLogado().orElse(null);
 
         transactionGateway.execute(() -> {
             UsuarioBase usuarioSendoEditado = repository.findById(id).orElse(null);
