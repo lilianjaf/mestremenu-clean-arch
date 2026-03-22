@@ -36,11 +36,8 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<Map<String, UUID>> criarUsuario(
-            @RequestBody CriarUsuarioJson json,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        String loginUsuarioLogado = userDetails.getUsername();
+            @RequestBody CriarUsuarioJson json) {
         UUID idGerado = criarUsuarioUsecase.criar(
-                loginUsuarioLogado,
                 json.nome(),
                 json.email(),
                 json.login(),
