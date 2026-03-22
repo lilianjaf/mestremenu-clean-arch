@@ -4,6 +4,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
 import com.github.lilianjaf.mestremenuclean.usuario.infra.gateway.entity.UsuarioEntity;
 import com.github.lilianjaf.mestremenuclean.usuario.infra.gateway.mapper.UsuarioEntityMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -13,10 +14,14 @@ import java.util.UUID;
 public class UsuarioRepositoryJpaImpl implements UsuarioRepository {
 
     private final SpringDataUsuarioRepository jpaRepository;
+    private final SpringDataTipoUsuarioRepository  jpaTipoUsuarioRepository;
 
-    public UsuarioRepositoryJpaImpl(SpringDataUsuarioRepository jpaRepository) {
+    public UsuarioRepositoryJpaImpl(SpringDataUsuarioRepository jpaRepository, SpringDataTipoUsuarioRepository jpaTipoUsuarioRepository) {
         this.jpaRepository = jpaRepository;
+        this.jpaTipoUsuarioRepository = jpaTipoUsuarioRepository;
     }
+
+    @Transactional
     @Override
     public UsuarioBase salvar(UsuarioBase usuarioDomain) {
         UsuarioEntity entity;
@@ -26,12 +31,14 @@ public class UsuarioRepositoryJpaImpl implements UsuarioRepository {
                     .orElseThrow(() -> new RuntimeException("Usuário não encontrado para atualização"));
 
             UsuarioEntityMapper.atualizarEntity(usuarioDomain, entity);
+            entity.setTipoCustomizado(jpaTipoUsuarioRepository.getReferenceById(entity.getTipoCustomizado().getId()));
 
             UsuarioEntity entitySalva = jpaRepository.save(entity);
             return UsuarioEntityMapper.toDomain(entitySalva);
 
         } else {
             entity = UsuarioEntityMapper.toEntity(usuarioDomain);
+            entity.setTipoCustomizado(jpaTipoUsuarioRepository.getReferenceById(entity.getTipoCustomizado().getId()));
             jpaRepository.save(entity);
 
             return usuarioDomain;
