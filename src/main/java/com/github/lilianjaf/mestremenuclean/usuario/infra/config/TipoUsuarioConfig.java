@@ -4,11 +4,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.ObterUsuarioLog
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TipoUsuarioRepository;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
-import com.github.lilianjaf.mestremenuclean.usuario.core.rules.NomeTipoUsuarioDeveSerUnicoRule;
-import com.github.lilianjaf.mestremenuclean.usuario.core.rules.UsuarioDeveEstarAutenticadoRule;
-import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidadorAtualizacaoTipoUsuarioRule;
-import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidadorPermissaoRule;
-import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidarPermissaoDonoRule;
+import com.github.lilianjaf.mestremenuclean.usuario.core.rules.*;
 import com.github.lilianjaf.mestremenuclean.usuario.core.usecase.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,15 +17,18 @@ public class TipoUsuarioConfig {
     @Bean
     public CriarTipoUsuarioUsecase criarTipoUsuarioUsecase(
             TipoUsuarioRepository tipoUsuarioRepository,
-            UsuarioRepository usuarioRepository,
+            ObterUsuarioLogadoGateway obterUsuarioLogadoGateway,
             TransactionGateway transactionGateway) {
         return new CriarTipoUsuarioUsecaseImpl(
                 tipoUsuarioRepository,
-                usuarioRepository,
+                obterUsuarioLogadoGateway,
                 transactionGateway,
                 List.of(
                         new UsuarioDeveEstarAutenticadoRule(),
-                        new ValidarPermissaoDonoRule()
+                        new ApenasDonoPodeCriarTipoUsuarioRule()
+                ),
+                List.of(
+                        new TipoUsuarioNomeDeveSerUnicoRule()
                 )
         );
     }
