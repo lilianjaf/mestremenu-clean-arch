@@ -16,9 +16,11 @@ public class TipoUsuarioConfig {
     @Bean
     public CriarTipoUsuarioUsecase criarTipoUsuarioUsecase(
             TipoUsuarioRepository tipoUsuarioRepository,
+            UsuarioRepository usuarioRepository,
             TransactionGateway transactionGateway) {
         return new CriarTipoUsuarioUsecaseImpl(
                 tipoUsuarioRepository,
+                usuarioRepository,
                 transactionGateway,
                 List.of(new ValidarPermissaoDonoRule())
         );

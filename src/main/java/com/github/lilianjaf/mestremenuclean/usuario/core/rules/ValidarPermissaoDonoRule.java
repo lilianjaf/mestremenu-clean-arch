@@ -5,6 +5,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
 import com.github.lilianjaf.mestremenuclean.usuario.core.exception.AcessoNegadoException;
 
 public class ValidarPermissaoDonoRule implements ValidadorPermissaoRule {
+
     @Override
     public void validar(UsuarioBase usuarioLogado) {
         if (!(usuarioLogado instanceof Dono)) {

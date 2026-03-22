@@ -2,6 +2,7 @@ package com.github.lilianjaf.mestremenuclean.usuario.core.usecase;
 
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.*;
 import com.github.lilianjaf.mestremenuclean.usuario.core.dto.DadosCriacaoUsuario;
+import com.github.lilianjaf.mestremenuclean.usuario.core.exception.RegistroNaoEncontradoException;
 import com.github.lilianjaf.mestremenuclean.usuario.core.exception.RegraDeNegocioException;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.CodificadorDeSenha;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TipoUsuarioRepository;
@@ -30,10 +31,13 @@ public class CriarUsuarioUsecaseImpl implements CriarUsuarioUsecase {
 
     @Override
     public UUID criar(
-            UsuarioBase usuarioLogado,
+            String loginUsuarioLogado,
             String nome, String email, String login, String senhaPura,
             String nomeTipoDesejado, TipoNativo tipoNativoDesejado,
             String logradouro, String numero, String complemento, String bairro, String cidade, String cep, String uf) {
+
+        UsuarioBase usuarioLogado = usuarioRepository.findByLogin(loginUsuarioLogado)
+                .orElseThrow(() -> new RegistroNaoEncontradoException("Usuário logado não encontrado: " + loginUsuarioLogado));
 
         rules.forEach(rule -> rule.validar(usuarioLogado));
 
