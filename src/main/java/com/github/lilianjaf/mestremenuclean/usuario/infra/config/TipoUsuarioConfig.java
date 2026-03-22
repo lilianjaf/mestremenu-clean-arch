@@ -56,7 +56,21 @@ public class TipoUsuarioConfig {
     public DeletarTipoUsuarioUsecase deletarTipoUsuarioUsecase(
             TipoUsuarioRepository tipoUsuarioRepository,
             UsuarioRepository usuarioRepository,
-            TransactionGateway transactionGateway) {
-        return new DeletarTipoUsuarioUsecaseImpl(tipoUsuarioRepository, usuarioRepository, transactionGateway);
+            TransactionGateway transactionGateway,
+            ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
+        return new DeletarTipoUsuarioUsecaseImpl(
+                tipoUsuarioRepository,
+                usuarioRepository,
+                transactionGateway,
+                obterUsuarioLogadoGateway,
+                List.of(
+                        new UsuarioDeveEstarAutenticadoRule(),
+                        new ApenasDonoPodeDeletarTipoUsuarioRule()
+                ),
+                List.of(
+                        new TipoUsuarioDeveExistirRule(),
+                        new TipoUsuarioNaoDeveEstarEmUsoRule()
+                )
+        );
     }
 }

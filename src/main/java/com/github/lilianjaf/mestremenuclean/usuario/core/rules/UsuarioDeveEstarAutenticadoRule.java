@@ -3,7 +3,12 @@ package com.github.lilianjaf.mestremenuclean.usuario.core.rules;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
 import com.github.lilianjaf.mestremenuclean.usuario.core.exception.UsuarioNaoAutenticadoException;
 
-public class UsuarioDeveEstarAutenticadoRule implements ValidadorConsultaUsuarioRule, ValidadorPermissaoAtualizacaoUsuarioRule, ValidadorPermissaoRule {
+public class UsuarioDeveEstarAutenticadoRule implements ValidadorConsultaUsuarioRule, ValidadorPermissaoAtualizacaoUsuarioRule, ValidadorPermissaoRule, ValidadorExclusaoTipoUsuarioRule {
+    @Override
+    public void validar(ExclusaoTipoUsuarioContext context) {
+        validar(context.usuarioLogado());
+    }
+
     @Override
     public void validar(UsuarioBase usuarioLogado, UsuarioBase usuarioBuscado) {
         validar(usuarioLogado);
