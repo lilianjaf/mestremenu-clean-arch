@@ -41,13 +41,11 @@ public class CriarUsuarioPublicoUseCaseImpl implements CriarUsuarioPublicoUseCas
         return transactionGateway.execute(() -> {
             TipoUsuario tipoCustomizado = tipoUsuarioRepository.findByNome("cliente").orElseThrow();
 
-            boolean emailJaExiste = usuarioRepository.findByEmail(email).isPresent();
-            boolean loginJaExiste = usuarioRepository.findByLogin(login).isPresent();
-
             var context = new CriacaoUsuarioPublicoContext(
                     nome, email, login, senhaPura, tipoCustomizado.getNome(),
                     logradouro, numero, bairro, cidade, cep, uf,
-                    emailJaExiste, loginJaExiste
+                    () -> usuarioRepository.findByEmail(email).isPresent(),
+                    () -> usuarioRepository.findByLogin(login).isPresent()
             );
             rules.forEach(rule -> rule.validar(context));
 

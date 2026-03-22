@@ -5,7 +5,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.exception.EmailUsuarioJ
 public class EmailUsuarioPublicoDeveSerUnicoRule implements ValidadorCriacaoUsuarioPublicoRule {
     @Override
     public void validar(CriacaoUsuarioPublicoContext context) {
-        if (context.emailJaExiste()) {
+        if (context.emailJaExiste().getAsBoolean()) {
             throw new EmailUsuarioJaEmUsoException("E-mail já está em uso.");
         }
     }

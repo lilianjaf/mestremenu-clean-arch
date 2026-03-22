@@ -1,5 +1,7 @@
 package com.github.lilianjaf.mestremenuclean.usuario.core.rules;
 
+import java.util.function.BooleanSupplier;
+
 public record CriacaoUsuarioPublicoContext(
         String nome,
         String email,
@@ -12,7 +14,7 @@ public record CriacaoUsuarioPublicoContext(
         String cidade,
         String cep,
         String uf,
-        boolean emailJaExiste,
-        boolean loginJaExiste
+        BooleanSupplier emailJaExiste,
+        BooleanSupplier loginJaExiste
 ) {
 }

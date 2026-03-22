@@ -2,13 +2,15 @@ package com.github.lilianjaf.mestremenuclean.usuario.core.usecase;
 
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.*;
 import com.github.lilianjaf.mestremenuclean.usuario.core.dto.DadosCriacaoUsuario;
-import com.github.lilianjaf.mestremenuclean.usuario.core.exception.RegistroNaoEncontradoException;
 import com.github.lilianjaf.mestremenuclean.usuario.core.exception.RegraDeNegocioException;
+import com.github.lilianjaf.mestremenuclean.usuario.core.exception.UsuarioLogadoNaoEncontradoException;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.CodificadorDeSenha;
+import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.ObterUsuarioLogadoGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TipoUsuarioRepository;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
-import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidadorPermissaoRule;
+import com.github.lilianjaf.mestremenuclean.usuario.core.rules.CriacaoUsuarioContext;
+import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidadorCriacaoUsuarioRule;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,26 +21,45 @@ public class CriarUsuarioUsecaseImpl implements CriarUsuarioUsecase {
     private final TipoUsuarioRepository tipoUsuarioRepository;
     private final CodificadorDeSenha codificadorDeSenha;
     private final TransactionGateway transactionGateway;
-    private final List<ValidadorPermissaoRule> rules;
+    private final ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
+    private final List<ValidadorCriacaoUsuarioRule> permissaoRules;
+    private final List<ValidadorCriacaoUsuarioRule> rules;
 
-    public CriarUsuarioUsecaseImpl(UsuarioRepository usuarioRepository, TipoUsuarioRepository tipoUsuarioRepository, CodificadorDeSenha codificadorDeSenha, TransactionGateway transactionGateway, List<ValidadorPermissaoRule> rules) {
+    public CriarUsuarioUsecaseImpl(
+            UsuarioRepository usuarioRepository,
+            TipoUsuarioRepository tipoUsuarioRepository,
+            CodificadorDeSenha codificadorDeSenha,
+            TransactionGateway transactionGateway,
+            ObterUsuarioLogadoGateway obterUsuarioLogadoGateway,
+            List<ValidadorCriacaoUsuarioRule> permissaoRules,
+            List<ValidadorCriacaoUsuarioRule> rules) {
         this.usuarioRepository = usuarioRepository;
         this.tipoUsuarioRepository = tipoUsuarioRepository;
         this.codificadorDeSenha = codificadorDeSenha;
         this.transactionGateway = transactionGateway;
+        this.obterUsuarioLogadoGateway = obterUsuarioLogadoGateway;
+        this.permissaoRules = permissaoRules;
         this.rules = rules;
     }
 
     @Override
     public UUID criar(
-            String loginUsuarioLogado,
             String nome, String email, String login, String senhaPura,
             String nomeTipoDesejado, TipoNativo tipoNativoDesejado,
             String logradouro, String numero, String complemento, String bairro, String cidade, String cep, String uf) {
 
-        UsuarioBase usuarioLogado = usuarioRepository.findByLogin(loginUsuarioLogado).orElse(null);
+        UsuarioBase usuarioLogado = obterUsuarioLogadoGateway.obterUsuarioLogado()
+                .orElseThrow(() -> new UsuarioLogadoNaoEncontradoException("Usuário logado não encontrado"));
 
-        rules.forEach(rule -> rule.validar(usuarioLogado));
+        CriacaoUsuarioContext context = new CriacaoUsuarioContext(
+                nome, email, login, senhaPura, nomeTipoDesejado, tipoNativoDesejado,
+                () -> usuarioRepository.findByEmail(email).isPresent(),
+                () -> usuarioRepository.findByLogin(login).isPresent(),
+                usuarioLogado
+        );
+
+        permissaoRules.forEach(rule -> rule.validar(context));
+        rules.forEach(rule -> rule.validar(context));
 
         return transactionGateway.execute(() -> {
             Endereco endereco = new Endereco(logradouro, numero, complemento, bairro, cidade, cep, uf);

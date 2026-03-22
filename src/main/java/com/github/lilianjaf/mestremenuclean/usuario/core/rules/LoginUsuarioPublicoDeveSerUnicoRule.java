@@ -5,7 +5,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.exception.LoginUsuarioJ
 public class LoginUsuarioPublicoDeveSerUnicoRule implements ValidadorCriacaoUsuarioPublicoRule {
     @Override
     public void validar(CriacaoUsuarioPublicoContext context) {
-        if (context.loginJaExiste()) {
+        if (context.loginJaExiste().getAsBoolean()) {
             throw new LoginUsuarioJaEmUsoException("Login já está em uso.");
         }
     }

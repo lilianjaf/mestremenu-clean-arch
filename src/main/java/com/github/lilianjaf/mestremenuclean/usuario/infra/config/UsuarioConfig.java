@@ -41,16 +41,27 @@ public class UsuarioConfig {
             UsuarioRepository usuarioRepository,
             TipoUsuarioRepository tipoUsuarioRepository,
             CodificadorDeSenha codificadorDeSenha,
-            TransactionGateway transactionGateway) {
+            TransactionGateway transactionGateway,
+            ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
+
+        List<ValidadorCriacaoUsuarioRule> permissaoRules = List.of(
+                new ApenasDonoPodeCriarNovosUsuariosRule()
+        );
+
+        List<ValidadorCriacaoUsuarioRule> rules = List.of(
+                new SenhaDeveSerInformadaRule(),
+                new TipoUsuarioNativoDeveExistirRule(),
+                new EmailELoginDevemSerUnicosRule()
+        );
+
         return new CriarUsuarioUsecaseImpl(
                 usuarioRepository,
                 tipoUsuarioRepository,
                 codificadorDeSenha,
                 transactionGateway,
-                List.of(
-                        new UsuarioDeveEstarAutenticadoRule(),
-                        new ValidarPermissaoDonoRule()
-                )
+                obterUsuarioLogadoGateway,
+                permissaoRules,
+                rules
         );
     }
 

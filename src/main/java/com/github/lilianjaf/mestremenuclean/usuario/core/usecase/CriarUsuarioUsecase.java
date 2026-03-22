@@ -5,7 +5,6 @@ import java.util.UUID;
 
 public interface CriarUsuarioUsecase {
     UUID criar(
-            String loginUsuarioLogado,
             String nome, String email, String login, String senhaPura,
             String nomeTipoDesejado, TipoNativo tipoNativoDesejado,
             String logradouro, String numero, String complemento, String bairro, String cidade, String cep, String uf);
