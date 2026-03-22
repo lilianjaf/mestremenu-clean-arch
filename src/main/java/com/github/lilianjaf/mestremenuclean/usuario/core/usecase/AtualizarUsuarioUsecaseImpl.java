@@ -2,7 +2,7 @@ package com.github.lilianjaf.mestremenuclean.usuario.core.usecase;
 
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.Endereco;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
-import com.github.lilianjaf.mestremenuclean.usuario.core.exception.UsuarioLogadoNaoEncontradoException;
+import com.github.lilianjaf.mestremenuclean.usuario.core.exception.UsuarioNaoAutenticadoException;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.ObterUsuarioLogadoGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
@@ -38,7 +38,7 @@ public class AtualizarUsuarioUsecaseImpl implements AtualizarUsuarioUsecase {
             String logradouro, String numero, String complemento, String bairro, String cidade, String cep, String uf) {
 
         UsuarioBase usuarioLogado = obterUsuarioLogadoGateway.obterUsuarioLogado()
-                .orElseThrow(() -> new UsuarioLogadoNaoEncontradoException("Usuário logado não encontrado"));
+                .orElseThrow(() -> new UsuarioNaoAutenticadoException("Usuário logado não encontrado"));
 
         transactionGateway.execute(() -> {
             UsuarioBase usuarioSendoEditado = repository.findById(id).orElse(null);
@@ -66,7 +66,7 @@ public class AtualizarUsuarioUsecaseImpl implements AtualizarUsuarioUsecase {
     @Override
     public void atualizarSemEndereco(UUID id, String novoNome, String novoEmail) {
         UsuarioBase usuarioLogado = obterUsuarioLogadoGateway.obterUsuarioLogado()
-                .orElseThrow(() -> new UsuarioLogadoNaoEncontradoException("Usuário logado não encontrado"));
+                .orElseThrow(() -> new UsuarioNaoAutenticadoException("Usuário logado não encontrado"));
 
         transactionGateway.execute(() -> {
             UsuarioBase usuarioSendoEditado = repository.findById(id).orElse(null);

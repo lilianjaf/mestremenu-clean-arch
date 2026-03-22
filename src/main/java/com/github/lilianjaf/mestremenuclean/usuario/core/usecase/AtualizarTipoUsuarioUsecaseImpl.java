@@ -2,13 +2,11 @@ package com.github.lilianjaf.mestremenuclean.usuario.core.usecase;
 
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.TipoUsuario;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
-import com.github.lilianjaf.mestremenuclean.usuario.core.exception.RegistroNaoEncontradoException;
 import com.github.lilianjaf.mestremenuclean.usuario.core.exception.TipoUsuarioNaoEncontradoException;
-import com.github.lilianjaf.mestremenuclean.usuario.core.exception.UsuarioLogadoNaoEncontradoException;
+import com.github.lilianjaf.mestremenuclean.usuario.core.exception.UsuarioNaoAutenticadoException;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.ObterUsuarioLogadoGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TipoUsuarioRepository;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TransactionGateway;
-import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
 import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidadorAtualizacaoTipoUsuarioRule;
 import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidadorPermissaoRule;
 
@@ -38,7 +36,7 @@ public class AtualizarTipoUsuarioUsecaseImpl implements AtualizarTipoUsuarioUsec
     @Override
     public void atualizar(UUID id, String novoNome) {
         UsuarioBase usuarioLogado = obterUsuarioLogadoGateway.obterUsuarioLogado()
-                .orElseThrow(() -> new UsuarioLogadoNaoEncontradoException("Usuário logado não encontrado"));
+                .orElseThrow(() -> new UsuarioNaoAutenticadoException("Usuário logado não encontrado"));
 
         permissaoRules.forEach(rule -> rule.validar(usuarioLogado));
 
