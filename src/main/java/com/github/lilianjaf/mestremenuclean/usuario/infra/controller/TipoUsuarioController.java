@@ -41,8 +41,12 @@ public class TipoUsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> atualizar(@PathVariable UUID id, @RequestBody AtualizarTipoUsuarioJson json) {
-        atualizarTipoUsuarioUsecase.atualizar(id, json.nome());
+    public ResponseEntity<Void> atualizar(
+            @PathVariable UUID id,
+            @RequestBody AtualizarTipoUsuarioJson json,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        String loginUsuarioLogado = userDetails.getUsername();
+        atualizarTipoUsuarioUsecase.atualizar(loginUsuarioLogado, id, json.nome());
 
         return ResponseEntity.noContent().build();
     }

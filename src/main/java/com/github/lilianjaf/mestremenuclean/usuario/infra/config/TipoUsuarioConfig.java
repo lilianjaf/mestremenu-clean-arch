@@ -3,6 +3,7 @@ package com.github.lilianjaf.mestremenuclean.usuario.infra.config;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TipoUsuarioRepository;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
+import com.github.lilianjaf.mestremenuclean.usuario.core.rules.NomeTipoUsuarioDeveSerUnicoRule;
 import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidarPermissaoDonoRule;
 import com.github.lilianjaf.mestremenuclean.usuario.core.usecase.*;
 import org.springframework.context.annotation.Bean;
@@ -29,8 +30,15 @@ public class TipoUsuarioConfig {
     @Bean
     public AtualizarTipoUsuarioUsecase atualizarTipoUsuarioUsecase(
             TipoUsuarioRepository tipoUsuarioRepository,
+            UsuarioRepository usuarioRepository,
             TransactionGateway transactionGateway) {
-        return new AtualizarTipoUsuarioUsecaseImpl(tipoUsuarioRepository, transactionGateway);
+        return new AtualizarTipoUsuarioUsecaseImpl(
+                tipoUsuarioRepository,
+                usuarioRepository,
+                transactionGateway,
+                List.of(new NomeTipoUsuarioDeveSerUnicoRule()),
+                List.of(new ValidarPermissaoDonoRule())
+        );
     }
 
     @Bean
