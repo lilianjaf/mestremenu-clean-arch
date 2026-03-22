@@ -25,7 +25,7 @@ public class UsuarioEntity implements Persistable<UUID> {
     @Column(nullable = false)
     private String senha;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "tipo_usuario_id", nullable = false)
     private TipoUsuarioEntity tipoCustomizado;
 

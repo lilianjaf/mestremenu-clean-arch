@@ -41,6 +41,37 @@ public class UsuarioEntityMapper {
         );
     }
 
+    public static void atualizarEntity(UsuarioBase domain, UsuarioEntity entity) {
+        if (domain == null || entity == null) return;
+
+        entity.setNome(domain.getNome());
+        entity.setEmail(domain.getEmail());
+        entity.setLogin(domain.getLogin());
+        entity.setSenha(domain.getSenha());
+        entity.setDataUltimaAlteracao(domain.getDataUltimaAlteracao());
+        entity.setAtivo(domain.getAtivo());
+
+        if (domain.getEndereco() != null) {
+            entity.setEndereco(new EnderecoEmbeddable(
+                    domain.getEndereco().logradouro(),
+                    domain.getEndereco().numero(),
+                    domain.getEndereco().complemento(),
+                    domain.getEndereco().bairro(),
+                    domain.getEndereco().cidade(),
+                    domain.getEndereco().cep(),
+                    domain.getEndereco().uf()
+            ));
+        }
+
+        if (domain.getTipoCustomizado() != null) {
+            entity.setTipoCustomizado(new TipoUsuarioEntity(
+                    domain.getTipoCustomizado().getId(),
+                    domain.getTipoCustomizado().getNome(),
+                    domain.getTipoCustomizado().getTipoNativo()
+            ));
+        }
+    }
+
     public static UsuarioBase toDomain(UsuarioEntity entity) {
         if (entity == null) return null;
 
