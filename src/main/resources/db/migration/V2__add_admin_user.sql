@@ -1,5 +1,5 @@
 INSERT INTO tipo_usuario (id, nome, tipo_nativo)
-VALUES ('799981d3-3b1f-4b68-b3d9-6938d6174154', 'DONO', 'DONO');
+VALUES ('799981d3-3b1f-4b68-b3d9-6938d6174154', 'dono', 'DONO');
 
 INSERT INTO usuario (
     id, nome, email, login, senha, tipo_usuario_id,
