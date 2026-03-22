@@ -1,6 +1,7 @@
 package com.github.lilianjaf.mestremenuclean.usuario.core.usecase;
 
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
+import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
 
 import java.util.UUID;
@@ -8,17 +9,23 @@ import java.util.UUID;
 public class InativarUsuarioUsecase {
     private final BuscarUsuarioUsecase buscarUsuarioUsecase;
     private final UsuarioRepository repository;
+    private final TransactionGateway transactionGateway;
 
-    public InativarUsuarioUsecase(BuscarUsuarioUsecase buscarUsuarioUsecase, UsuarioRepository repository) {
+    public InativarUsuarioUsecase(BuscarUsuarioUsecase buscarUsuarioUsecase,
+                                  UsuarioRepository usuarioRepository,
+                                  TransactionGateway transactionGateway) {
         this.buscarUsuarioUsecase = buscarUsuarioUsecase;
-        this.repository = repository;
+        this.repository = usuarioRepository;
+        this.transactionGateway = transactionGateway;
     }
 
     public void inativar(UUID id) {
-        UsuarioBase usuario = buscarUsuarioUsecase.buscarEntidade(id);
+        transactionGateway.execute(() -> {
+            UsuarioBase usuario = buscarUsuarioUsecase.buscarEntidade(id);
 
-        usuario.desativar();
+            usuario.desativar();
 
-        repository.salvar(usuario);
+            repository.salvar(usuario);
+        });
     }
 }

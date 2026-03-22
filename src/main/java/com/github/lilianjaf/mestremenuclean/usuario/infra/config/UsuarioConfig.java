@@ -2,6 +2,7 @@ package com.github.lilianjaf.mestremenuclean.usuario.infra.config;
 
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.CodificadorDeSenha;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TipoUsuarioRepository;
+import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
 import com.github.lilianjaf.mestremenuclean.usuario.core.usecase.AtualizarUsuarioUsecase;
 import com.github.lilianjaf.mestremenuclean.usuario.core.usecase.BuscarUsuarioUsecase;
@@ -17,8 +18,9 @@ public class UsuarioConfig {
     public CriarUsuarioUsecase criarUsuarioUsecase(
             UsuarioRepository usuarioRepository,
             TipoUsuarioRepository tipoUsuarioRepository,
-            CodificadorDeSenha codificadorDeSenha) {
-        return new CriarUsuarioUsecase(usuarioRepository, tipoUsuarioRepository, codificadorDeSenha);
+            CodificadorDeSenha codificadorDeSenha,
+            TransactionGateway transactionGateway) {
+        return new CriarUsuarioUsecase(usuarioRepository, tipoUsuarioRepository, codificadorDeSenha, transactionGateway);
     }
 
     @Bean
@@ -29,14 +31,16 @@ public class UsuarioConfig {
     @Bean
     public AtualizarUsuarioUsecase atualizarUsuarioUsecase(
             BuscarUsuarioUsecase buscarUsuarioUsecase,
-            UsuarioRepository usuarioRepository) {
-        return new AtualizarUsuarioUsecase(buscarUsuarioUsecase, usuarioRepository);
+            UsuarioRepository usuarioRepository,
+            TransactionGateway transactionGateway) {
+        return new AtualizarUsuarioUsecase(buscarUsuarioUsecase, usuarioRepository, transactionGateway);
     }
 
     @Bean
     public InativarUsuarioUsecase inativarUsuarioUsecase(
             BuscarUsuarioUsecase buscarUsuarioUsecase,
-            UsuarioRepository usuarioRepository) {
-        return new InativarUsuarioUsecase(buscarUsuarioUsecase, usuarioRepository);
+            UsuarioRepository usuarioRepository,
+            TransactionGateway transactionGateway) {
+        return new InativarUsuarioUsecase(buscarUsuarioUsecase, usuarioRepository, transactionGateway);
     }
 }
