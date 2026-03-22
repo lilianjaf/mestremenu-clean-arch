@@ -6,6 +6,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.domain.TipoNativo;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.TipoUsuario;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
 import com.github.lilianjaf.mestremenuclean.usuario.core.exception.DomainException;
+import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,8 +17,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,8 +32,11 @@ class InativarUsuarioUsecaseTest {
     @Mock
     private UsuarioRepository repository;
 
+    @Mock
+    private TransactionGateway transactionGateway;
+
     @InjectMocks
-    private InativarUsuarioUsecase inativarUsuarioUsecase;
+    private InativarUsuarioUsecaseImpl inativarUsuarioUsecase;
 
     private UsuarioBase usuarioMock;
     private UUID usuarioId;
@@ -46,7 +52,11 @@ class InativarUsuarioUsecaseTest {
 
     @Test
     void deveInativarUsuarioComSucesso() {
-        when(buscarUsuarioUsecase.buscarPorId(usuarioId)).thenReturn(usuarioMock);
+        when(buscarUsuarioUsecase.buscarEntidade(usuarioId)).thenReturn(usuarioMock);
+        doAnswer(invocation -> {
+            Supplier<?> supplier = invocation.getArgument(0);
+            return supplier.get();
+        }).when(transactionGateway).execute(any(Supplier.class));
 
         inativarUsuarioUsecase.inativar(usuarioId);
 
@@ -58,7 +68,11 @@ class InativarUsuarioUsecaseTest {
     @Test
     void deveLancarExcecaoSeUsuarioJaEstiverInativo() {
         usuarioMock.desativar();
-        when(buscarUsuarioUsecase.buscarPorId(usuarioId)).thenReturn(usuarioMock);
+        when(buscarUsuarioUsecase.buscarEntidade(usuarioId)).thenReturn(usuarioMock);
+        doAnswer(invocation -> {
+            Supplier<?> supplier = invocation.getArgument(0);
+            return supplier.get();
+        }).when(transactionGateway).execute(any(Supplier.class));
 
         DomainException exception = assertThrows(DomainException.class, () -> {
             inativarUsuarioUsecase.inativar(usuarioId);

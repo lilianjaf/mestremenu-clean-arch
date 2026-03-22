@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/tipos-usuario")
+@RequestMapping("/api/v1/tipos-usuario")
 public class TipoUsuarioController {
 
     private final CriarTipoUsuarioUsecase criarTipoUsuarioUsecase;

@@ -4,10 +4,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.CodificadorDeSe
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TipoUsuarioRepository;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
-import com.github.lilianjaf.mestremenuclean.usuario.core.usecase.AtualizarUsuarioUsecase;
-import com.github.lilianjaf.mestremenuclean.usuario.core.usecase.BuscarUsuarioUsecase;
-import com.github.lilianjaf.mestremenuclean.usuario.core.usecase.CriarUsuarioUsecase;
-import com.github.lilianjaf.mestremenuclean.usuario.core.usecase.InativarUsuarioUsecase;
+import com.github.lilianjaf.mestremenuclean.usuario.core.usecase.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,12 +17,12 @@ public class UsuarioConfig {
             TipoUsuarioRepository tipoUsuarioRepository,
             CodificadorDeSenha codificadorDeSenha,
             TransactionGateway transactionGateway) {
-        return new CriarUsuarioUsecase(usuarioRepository, tipoUsuarioRepository, codificadorDeSenha, transactionGateway);
+        return new CriarUsuarioUsecaseImpl(usuarioRepository, tipoUsuarioRepository, codificadorDeSenha, transactionGateway);
     }
 
     @Bean
     public BuscarUsuarioUsecase buscarUsuarioUsecase(UsuarioRepository usuarioRepository) {
-        return new BuscarUsuarioUsecase(usuarioRepository);
+        return new BuscarUsuarioUsecaseImpl(usuarioRepository);
     }
 
     @Bean
@@ -33,7 +30,7 @@ public class UsuarioConfig {
             BuscarUsuarioUsecase buscarUsuarioUsecase,
             UsuarioRepository usuarioRepository,
             TransactionGateway transactionGateway) {
-        return new AtualizarUsuarioUsecase(buscarUsuarioUsecase, usuarioRepository, transactionGateway);
+        return new AtualizarUsuarioUsecaseImpl(buscarUsuarioUsecase, usuarioRepository, transactionGateway);
     }
 
     @Bean
@@ -41,6 +38,6 @@ public class UsuarioConfig {
             BuscarUsuarioUsecase buscarUsuarioUsecase,
             UsuarioRepository usuarioRepository,
             TransactionGateway transactionGateway) {
-        return new InativarUsuarioUsecase(buscarUsuarioUsecase, usuarioRepository, transactionGateway);
+        return new InativarUsuarioUsecaseImpl(buscarUsuarioUsecase, usuarioRepository, transactionGateway);
     }
 }

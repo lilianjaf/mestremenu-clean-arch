@@ -3,9 +3,7 @@ package com.github.lilianjaf.mestremenuclean.usuario.infra.config;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TipoUsuarioRepository;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
-import com.github.lilianjaf.mestremenuclean.usuario.core.usecase.AtualizarTipoUsuarioUsecase;
-import com.github.lilianjaf.mestremenuclean.usuario.core.usecase.CriarTipoUsuarioUsecase;
-import com.github.lilianjaf.mestremenuclean.usuario.core.usecase.DeletarTipoUsuarioUsecase;
+import com.github.lilianjaf.mestremenuclean.usuario.core.usecase.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,14 +14,14 @@ public class TipoUsuarioConfig {
     public CriarTipoUsuarioUsecase criarTipoUsuarioUsecase(
             TipoUsuarioRepository tipoUsuarioRepository,
             TransactionGateway transactionGateway) {
-        return new CriarTipoUsuarioUsecase(tipoUsuarioRepository, transactionGateway);
+        return new CriarTipoUsuarioUsecaseImpl(tipoUsuarioRepository, transactionGateway);
     }
 
     @Bean
     public AtualizarTipoUsuarioUsecase atualizarTipoUsuarioUsecase(
             TipoUsuarioRepository tipoUsuarioRepository,
             TransactionGateway transactionGateway) {
-        return new AtualizarTipoUsuarioUsecase(tipoUsuarioRepository, transactionGateway);
+        return new AtualizarTipoUsuarioUsecaseImpl(tipoUsuarioRepository, transactionGateway);
     }
 
     @Bean
@@ -31,6 +29,6 @@ public class TipoUsuarioConfig {
             TipoUsuarioRepository tipoUsuarioRepository,
             UsuarioRepository usuarioRepository,
             TransactionGateway transactionGateway) {
-        return new DeletarTipoUsuarioUsecase(tipoUsuarioRepository, usuarioRepository, transactionGateway);
+        return new DeletarTipoUsuarioUsecaseImpl(tipoUsuarioRepository, usuarioRepository, transactionGateway);
     }
 }
