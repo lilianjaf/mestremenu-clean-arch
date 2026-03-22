@@ -22,8 +22,11 @@ public class UsuarioConfig {
             TransactionGateway transactionGateway,
             CodificadorDeSenha codificadorDeSenha) {
 
-        List<ValidadorCriacaoUsuarioRule> rules = List.of(
-                new ForcarTipoClienteRule()
+        List<ValidadorCriacaoUsuarioPublicoRule> rules = List.of(
+                new UsuarioPublicoDeveSerTipoClienteRule(),
+                new EmailUsuarioPublicoDeveSerUnicoRule(),
+                new LoginUsuarioPublicoDeveSerUnicoRule(),
+                new SenhaUsuarioPublicoNaoPodeSerVaziaRule()
         );
 
         return new CriarUsuarioPublicoUseCaseImpl(usuarioRepository,
