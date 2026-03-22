@@ -6,6 +6,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TransactionGate
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
 import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ForcarTipoClienteRule;
 import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidadorCriacaoUsuarioRule;
+import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidarPermissaoDonoRule;
 import com.github.lilianjaf.mestremenuclean.usuario.core.usecase.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,7 +40,13 @@ public class UsuarioConfig {
             TipoUsuarioRepository tipoUsuarioRepository,
             CodificadorDeSenha codificadorDeSenha,
             TransactionGateway transactionGateway) {
-        return new CriarUsuarioUsecaseImpl(usuarioRepository, tipoUsuarioRepository, codificadorDeSenha, transactionGateway);
+        return new CriarUsuarioUsecaseImpl(
+                usuarioRepository,
+                tipoUsuarioRepository,
+                codificadorDeSenha,
+                transactionGateway,
+                List.of(new ValidarPermissaoDonoRule())
+        );
     }
 
     @Bean

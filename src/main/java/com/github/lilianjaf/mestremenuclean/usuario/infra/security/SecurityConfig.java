@@ -38,9 +38,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/publico/usuarios").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/usuarios").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/v1/usuarios/*/senha").permitAll()
-                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
                 .anyRequest().authenticated()
             )

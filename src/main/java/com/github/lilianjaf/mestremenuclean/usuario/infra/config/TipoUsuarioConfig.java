@@ -3,9 +3,12 @@ package com.github.lilianjaf.mestremenuclean.usuario.infra.config;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TipoUsuarioRepository;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
+import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidarPermissaoDonoRule;
 import com.github.lilianjaf.mestremenuclean.usuario.core.usecase.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 @Configuration
 public class TipoUsuarioConfig {
@@ -14,7 +17,11 @@ public class TipoUsuarioConfig {
     public CriarTipoUsuarioUsecase criarTipoUsuarioUsecase(
             TipoUsuarioRepository tipoUsuarioRepository,
             TransactionGateway transactionGateway) {
-        return new CriarTipoUsuarioUsecaseImpl(tipoUsuarioRepository, transactionGateway);
+        return new CriarTipoUsuarioUsecaseImpl(
+                tipoUsuarioRepository,
+                transactionGateway,
+                List.of(new ValidarPermissaoDonoRule())
+        );
     }
 
     @Bean

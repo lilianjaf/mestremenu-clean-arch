@@ -7,7 +7,9 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.CodificadorDeSe
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TipoUsuarioRepository;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
+import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidadorPermissaoRule;
 
+import java.util.List;
 import java.util.UUID;
 
 public class CriarUsuarioUsecaseImpl implements CriarUsuarioUsecase {
@@ -16,19 +18,24 @@ public class CriarUsuarioUsecaseImpl implements CriarUsuarioUsecase {
     private final TipoUsuarioRepository tipoUsuarioRepository;
     private final CodificadorDeSenha codificadorDeSenha;
     private final TransactionGateway transactionGateway;
+    private final List<ValidadorPermissaoRule> rules;
 
-    public CriarUsuarioUsecaseImpl(UsuarioRepository usuarioRepository, TipoUsuarioRepository tipoUsuarioRepository, CodificadorDeSenha codificadorDeSenha, TransactionGateway transactionGateway) {
+    public CriarUsuarioUsecaseImpl(UsuarioRepository usuarioRepository, TipoUsuarioRepository tipoUsuarioRepository, CodificadorDeSenha codificadorDeSenha, TransactionGateway transactionGateway, List<ValidadorPermissaoRule> rules) {
         this.usuarioRepository = usuarioRepository;
         this.tipoUsuarioRepository = tipoUsuarioRepository;
         this.codificadorDeSenha = codificadorDeSenha;
         this.transactionGateway = transactionGateway;
+        this.rules = rules;
     }
 
     @Override
     public UUID criar(
+            UsuarioBase usuarioLogado,
             String nome, String email, String login, String senhaPura,
             String nomeTipoDesejado, TipoNativo tipoNativoDesejado,
             String logradouro, String numero, String complemento, String bairro, String cidade, String cep, String uf) {
+
+        rules.forEach(rule -> rule.validar(usuarioLogado));
 
         return transactionGateway.execute(() -> {
             Endereco endereco = new Endereco(logradouro, numero, complemento, bairro, cidade, cep, uf);
