@@ -58,6 +58,12 @@ public class UsuarioRepositoryJpaImpl implements UsuarioRepository {
     }
 
     @Override
+    public Optional<UsuarioBase> findByEmail(String email) {
+        return jpaRepository.findByEmail(email)
+                .map(UsuarioEntityMapper::toDomain);
+    }
+
+    @Override
     public boolean existeUsuarioComTipo(UUID idTipoUsuario) {
         return jpaRepository.existsByTipoCustomizadoId(idTipoUsuario);
     }

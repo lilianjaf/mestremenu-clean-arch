@@ -9,5 +9,6 @@ import java.util.UUID;
 public interface SpringDataUsuarioRepository extends JpaRepository<UsuarioEntity, UUID> {
     Optional<UsuarioEntity> findById(UUID id);
     Optional<UsuarioEntity> findByLogin(String login);
+    Optional<UsuarioEntity> findByEmail(String email);
     boolean existsByTipoCustomizadoId(UUID idTipoUsuario);
 }

@@ -8,5 +8,6 @@ public interface UsuarioRepository {
     UsuarioBase salvar(UsuarioBase usuario);
     Optional<UsuarioBase> findByLogin(String login);
     Optional<UsuarioBase> findById(UUID id);
+    Optional<UsuarioBase> findByEmail(String email);
     boolean existeUsuarioComTipo(UUID idTipoUsuario);
 }

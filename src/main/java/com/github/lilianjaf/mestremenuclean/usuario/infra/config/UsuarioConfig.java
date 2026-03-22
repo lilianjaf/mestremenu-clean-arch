@@ -1,12 +1,11 @@
 package com.github.lilianjaf.mestremenuclean.usuario.infra.config;
 
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.CodificadorDeSenha;
+import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.ObterUsuarioLogadoGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TipoUsuarioRepository;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
-import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ForcarTipoClienteRule;
-import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidadorCriacaoUsuarioRule;
-import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidarPermissaoDonoRule;
+import com.github.lilianjaf.mestremenuclean.usuario.core.rules.*;
 import com.github.lilianjaf.mestremenuclean.usuario.core.usecase.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -56,10 +55,26 @@ public class UsuarioConfig {
 
     @Bean
     public AtualizarUsuarioUsecase atualizarUsuarioUsecase(
-            BuscarUsuarioUsecase buscarUsuarioUsecase,
             UsuarioRepository usuarioRepository,
-            TransactionGateway transactionGateway) {
-        return new AtualizarUsuarioUsecaseImpl(buscarUsuarioUsecase, usuarioRepository, transactionGateway);
+            TransactionGateway transactionGateway,
+            ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
+
+        List<ValidadorPermissaoAtualizacaoUsuarioRule> permissaoRules = List.of(
+                new ApenasDonoOuProprioUsuarioPodeEditarRule()
+        );
+
+        List<ValidadorAtualizacaoUsuarioRule> rules = List.of(
+                new UsuarioDeveExistirRule(),
+                new EmailUsuarioDeveSerUnicoRule()
+        );
+
+        return new AtualizarUsuarioUsecaseImpl(
+                usuarioRepository,
+                transactionGateway,
+                obterUsuarioLogadoGateway,
+                permissaoRules,
+                rules
+        );
     }
 
     @Bean
