@@ -116,7 +116,25 @@ public class UsuarioConfig {
     public InativarUsuarioUsecase inativarUsuarioUsecase(
             BuscarUsuarioUsecase buscarUsuarioUsecase,
             UsuarioRepository usuarioRepository,
-            TransactionGateway transactionGateway) {
-        return new InativarUsuarioUsecaseImpl(buscarUsuarioUsecase, usuarioRepository, transactionGateway);
+            TransactionGateway transactionGateway,
+            ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
+
+        List<ValidadorInativacaoUsuarioRule> permissaoRules = List.of(
+                new UsuarioDeveEstarAutenticadoRule(),
+                new ApenasDonoOuProprioUsuarioPodeInativarRule()
+        );
+
+        List<ValidadorInativacaoUsuarioRule> rules = List.of(
+                new UsuarioSemRestauranteVinculadoRule()
+        );
+
+        return new InativarUsuarioUsecaseImpl(
+                buscarUsuarioUsecase,
+                usuarioRepository,
+                transactionGateway,
+                obterUsuarioLogadoGateway,
+                permissaoRules,
+                rules
+        );
     }
 }
