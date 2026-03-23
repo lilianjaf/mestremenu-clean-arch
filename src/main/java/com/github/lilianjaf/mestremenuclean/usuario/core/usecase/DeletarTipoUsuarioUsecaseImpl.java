@@ -11,7 +11,6 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ExclusaoTipoUsuar
 import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidadorExclusaoTipoUsuarioRule;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class DeletarTipoUsuarioUsecaseImpl implements DeletarTipoUsuarioUsecase {
