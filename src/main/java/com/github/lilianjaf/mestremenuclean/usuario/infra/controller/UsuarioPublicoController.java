@@ -28,14 +28,13 @@ public class UsuarioPublicoController {
                 json.email(),
                 json.login(),
                 json.senha(),
-                json.endereco().logradouro(),
-                json.endereco().numero(),
-                json.endereco().complemento(),
-                json.endereco().bairro(),
-                json.endereco().cidade(),
-                json.endereco().cep(),
-                json.endereco().uf()
-        );
+                json.endereco() != null ? json.endereco().logradouro() : null,
+                json.endereco() != null ? json.endereco().numero() : null,
+                json.endereco() != null ? json.endereco().complemento() : null,
+                json.endereco() != null ? json.endereco().bairro() : null,
+                json.endereco() != null ? json.endereco().cidade() : null,
+                json.endereco() != null ? json.endereco().cep() : null,
+                json.endereco() != null ? json.endereco().uf() : null);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("id", idGerado));
     }

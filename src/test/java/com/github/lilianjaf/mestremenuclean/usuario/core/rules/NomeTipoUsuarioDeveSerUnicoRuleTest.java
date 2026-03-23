@@ -1,0 +1,53 @@
+package com.github.lilianjaf.mestremenuclean.usuario.core.rules;
+
+import com.github.lilianjaf.mestremenuclean.usuario.core.domain.TipoUsuario;
+import com.github.lilianjaf.mestremenuclean.usuario.core.exception.NomeTipoUsuarioJaEmUsoException;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class NomeTipoUsuarioDeveSerUnicoRuleTest {
+
+    @Mock
+    private TipoUsuario tipoAtual;
+
+    @Mock
+    private TipoUsuario tipoComMesmoNome;
+
+    private final NomeTipoUsuarioDeveSerUnicoRule rule = new NomeTipoUsuarioDeveSerUnicoRule();
+
+    @Test
+    @DisplayName("Deve permitir quando nao existe outro tipo com mesmo nome")
+    void devePermitirQuandoNaoExisteOutroComMesmoNome() {
+        assertDoesNotThrow(() -> rule.validar(tipoAtual, null));
+    }
+
+    @Test
+    @DisplayName("Deve permitir quando o tipo com mesmo nome eh o proprio tipo atual")
+    void devePermitirQuandoEhOMesmoTipo() {
+        UUID id = UUID.randomUUID();
+        when(tipoAtual.getId()).thenReturn(id);
+        when(tipoComMesmoNome.getId()).thenReturn(id);
+
+        assertDoesNotThrow(() -> rule.validar(tipoAtual, tipoComMesmoNome));
+    }
+
+    @Test
+    @DisplayName("Deve lancar excecao quando nome ja esta em uso por outro tipo")
+    void deveLancarExcecaoQuandoNomeEmUsoPorOutro() {
+        when(tipoAtual.getId()).thenReturn(UUID.randomUUID());
+        when(tipoComMesmoNome.getId()).thenReturn(UUID.randomUUID());
+        when(tipoComMesmoNome.getNome()).thenReturn("VIP");
+
+        assertThrows(NomeTipoUsuarioJaEmUsoException.class, () -> rule.validar(tipoAtual, tipoComMesmoNome));
+    }
+}

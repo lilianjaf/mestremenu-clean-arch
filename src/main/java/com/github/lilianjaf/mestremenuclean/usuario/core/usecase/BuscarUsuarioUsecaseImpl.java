@@ -17,9 +17,9 @@ public class BuscarUsuarioUsecaseImpl implements BuscarUsuarioUsecase {
     private final List<ValidadorConsultaUsuarioRule> rules;
 
     public BuscarUsuarioUsecaseImpl(UsuarioRepository repository,
-                                    ObterUsuarioLogadoGateway obterUsuarioLogadoGateway,
-                                    List<ValidadorConsultaUsuarioRule> permissaoRules,
-                                    List<ValidadorConsultaUsuarioRule> rules) {
+            ObterUsuarioLogadoGateway obterUsuarioLogadoGateway,
+            List<ValidadorConsultaUsuarioRule> permissaoRules,
+            List<ValidadorConsultaUsuarioRule> rules) {
         this.repository = repository;
         this.obterUsuarioLogadoGateway = obterUsuarioLogadoGateway;
         this.permissaoRules = permissaoRules;
@@ -29,7 +29,8 @@ public class BuscarUsuarioUsecaseImpl implements BuscarUsuarioUsecase {
     @Override
     public UsuarioOutput buscarPorId(UUID id) {
         UsuarioBase usuarioLogado = obterUsuarioLogadoGateway.obterUsuarioLogado().orElse(null);
-        UsuarioBase usuarioBuscado = repository.findById(id).orElse(null);
+        UsuarioBase usuarioBuscado = repository.findById(id)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado."));
 
         permissaoRules.forEach(rule -> rule.validar(usuarioLogado, usuarioBuscado));
         rules.forEach(rule -> rule.validar(usuarioLogado, usuarioBuscado));
@@ -40,8 +41,7 @@ public class BuscarUsuarioUsecaseImpl implements BuscarUsuarioUsecase {
                 usuarioBuscado.getEmail(),
                 usuarioBuscado.getLogin(),
                 usuarioBuscado.getTipoCustomizado().getNome(),
-                usuarioBuscado.getAtivo()
-        );
+                usuarioBuscado.getAtivo());
     }
 
     @Override
