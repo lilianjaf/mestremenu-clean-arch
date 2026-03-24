@@ -1,5 +1,6 @@
 package com.github.lilianjaf.mestremenuclean.usuario.core.rules;
 
+import com.github.lilianjaf.mestremenuclean.usuario.core.domain.Dono;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.TipoUsuario;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
 
@@ -11,4 +12,20 @@ public record ExclusaoTipoUsuarioContext(
         BooleanSupplier estaEmUso,
         UsuarioBase usuarioLogado
 ) {
+    public boolean isUsuarioLogadoDono() {
+        return usuarioLogado instanceof Dono;
+    }
+
+    public boolean isTipoUsuarioPresente() {
+        return tipoUsuarioASerDeletado.isPresent();
+    }
+
+    public boolean isTipoUsuarioEmUso() {
+        return estaEmUso.getAsBoolean();
+    }
+
+    public String getNomeTipoUsuario() {
+        return tipoUsuarioASerDeletado.map(TipoUsuario::getNome).orElse("");
+    }
+
 }

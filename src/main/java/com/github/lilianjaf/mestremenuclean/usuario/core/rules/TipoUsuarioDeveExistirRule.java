@@ -5,7 +5,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.exception.TipoUsuarioNa
 public class TipoUsuarioDeveExistirRule implements ValidadorExclusaoTipoUsuarioRule {
     @Override
     public void validar(ExclusaoTipoUsuarioContext context) {
-        if (context.tipoUsuarioASerDeletado().isEmpty()) {
+        if (!context.isTipoUsuarioPresente()) {
             throw new TipoUsuarioNaoEncontradoException("Tipo de usuário não encontrado.");
         }
     }

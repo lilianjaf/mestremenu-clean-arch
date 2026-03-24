@@ -6,7 +6,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.exception.AcessoNegadoE
 public class ApenasDonoPodeDeletarTipoUsuarioRule implements ValidadorExclusaoTipoUsuarioRule {
     @Override
     public void validar(ExclusaoTipoUsuarioContext context) {
-        if (!(context.usuarioLogado() instanceof Dono)) {
+        if (!context.isUsuarioLogadoDono()) {
             throw new AcessoNegadoExclusaoTipoUsuarioException("Apenas usuários do tipo DONO podem excluir tipos de usuário.");
         }
     }

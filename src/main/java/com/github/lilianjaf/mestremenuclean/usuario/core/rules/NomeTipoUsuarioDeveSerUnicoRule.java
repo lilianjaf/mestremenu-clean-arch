@@ -6,9 +6,9 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.exception.NomeTipoUsuar
 public class NomeTipoUsuarioDeveSerUnicoRule implements ValidadorAtualizacaoTipoUsuarioRule {
 
     @Override
-    public void validar(TipoUsuario tipoAtual, TipoUsuario tipoComMesmoNome) {
-        if (tipoComMesmoNome != null && !tipoComMesmoNome.getId().equals(tipoAtual.getId())) {
-            throw new NomeTipoUsuarioJaEmUsoException("O nome '" + tipoComMesmoNome.getNome() + "' já está em uso por outro tipo de usuário.");
+    public void validar(AtualizacaoTipoUsuarioContext context) {
+        if (context.isNomeJaEmUso()) {
+            throw new NomeTipoUsuarioJaEmUsoException("O nome '" + context.getNomeTipoComMesmoNome() + "' já está em uso por outro tipo de usuário.");
         }
     }
 }

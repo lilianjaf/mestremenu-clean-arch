@@ -95,6 +95,10 @@ public abstract class UsuarioBase {
         }
     }
 
+    public boolean isDono() {
+        return this instanceof Dono;
+    }
+
     public UUID getId() { return id; }
     public String getNome() { return nome; }
     public String getEmail() { return email; }

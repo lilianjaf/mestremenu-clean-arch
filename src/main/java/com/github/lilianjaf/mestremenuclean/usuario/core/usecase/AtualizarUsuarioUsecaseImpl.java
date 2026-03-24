@@ -41,16 +41,15 @@ public class AtualizarUsuarioUsecaseImpl implements AtualizarUsuarioUsecase {
 
         transactionGateway.execute(() -> {
             UsuarioBase usuarioSendoEditado = repository.findById(id).orElse(null);
-
-            permissaoRules.forEach(rule -> rule.validar(usuarioLogado, usuarioSendoEditado));
-
             UsuarioBase usuarioComMesmoEmail = repository.findByEmail(novoEmail).orElse(null);
 
             AtualizacaoUsuarioContext context = new AtualizacaoUsuarioContext(
                     usuarioSendoEditado,
-                    usuarioComMesmoEmail
+                    usuarioComMesmoEmail,
+                    usuarioLogado
             );
 
+            permissaoRules.forEach(rule -> rule.validar(context));
             rules.forEach(rule -> rule.validar(context));
 
             usuarioSendoEditado.atualizarDadosBasicos(novoNome, novoEmail);
@@ -68,16 +67,15 @@ public class AtualizarUsuarioUsecaseImpl implements AtualizarUsuarioUsecase {
 
         transactionGateway.execute(() -> {
             UsuarioBase usuarioSendoEditado = repository.findById(id).orElse(null);
-
-            permissaoRules.forEach(rule -> rule.validar(usuarioLogado, usuarioSendoEditado));
-
             UsuarioBase usuarioComMesmoEmail = repository.findByEmail(novoEmail).orElse(null);
 
             AtualizacaoUsuarioContext context = new AtualizacaoUsuarioContext(
                     usuarioSendoEditado,
-                    usuarioComMesmoEmail
+                    usuarioComMesmoEmail,
+                    usuarioLogado
             );
 
+            permissaoRules.forEach(rule -> rule.validar(context));
             rules.forEach(rule -> rule.validar(context));
 
             usuarioSendoEditado.atualizarDadosBasicos(novoNome, novoEmail);

@@ -8,7 +8,7 @@ public class ValidarPermissaoDonoRule implements ValidadorPermissaoRule {
 
     @Override
     public void validar(UsuarioBase usuarioLogado) {
-        if (!(usuarioLogado instanceof Dono)) {
+        if (!usuarioLogado.isDono()) {
             throw new AcessoNegadoException("Apenas um usuário 'dono' pode realizar esta operação.");
         }
     }

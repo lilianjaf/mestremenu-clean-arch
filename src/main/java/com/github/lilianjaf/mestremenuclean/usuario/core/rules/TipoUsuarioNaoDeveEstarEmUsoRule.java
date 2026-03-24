@@ -5,11 +5,8 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.exception.TipoUsuarioEm
 public class TipoUsuarioNaoDeveEstarEmUsoRule implements ValidadorExclusaoTipoUsuarioRule {
     @Override
     public void validar(ExclusaoTipoUsuarioContext context) {
-        if (context.estaEmUso().getAsBoolean()) {
-            String nome = context.tipoUsuarioASerDeletado()
-                    .map(tipo -> "'" + tipo.getNome() + "' ")
-                    .orElse("");
-            throw new TipoUsuarioEmUsoException("Não é possível excluir o tipo " + nome + " pois existem usuários vinculados a ele.");
+        if (context.isTipoUsuarioEmUso()) {
+            throw new TipoUsuarioEmUsoException("Não é possível excluir o tipo " + context.getNomeTipoUsuario() + " pois existem usuários vinculados a ele.");
         }
     }
 }

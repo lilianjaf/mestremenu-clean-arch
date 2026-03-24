@@ -7,10 +7,8 @@ public class UsuarioSemRestauranteVinculadoRule implements ValidadorInativacaoUs
 
     @Override
     public void validar(InativacaoUsuarioContext context) {
-        if (context.usuarioAlvo() instanceof Dono dono) {
-            if (dono.getRestaurantes() != null && !dono.getRestaurantes().isEmpty()) {
-                throw new UsuarioPossuiRestauranteAtivoException("Usuário possui restaurante(s) ativo(s) vinculado(s) e não pode ser inativado.");
-            }
+        if (context.isUsuarioAlvoDonoComRestaurantes()) {
+            throw new UsuarioPossuiRestauranteAtivoException("Usuário possui restaurante(s) ativo(s) vinculado(s) e não pode ser inativado.");
         }
     }
 }

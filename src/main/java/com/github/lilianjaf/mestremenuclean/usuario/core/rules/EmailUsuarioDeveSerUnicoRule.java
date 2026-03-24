@@ -5,9 +5,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.exception.EmailUsuarioJ
 public class EmailUsuarioDeveSerUnicoRule implements ValidadorAtualizacaoUsuarioRule {
     @Override
     public void validar(AtualizacaoUsuarioContext context) {
-        if (context.usuarioComMesmoEmail() != null && 
-            context.usuarioSendoEditado() != null &&
-            !context.usuarioComMesmoEmail().getId().equals(context.usuarioSendoEditado().getId())) {
+        if (context.isConflitoDeEmail()) {
             throw new EmailUsuarioJaEmUsoException("E-mail já está em uso por outro usuário.");
         }
     }

@@ -6,7 +6,7 @@ public class SenhaDeveSerInformadaRule implements ValidadorCriacaoUsuarioRule {
 
     @Override
     public void validar(CriacaoUsuarioContext context) {
-        if (context.senha() == null || context.senha().isBlank()) {
+        if (!context.isSenhaInformada()) {
             throw new SenhaObrigatoriaNaoInformadaException("A senha deve ser informada para a criação do usuário.");
         }
     }

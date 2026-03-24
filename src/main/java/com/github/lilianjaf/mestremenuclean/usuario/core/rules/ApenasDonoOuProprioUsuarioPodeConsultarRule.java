@@ -6,15 +6,12 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.exception.AcessoNegadoC
 
 public class ApenasDonoOuProprioUsuarioPodeConsultarRule implements ValidadorConsultaUsuarioRule {
     @Override
-    public void validar(UsuarioBase usuarioLogado, UsuarioBase usuarioBuscado) {
-        if (usuarioLogado == null) {
-            return; // Outra regra deve tratar isso
+    public void validar(ConsultaUsuarioContext context) {
+        if (context.usuarioLogado() == null) {
+            return;
         }
 
-        boolean isDono = usuarioLogado instanceof Dono;
-        boolean isMesmoUsuario = usuarioLogado.getId().equals(usuarioBuscado.getId());
-
-        if (!isDono && !isMesmoUsuario) {
+        if (!context.isDonoOuProprioUsuario()) {
             throw new AcessoNegadoConsultaUsuarioException("Você não tem permissão para consultar este usuário");
         }
     }

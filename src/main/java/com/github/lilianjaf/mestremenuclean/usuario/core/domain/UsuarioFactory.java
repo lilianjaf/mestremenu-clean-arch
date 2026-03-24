@@ -37,7 +37,7 @@ public class UsuarioFactory {
         Function<DadosCriacaoUsuario, UsuarioBase> construtor = REGISTRY.get(tipoBase);
 
         if (construtor == null) {
-            throw new DomainException("Tipo de usuário nativo não suportado pela fábrica.");
+            throw new DomainException("Tipo de usuário nativo não suportado.");
         }
 
         return construtor.apply(dados);

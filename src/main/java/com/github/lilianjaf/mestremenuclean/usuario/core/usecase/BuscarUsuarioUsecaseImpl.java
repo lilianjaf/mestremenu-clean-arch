@@ -5,6 +5,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.dto.UsuarioOutput;
 import com.github.lilianjaf.mestremenuclean.usuario.core.exception.UsuarioNaoEncontradoException;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.ObterUsuarioLogadoGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
+import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ConsultaUsuarioContext;
 import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidadorConsultaUsuarioRule;
 
 import java.util.List;
@@ -32,8 +33,10 @@ public class BuscarUsuarioUsecaseImpl implements BuscarUsuarioUsecase {
         UsuarioBase usuarioBuscado = repository.findById(id)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado."));
 
-        permissaoRules.forEach(rule -> rule.validar(usuarioLogado, usuarioBuscado));
-        rules.forEach(rule -> rule.validar(usuarioLogado, usuarioBuscado));
+        ConsultaUsuarioContext context = new ConsultaUsuarioContext(usuarioLogado, usuarioBuscado);
+
+        permissaoRules.forEach(rule -> rule.validar(context));
+        rules.forEach(rule -> rule.validar(context));
 
         return new UsuarioOutput(
                 usuarioBuscado.getId(),

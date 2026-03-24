@@ -36,11 +36,10 @@ public class CriarTipoUsuarioUsecaseImpl implements CriarTipoUsuarioUsecase {
     public TipoUsuario criar(String loginUsuarioLogado, String nome, TipoNativo tipoNativo) {
         UsuarioBase usuarioLogado = obterUsuarioLogadoGateway.obterUsuarioLogado().orElse(null);
 
-        permissaoRules.forEach(rule -> rule.validar(usuarioLogado));
-
         boolean existeComMesmoNome = repository.findByNome(nome).isPresent();
-        CriacaoTipoUsuarioContext context = new CriacaoTipoUsuarioContext(nome, existeComMesmoNome);
+        CriacaoTipoUsuarioContext context = new CriacaoTipoUsuarioContext(nome, existeComMesmoNome, usuarioLogado);
 
+        permissaoRules.forEach(rule -> rule.validar(usuarioLogado));
         rules.forEach(rule -> rule.validar(context));
 
         return transactionGateway.execute(() -> {

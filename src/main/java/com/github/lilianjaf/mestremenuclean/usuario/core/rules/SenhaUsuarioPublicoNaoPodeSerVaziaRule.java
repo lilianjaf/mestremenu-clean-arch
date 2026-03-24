@@ -5,7 +5,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.exception.SenhaUsuarioN
 public class SenhaUsuarioPublicoNaoPodeSerVaziaRule implements ValidadorCriacaoUsuarioPublicoRule {
     @Override
     public void validar(CriacaoUsuarioPublicoContext context) {
-        if (context.senha() == null || context.senha().isBlank()) {
+        if (!context.isSenhaInformada()) {
             throw new SenhaUsuarioNaoPodeSerVaziaException("A senha não pode ser vazia");
         }
     }

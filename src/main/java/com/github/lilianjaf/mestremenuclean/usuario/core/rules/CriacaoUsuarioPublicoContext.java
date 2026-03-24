@@ -17,4 +17,19 @@ public record CriacaoUsuarioPublicoContext(
         BooleanSupplier emailJaExiste,
         BooleanSupplier loginJaExiste
 ) {
+    public boolean isEmailJaCadastrado() {
+        return emailJaExiste.getAsBoolean();
+    }
+
+    public boolean isLoginJaCadastrado() {
+        return loginJaExiste.getAsBoolean();
+    }
+
+    public boolean isSenhaInformada() {
+        return senha != null && !senha.isBlank();
+    }
+
+    public boolean isTipoCliente() {
+        return "cliente".equalsIgnoreCase(nomeTipo);
+    }
 }

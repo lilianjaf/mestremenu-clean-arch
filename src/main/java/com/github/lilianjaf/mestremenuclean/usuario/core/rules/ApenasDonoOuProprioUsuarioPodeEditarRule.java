@@ -6,15 +6,12 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.exception.EdicaoUsuario
 
 public class ApenasDonoOuProprioUsuarioPodeEditarRule implements ValidadorPermissaoAtualizacaoUsuarioRule {
     @Override
-    public void validar(UsuarioBase usuarioLogado, UsuarioBase usuarioSendoEditado) {
-        if (usuarioSendoEditado == null) {
+    public void validar(AtualizacaoUsuarioContext context) {
+        if (context.usuarioSendoEditado() == null) {
             return;
         }
 
-        boolean isDono = usuarioLogado instanceof Dono;
-        boolean isProprioUsuario = usuarioLogado.getId().equals(usuarioSendoEditado.getId());
-
-        if (!isDono && !isProprioUsuario) {
+        if (!context.isDonoOuProprioUsuario()) {
             throw new EdicaoUsuarioNaoAutorizadaException("Apenas o próprio usuário ou um usuário do tipo DONO pode realizar edições.");
         }
     }

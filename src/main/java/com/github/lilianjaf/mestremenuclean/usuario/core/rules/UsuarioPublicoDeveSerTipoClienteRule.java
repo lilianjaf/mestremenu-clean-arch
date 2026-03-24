@@ -6,7 +6,7 @@ public class UsuarioPublicoDeveSerTipoClienteRule implements ValidadorCriacaoUsu
 
     @Override
     public void validar(CriacaoUsuarioPublicoContext context) {
-        if (!"cliente".equalsIgnoreCase(context.nomeTipo())) {
+        if (!context.isTipoCliente()) {
             throw new TipoUsuarioInvalidoParaCadastroPublicoException("Apenas usuários do tipo CLIENTE podem ser criados via cadastro público.");
         }
     }

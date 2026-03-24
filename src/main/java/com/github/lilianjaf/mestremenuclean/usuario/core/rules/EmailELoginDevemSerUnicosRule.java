@@ -6,10 +6,10 @@ public class EmailELoginDevemSerUnicosRule implements ValidadorCriacaoUsuarioRul
 
     @Override
     public void validar(CriacaoUsuarioContext context) {
-        if (context.emailJaExiste().getAsBoolean()) {
+        if (context.isEmailJaCadastrado()) {
             throw new CredenciaisJaEmUsoException("O e-mail informado já está em uso.");
         }
-        if (context.loginJaExiste().getAsBoolean()) {
+        if (context.isLoginJaCadastrado()) {
             throw new CredenciaisJaEmUsoException("O login informado já está em uso.");
         }
     }

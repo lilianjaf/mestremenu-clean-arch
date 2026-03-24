@@ -7,6 +7,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.exception.UsuarioNaoAut
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.ObterUsuarioLogadoGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TipoUsuarioRepository;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TransactionGateway;
+import com.github.lilianjaf.mestremenuclean.usuario.core.rules.AtualizacaoTipoUsuarioContext;
 import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidadorAtualizacaoTipoUsuarioRule;
 import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidadorPermissaoRule;
 
@@ -45,7 +46,9 @@ public class AtualizarTipoUsuarioUsecaseImpl implements AtualizarTipoUsuarioUsec
 
             TipoUsuario tipoComMesmoNome = repository.findByNome(novoNome).orElse(null);
 
-            rules.forEach(rule -> rule.validar(tipo, tipoComMesmoNome));
+            AtualizacaoTipoUsuarioContext context = new AtualizacaoTipoUsuarioContext(tipo, tipoComMesmoNome, usuarioLogado);
+
+            rules.forEach(rule -> rule.validar(context));
 
             tipo.atualizarNome(novoNome);
 

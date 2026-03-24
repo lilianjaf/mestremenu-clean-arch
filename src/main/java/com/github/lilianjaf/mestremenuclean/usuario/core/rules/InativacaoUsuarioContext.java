@@ -1,9 +1,29 @@
 package com.github.lilianjaf.mestremenuclean.usuario.core.rules;
 
+import com.github.lilianjaf.mestremenuclean.usuario.core.domain.Dono;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
 
 public record InativacaoUsuarioContext(
         UsuarioBase usuarioLogado,
         UsuarioBase usuarioAlvo
 ) {
+    public boolean isUsuarioLogadoDono() {
+        return usuarioLogado instanceof Dono;
+    }
+
+    public boolean isUsuarioLogadoProprioUsuarioAlvo() {
+        return usuarioLogado.getId().equals(usuarioAlvo.getId());
+    }
+
+    public boolean isDonoOuProprioUsuarioAlvo() {
+        return isUsuarioLogadoDono() || isUsuarioLogadoProprioUsuarioAlvo();
+    }
+
+    public boolean isUsuarioAlvoDonoComRestaurantes() {
+        if (usuarioAlvo.isDono()) {
+            Dono dono = (Dono) usuarioAlvo;
+            return dono.getRestaurantes() != null && !dono.getRestaurantes().isEmpty();
+        }
+        return false;
+    }
 }

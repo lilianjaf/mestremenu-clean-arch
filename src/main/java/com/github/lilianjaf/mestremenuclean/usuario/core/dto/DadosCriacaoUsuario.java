@@ -14,16 +14,16 @@ public record DadosCriacaoUsuario(
 ) {
     public DadosCriacaoUsuario {
         if (nome == null || nome.trim().isEmpty()) {
-            throw new DomainException("Nome não pode ser nulo ou vazio no DTO.");
+            throw new DomainException("Nome não pode ser nulo ou vazio.");
         }
         if (email == null || !email.contains("@")) {
-            throw new DomainException("Formato de email inválido no DTO.");
+            throw new DomainException("Formato de email inválido.");
         }
         if (login == null || login.trim().isEmpty()) {
-            throw new DomainException("Login não pode ser nulo ou vazio no DTO.");
+            throw new DomainException("Login não pode ser nulo ou vazio.");
         }
         if (senha == null || senha.trim().isEmpty()) {
-            throw new DomainException("Senha não pode ser nula ou vazia no DTO.");
+            throw new DomainException("Senha não pode ser nula ou vazia.");
         }
         if (tipoCustomizado == null) {
             throw new DomainException("O tipo customizado é obrigatório para criar um usuário.");

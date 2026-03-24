@@ -1,5 +1,6 @@
 package com.github.lilianjaf.mestremenuclean.usuario.core.rules;
 
+import com.github.lilianjaf.mestremenuclean.usuario.core.domain.Dono;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.TipoNativo;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
 
@@ -16,4 +17,19 @@ public record CriacaoUsuarioContext(
         BooleanSupplier loginJaExiste,
         UsuarioBase usuarioLogado
 ) {
+    public boolean isUsuarioLogadoDono() {
+        return usuarioLogado instanceof Dono;
+    }
+
+    public boolean isEmailJaCadastrado() {
+        return emailJaExiste.getAsBoolean();
+    }
+
+    public boolean isLoginJaCadastrado() {
+        return loginJaExiste.getAsBoolean();
+    }
+
+    public boolean isSenhaInformada() {
+        return senha != null && !senha.isBlank();
+    }
 }
