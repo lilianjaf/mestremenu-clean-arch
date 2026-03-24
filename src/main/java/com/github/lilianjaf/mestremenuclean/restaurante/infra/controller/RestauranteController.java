@@ -22,18 +22,18 @@ public class RestauranteController {
     private final BuscarRestaurantePorIdUseCase buscarRestaurantePorIdUseCase;
     private final ListarRestaurantesUseCase listarRestaurantesUseCase;
     private final AtualizarRestauranteUseCase atualizarRestauranteUseCase;
-    private final ExcluirRestauranteUseCase excluirRestauranteUseCase;
+    private final InativarRestauranteUseCase inativarRestauranteUseCase;
 
     public RestauranteController(CriarRestauranteUseCase criarRestauranteUseCase,
                                  BuscarRestaurantePorIdUseCase buscarRestaurantePorIdUseCase,
                                  ListarRestaurantesUseCase listarRestaurantesUseCase,
                                  AtualizarRestauranteUseCase atualizarRestauranteUseCase,
-                                 ExcluirRestauranteUseCase excluirRestauranteUseCase) {
+                                 InativarRestauranteUseCase inativarRestauranteUseCase) {
         this.criarRestauranteUseCase = criarRestauranteUseCase;
         this.buscarRestaurantePorIdUseCase = buscarRestaurantePorIdUseCase;
         this.listarRestaurantesUseCase = listarRestaurantesUseCase;
         this.atualizarRestauranteUseCase = atualizarRestauranteUseCase;
-        this.excluirRestauranteUseCase = excluirRestauranteUseCase;
+        this.inativarRestauranteUseCase = inativarRestauranteUseCase;
     }
 
     @PostMapping
@@ -106,8 +106,8 @@ public class RestauranteController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluirRestaurante(@PathVariable UUID id) {
-        excluirRestauranteUseCase.executar(id);
+    public ResponseEntity<Void> inativarRestaurante(@PathVariable UUID id) {
+        inativarRestauranteUseCase.executar(id);
         return ResponseEntity.noContent().build();
     }
 

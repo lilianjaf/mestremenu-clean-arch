@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.function.Supplier;
 
 @Component
-public class TransactionGatewayImpl implements TransactionGateway {
+public class TransactionGatewayImpl implements TransactionGateway, com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.TransactionGateway {
 
     @Override
     @Transactional

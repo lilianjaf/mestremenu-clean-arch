@@ -9,5 +9,4 @@ public interface RestauranteRepository {
     Restaurante salvar(Restaurante restaurante);
     Optional<Restaurante> findById(UUID id);
     List<Restaurante> buscarTodos();
-    void deletar(UUID id);
 }

@@ -38,9 +38,4 @@ public class RestauranteRepositoryJpaImpl implements RestauranteRepository {
                 .map(RestauranteEntityMapper::toDomain)
                 .collect(Collectors.toList());
     }
-
-    @Override
-    public void deletar(UUID id) {
-        springDataRepository.deleteById(id);
-    }
 }

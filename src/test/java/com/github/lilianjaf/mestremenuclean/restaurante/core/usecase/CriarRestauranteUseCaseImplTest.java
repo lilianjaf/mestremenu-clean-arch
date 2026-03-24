@@ -1,11 +1,13 @@
 package com.github.lilianjaf.mestremenuclean.restaurante.core.usecase;
 
 import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Restaurante;
-import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.AtualizarRestauranteRuleContextDto;
-import com.github.lilianjaf.mestremenuclean.restaurante.core.dto.DadosAtualizacaoRestaurante;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Usuario;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.dto.DadosCriacaoRestaurante;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.RestauranteRepository;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.TransactionGateway;
-import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.AtualizarRestauranteRule;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.UsuarioGateway;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.CriacaoRestauranteContext;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.ValidadorCriacaoRestauranteRule;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.ObterUsuarioLogadoGateway;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,10 +25,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class AtualizarRestauranteUseCaseImplTest {
+class CriarRestauranteUseCaseImplTest {
 
     @Mock
     private RestauranteRepository restauranteRepository;
+
+    @Mock
+    private UsuarioGateway usuarioGateway;
 
     @Mock
     private ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
@@ -35,12 +40,12 @@ class AtualizarRestauranteUseCaseImplTest {
     private TransactionGateway transactionGateway;
 
     @Mock
-    private AtualizarRestauranteRule permissaoRule;
+    private ValidadorCriacaoRestauranteRule permissaoRule;
 
     @Mock
-    private AtualizarRestauranteRule rule;
+    private ValidadorCriacaoRestauranteRule rule;
 
-    private AtualizarRestauranteUseCaseImpl usecase;
+    private CriarRestauranteUseCaseImpl usecase;
 
     @BeforeEach
     void setUp() {
@@ -49,8 +54,9 @@ class AtualizarRestauranteUseCaseImplTest {
             return supplier.get();
         });
 
-        usecase = new AtualizarRestauranteUseCaseImpl(
+        usecase = new CriarRestauranteUseCaseImpl(
                 restauranteRepository,
+                usuarioGateway,
                 obterUsuarioLogadoGateway,
                 transactionGateway,
                 List.of(permissaoRule),
@@ -59,22 +65,25 @@ class AtualizarRestauranteUseCaseImplTest {
     }
 
     @Test
-    @DisplayName("Deve atualizar um restaurante com sucesso")
-    void deveAtualizarRestauranteComSucesso() {
-        UUID id = UUID.randomUUID();
+    @DisplayName("Deve criar um restaurante com sucesso")
+    void deveCriarRestauranteComSucesso() {
+        UUID idDono = UUID.randomUUID();
         UsuarioBase usuarioLogado = mock(UsuarioBase.class);
-        Restaurante restaurante = mock(Restaurante.class);
-        DadosAtualizacaoRestaurante dados = mock(DadosAtualizacaoRestaurante.class);
+        Usuario dono = mock(Usuario.class);
+        com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Endereco endereco = 
+                new com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Endereco(
+                        "Rua Teste", "123", null, "Bairro Teste", "Cidade Teste", "12345-678", "TS"
+                );
+        DadosCriacaoRestaurante dados = new DadosCriacaoRestaurante("Restaurante Teste", endereco, "Italiana", "08:00-22:00", idDono);
 
         when(obterUsuarioLogadoGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
-        when(restauranteRepository.findById(id)).thenReturn(Optional.of(restaurante));
-        when(restauranteRepository.salvar(any(Restaurante.class))).thenReturn(restaurante);
+        when(usuarioGateway.buscarPorId(idDono)).thenReturn(Optional.of(dono));
+        when(restauranteRepository.salvar(any(Restaurante.class))).thenReturn(mock(Restaurante.class));
 
-        usecase.executar(id, dados);
+        usecase.executar(dados);
 
-        verify(permissaoRule).validar(any(AtualizarRestauranteRuleContextDto.class));
-        verify(rule).validar(any(AtualizarRestauranteRuleContextDto.class));
-        verify(restaurante).atualizar(any(), any(), any(), any());
-        verify(restauranteRepository).salvar(restaurante);
+        verify(permissaoRule).validar(any(CriacaoRestauranteContext.class));
+        verify(rule).validar(any(CriacaoRestauranteContext.class));
+        verify(restauranteRepository).salvar(any(Restaurante.class));
     }
 }

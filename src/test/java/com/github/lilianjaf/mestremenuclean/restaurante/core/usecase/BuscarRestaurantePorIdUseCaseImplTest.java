@@ -1,11 +1,9 @@
 package com.github.lilianjaf.mestremenuclean.restaurante.core.usecase;
 
 import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Restaurante;
-import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.AtualizarRestauranteRuleContextDto;
-import com.github.lilianjaf.mestremenuclean.restaurante.core.dto.DadosAtualizacaoRestaurante;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.RestauranteRepository;
-import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.TransactionGateway;
-import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.AtualizarRestauranteRule;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.BuscarRestauranteRule;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.BuscarRestauranteRuleContextDto;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.ObterUsuarioLogadoGateway;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,11 +17,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class AtualizarRestauranteUseCaseImplTest {
+class BuscarRestaurantePorIdUseCaseImplTest {
 
     @Mock
     private RestauranteRepository restauranteRepository;
@@ -32,49 +32,39 @@ class AtualizarRestauranteUseCaseImplTest {
     private ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
 
     @Mock
-    private TransactionGateway transactionGateway;
+    private BuscarRestauranteRule permissaoRule;
 
     @Mock
-    private AtualizarRestauranteRule permissaoRule;
+    private BuscarRestauranteRule rule;
 
-    @Mock
-    private AtualizarRestauranteRule rule;
-
-    private AtualizarRestauranteUseCaseImpl usecase;
+    private BuscarRestaurantePorIdUseCaseImpl usecase;
 
     @BeforeEach
     void setUp() {
-        lenient().when(transactionGateway.execute(any(java.util.function.Supplier.class))).thenAnswer(invocation -> {
-            java.util.function.Supplier<?> supplier = invocation.getArgument(0);
-            return supplier.get();
-        });
-
-        usecase = new AtualizarRestauranteUseCaseImpl(
+        usecase = new BuscarRestaurantePorIdUseCaseImpl(
                 restauranteRepository,
                 obterUsuarioLogadoGateway,
-                transactionGateway,
                 List.of(permissaoRule),
                 List.of(rule)
         );
     }
 
     @Test
-    @DisplayName("Deve atualizar um restaurante com sucesso")
-    void deveAtualizarRestauranteComSucesso() {
+    @DisplayName("Deve buscar um restaurante por id com sucesso")
+    void deveBuscarRestauranteComSucesso() {
         UUID id = UUID.randomUUID();
         UsuarioBase usuarioLogado = mock(UsuarioBase.class);
         Restaurante restaurante = mock(Restaurante.class);
-        DadosAtualizacaoRestaurante dados = mock(DadosAtualizacaoRestaurante.class);
 
         when(obterUsuarioLogadoGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
         when(restauranteRepository.findById(id)).thenReturn(Optional.of(restaurante));
-        when(restauranteRepository.salvar(any(Restaurante.class))).thenReturn(restaurante);
 
-        usecase.executar(id, dados);
+        Restaurante resultado = usecase.executar(id);
 
-        verify(permissaoRule).validar(any(AtualizarRestauranteRuleContextDto.class));
-        verify(rule).validar(any(AtualizarRestauranteRuleContextDto.class));
-        verify(restaurante).atualizar(any(), any(), any(), any());
-        verify(restauranteRepository).salvar(restaurante);
+        assertNotNull(resultado);
+        assertEquals(restaurante, resultado);
+        verify(permissaoRule).validar(any(BuscarRestauranteRuleContextDto.class));
+        verify(rule).validar(any(BuscarRestauranteRuleContextDto.class));
+        verify(restauranteRepository).findById(id);
     }
 }

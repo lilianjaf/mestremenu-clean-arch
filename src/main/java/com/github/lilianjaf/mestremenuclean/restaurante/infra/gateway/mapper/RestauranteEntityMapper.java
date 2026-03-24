@@ -28,7 +28,8 @@ public class RestauranteEntityMapper {
                 endereco,
                 entity.getTipoCozinha(),
                 entity.getHorarioFuncionamento(),
-                entity.getIdDono()
+                entity.getIdDono(),
+                entity.isAtivo()
         );
     }
 
@@ -53,7 +54,8 @@ public class RestauranteEntityMapper {
                 enderecoEmbeddable,
                 domain.getTipoCozinha(),
                 domain.getHorarioFuncionamento(),
-                domain.getIdDono()
+                domain.getIdDono(),
+                domain.isAtivo()
         );
     }
 }

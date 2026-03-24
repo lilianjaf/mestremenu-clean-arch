@@ -1,11 +1,10 @@
 package com.github.lilianjaf.mestremenuclean.restaurante.core.usecase;
 
 import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Restaurante;
-import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.AtualizarRestauranteRuleContextDto;
-import com.github.lilianjaf.mestremenuclean.restaurante.core.dto.DadosAtualizacaoRestaurante;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.RestauranteRepository;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.TransactionGateway;
-import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.AtualizarRestauranteRule;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.InativacaoRestauranteContext;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.InativarRestauranteRule;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
 import com.github.lilianjaf.mestremenuclean.usuario.core.exception.DomainException;
 import com.github.lilianjaf.mestremenuclean.usuario.core.exception.UsuarioLogadoNaoEncontradoException;
@@ -14,19 +13,19 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.ObterUsuarioLog
 import java.util.List;
 import java.util.UUID;
 
-public class AtualizarRestauranteUseCaseImpl implements AtualizarRestauranteUseCase {
+public class InativarRestauranteUseCaseImpl implements InativarRestauranteUseCase {
 
     private final RestauranteRepository restauranteRepository;
     private final ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
     private final TransactionGateway transactionGateway;
-    private final List<AtualizarRestauranteRule> permissaoRules;
-    private final List<AtualizarRestauranteRule> rules;
+    private final List<InativarRestauranteRule> permissaoRules;
+    private final List<InativarRestauranteRule> rules;
 
-    public AtualizarRestauranteUseCaseImpl(RestauranteRepository restauranteRepository,
-                                           ObterUsuarioLogadoGateway obterUsuarioLogadoGateway,
-                                           TransactionGateway transactionGateway,
-                                           List<AtualizarRestauranteRule> permissaoRules,
-                                           List<AtualizarRestauranteRule> rules) {
+    public InativarRestauranteUseCaseImpl(RestauranteRepository restauranteRepository,
+                                         ObterUsuarioLogadoGateway obterUsuarioLogadoGateway,
+                                         TransactionGateway transactionGateway,
+                                         List<InativarRestauranteRule> permissaoRules,
+                                         List<InativarRestauranteRule> rules) {
         this.restauranteRepository = restauranteRepository;
         this.obterUsuarioLogadoGateway = obterUsuarioLogadoGateway;
         this.transactionGateway = transactionGateway;
@@ -35,27 +34,25 @@ public class AtualizarRestauranteUseCaseImpl implements AtualizarRestauranteUseC
     }
 
     @Override
-    public Restaurante executar(UUID id, DadosAtualizacaoRestaurante dados) {
+    public void executar(UUID id) {
+        if (id == null) {
+            throw new DomainException("ID do restaurante não pode ser nulo para inativação.");
+        }
+
         UsuarioBase usuarioLogado = obterUsuarioLogadoGateway.obterUsuarioLogado()
                 .orElseThrow(() -> new UsuarioLogadoNaoEncontradoException("Usuário logado não encontrado"));
 
         Restaurante restaurante = restauranteRepository.findById(id)
-                .orElseThrow(() -> new DomainException("Restaurante não encontrado."));
+                .orElseThrow(() -> new DomainException("Restaurante não encontrado para inativação."));
 
-        AtualizarRestauranteRuleContextDto context = new AtualizarRestauranteRuleContextDto(usuarioLogado, restaurante);
+        InativacaoRestauranteContext context = new InativacaoRestauranteContext(usuarioLogado, restaurante);
 
-        return transactionGateway.execute(() -> {
+        transactionGateway.execute(() -> {
             permissaoRules.forEach(rule -> rule.validar(context));
             rules.forEach(rule -> rule.validar(context));
 
-            restaurante.atualizar(
-                    dados.nome(),
-                    dados.endereco(),
-                    dados.tipoCozinha(),
-                    dados.horarioFuncionamento()
-            );
-
-            return restauranteRepository.salvar(restaurante);
+            restaurante.inativar();
+            restauranteRepository.salvar(restaurante);
         });
     }
 }

@@ -12,6 +12,7 @@ public class Restaurante {
     private String tipoCozinha;
     private String horarioFuncionamento;
     private UUID idDono;
+    private boolean ativo;
 
     public Restaurante(String nome, Endereco endereco, String tipoCozinha, String horarioFuncionamento, UUID idDono) {
         this.id = UUID.randomUUID();
@@ -20,16 +21,18 @@ public class Restaurante {
         this.tipoCozinha = tipoCozinha;
         this.horarioFuncionamento = horarioFuncionamento;
         this.idDono = idDono;
+        this.ativo = true;
         validarEstado();
     }
 
-    public Restaurante(UUID id, String nome, Endereco endereco, String tipoCozinha, String horarioFuncionamento, UUID idDono) {
+    public Restaurante(UUID id, String nome, Endereco endereco, String tipoCozinha, String horarioFuncionamento, UUID idDono, boolean ativo) {
         this.id = id;
         this.nome = nome;
         this.endereco = endereco;
         this.tipoCozinha = tipoCozinha;
         this.horarioFuncionamento = horarioFuncionamento;
         this.idDono = idDono;
+        this.ativo = ativo;
         validarEstado();
     }
 
@@ -50,10 +53,15 @@ public class Restaurante {
         validarEstado();
     }
 
+    public void inativar() {
+        this.ativo = false;
+    }
+
     public UUID getId() { return id; }
     public String getNome() { return nome; }
     public Endereco getEndereco() { return endereco; }
     public String getTipoCozinha() { return tipoCozinha; }
     public String getHorarioFuncionamento() { return horarioFuncionamento; }
     public UUID getIdDono() { return idDono; }
+    public boolean isAtivo() { return ativo; }
 }
