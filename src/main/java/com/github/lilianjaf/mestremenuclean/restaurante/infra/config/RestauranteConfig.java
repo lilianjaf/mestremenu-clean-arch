@@ -3,6 +3,7 @@ package com.github.lilianjaf.mestremenuclean.restaurante.infra.config;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.RestauranteRepository;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.UsuarioGateway;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.api.RestauranteModuleFacade;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.*;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.usecase.*;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.ObterUsuarioLogadoRestauranteGateway;
@@ -76,5 +77,10 @@ public class RestauranteConfig {
                 new RestauranteDeveEstarAtivoRule()
         );
         return new InativarRestauranteUseCaseImpl(restauranteRepository, obterUsuarioLogadoRestauranteGateway, transactionGateway, permissaoRules, rules);
+    }
+
+    @Bean
+    public RestauranteModuleFacade restauranteModuleFacade(RestauranteRepository restauranteRepository) {
+        return new RestauranteModuleFacadeImpl(restauranteRepository);
     }
 }

@@ -1,11 +1,11 @@
 {
 	"info": {
-		"_postman_id": "d8fd0ecc-c0a1-412c-8f28-332e78927710",
+		"_postman_id": "a7ffa4e5-439b-4bce-8e7f-b71db073d8f3",
 		"name": "MestreMenu Clean Arch",
 		"description": "Coleção do meu projeto de arquitetura limpa.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "51456633",
-		"_collection_link": "https://lilianjaf-a6429169-5766243.postman.co/workspace/Lilian-Ferreira's-Workspace~6fb41077-ed84-4dda-811e-7caa3fd93e45/collection/51456633-d8fd0ecc-c0a1-412c-8f28-332e78927710?action=share&source=collection_link&creator=51456633"
+		"_exporter_id": "51600030",
+		"_collection_link": "https://emersondallagnol-2303821.postman.co/workspace/Emerson-Dallagnol's-Workspace~b1d4b05b-2eb3-45c3-8a78-f3ec9344f87a/collection/51600030-a7ffa4e5-439b-4bce-8e7f-b71db073d8f3?action=share&source=collection_link&creator=51600030"
 	},
 	"item": [
 		{
@@ -1735,6 +1735,525 @@
 					}
 				]
 			}
+		},
+		{
+			"name": "5. Restaurantes",
+			"item": [
+				{
+					"name": "Criar Restaurante",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code deve ser 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Salvar UUID do restaurante na variável\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property(\"id\");",
+									"    pm.collectionVariables.set(\"restaurante_id\", jsonData.id);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Restaurante do Teste\",\n    \"tipoCozinha\": \"Brasileira\",\n    \"horarioFuncionamento\": \"08:00 - 22:00\",\n    \"idDono\": \"8c9c7e0c-84d4-4a4e-862d-0b70c3c54d3d\",\n    \"endereco\": {\n        \"logradouro\": \"Rua de Teste\",\n        \"numero\": \"123\",\n        \"bairro\": \"Centro\",\n        \"cidade\": \"Atibaia\",\n        \"cep\": \"12940-000\",\n        \"uf\": \"SP\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/restaurantes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"restaurantes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Restaurante",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code deve ser 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/restaurantes/{{restaurante_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"restaurantes",
+								"{{restaurante_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Restaurante",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code deve ser 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Restaurante do Teste Atualizado\",\n    \"tipoCozinha\": \"Italiana\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/restaurantes/{{restaurante_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"restaurantes",
+								"{{restaurante_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{jwt_token}}",
+						"type": "string"
+					}
+				]
+			}
+		},
+		{
+			"name": "6. Cardápios",
+			"item": [
+				{
+					"name": "Criar Cardápio",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code deve ser 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Salvar UUID do cardápio na variável\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property(\"id\");",
+									"    pm.collectionVariables.set(\"cardapio_id\", jsonData.id);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Cardápio de Verão\",\n    \"idRestaurante\": \"{{restaurante_id}}\",\n    \"itens\": [\n        {\n            \"nome\": \"Suco de Laranja\",\n            \"descricao\": \"Suco natural de laranja\",\n            \"preco\": 10.50,\n            \"disponibilidadeRestaurante\": true,\n            \"caminhoFoto\": \"suco.jpg\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/cardapios",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cardapios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Cardápios por Restaurante",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code deve ser 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Verificar se lista não está vazia\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an(\"array\").that.is.not.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/cardapios/restaurante/{{restaurante_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cardapios",
+								"restaurante",
+								"{{restaurante_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Editar Cardápio",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code deve ser 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Cardápio de Outono\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/cardapios/{{cardapio_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cardapios",
+								"{{cardapio_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Item Cardápio",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code deve ser 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Salvar UUID do item na variável\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property(\"id\");",
+									"    pm.collectionVariables.set(\"item_cardapio_id\", jsonData.id);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Hambúrguer\",\n    \"descricao\": \"Hambúrguer artesanal\",\n    \"preco\": 25.90,\n    \"disponibilidadeRestaurante\": true,\n    \"caminhoFoto\": \"burger.jpg\",\n    \"idCardapio\": \"{{cardapio_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/itens-cardapio",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"itens-cardapio"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Item Cardápio",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code deve ser 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/itens-cardapio/{{item_cardapio_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"itens-cardapio",
+								"{{item_cardapio_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Editar Item Cardápio",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code deve ser 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Hambúrguer Especial\",\n    \"descricao\": \"Hambúrguer artesanal com queijo duplo\",\n    \"preco\": 29.90,\n    \"disponibilidadeRestaurante\": true,\n    \"caminhoFoto\": \"burger_especial.jpg\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/itens-cardapio/{{item_cardapio_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"itens-cardapio",
+								"{{item_cardapio_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deletar Item Cardápio",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code deve ser 204 No Content\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/itens-cardapio/{{item_cardapio_id}}?idUsuarioLogado={{usuario_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"itens-cardapio",
+								"{{item_cardapio_id}}"
+							],
+							"query": [
+								{
+									"key": "idUsuarioLogado",
+									"value": "{{usuario_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deletar Cardápio",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code deve ser 204 No Content\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/cardapios/{{cardapio_id}}?idUsuarioLogado={{usuario_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cardapios",
+								"{{cardapio_id}}"
+							],
+							"query": [
+								{
+									"key": "idUsuarioLogado",
+									"value": "{{usuario_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deletar Restaurante",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code deve ser 204 No Content\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/restaurantes/{{restaurante_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"restaurantes",
+								"{{restaurante_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{jwt_token}}",
+						"type": "string"
+					}
+				]
+			}
 		}
 	],
 	"variable": [
@@ -1772,6 +2291,18 @@
 		},
 		{
 			"key": "tipo_aux_id",
+			"value": ""
+		},
+		{
+			"key": "restaurante_id",
+			"value": ""
+		},
+		{
+			"key": "cardapio_id",
+			"value": ""
+		},
+		{
+			"key": "item_cardapio_id",
 			"value": ""
 		}
 	]

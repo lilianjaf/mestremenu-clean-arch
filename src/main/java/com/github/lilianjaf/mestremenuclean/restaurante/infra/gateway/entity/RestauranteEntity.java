@@ -1,5 +1,6 @@
 package com.github.lilianjaf.mestremenuclean.restaurante.infra.gateway.entity;
 
+import com.github.lilianjaf.mestremenuclean.shared.infra.gateway.entity.EnderecoEmbeddable;
 import jakarta.persistence.*;
 import org.springframework.data.domain.Persistable;
 

@@ -2,8 +2,8 @@ package com.github.lilianjaf.mestremenuclean.restaurante.infra.gateway.mapper;
 
 import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Endereco;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Restaurante;
-import com.github.lilianjaf.mestremenuclean.restaurante.infra.gateway.entity.EnderecoEmbeddable;
 import com.github.lilianjaf.mestremenuclean.restaurante.infra.gateway.entity.RestauranteEntity;
+import com.github.lilianjaf.mestremenuclean.shared.infra.gateway.entity.EnderecoEmbeddable;
 
 public class RestauranteEntityMapper {
 
@@ -38,15 +38,7 @@ public class RestauranteEntityMapper {
             return null;
         }
 
-        EnderecoEmbeddable enderecoEmbeddable = new EnderecoEmbeddable(
-                domain.getEndereco().logradouro(),
-                domain.getEndereco().numero(),
-                domain.getEndereco().complemento(),
-                domain.getEndereco().bairro(),
-                domain.getEndereco().cidade(),
-                domain.getEndereco().cep(),
-                domain.getEndereco().uf()
-        );
+        EnderecoEmbeddable enderecoEmbeddable = toEntityEndereco(domain.getEndereco());
 
         return new RestauranteEntity(
                 domain.getId(),
@@ -56,6 +48,27 @@ public class RestauranteEntityMapper {
                 domain.getHorarioFuncionamento(),
                 domain.getIdDono(),
                 domain.isAtivo()
+        );
+    }
+
+    public static void atualizarEntity(Restaurante restauranteDomain, RestauranteEntity entity) {
+        entity.setNome(restauranteDomain.getNome());
+        entity.setTipoCozinha(restauranteDomain.getTipoCozinha());
+        entity.setHorarioFuncionamento(restauranteDomain.getHorarioFuncionamento());
+        entity.setIdDono(restauranteDomain.getIdDono());
+        entity.setEndereco(toEntityEndereco(restauranteDomain.getEndereco()));
+        entity.setAtivo(restauranteDomain.isAtivo());
+    }
+
+    private static EnderecoEmbeddable toEntityEndereco(Endereco endereco) {
+        return new EnderecoEmbeddable(
+                endereco.logradouro(),
+                endereco.numero(),
+                endereco.complemento(),
+                endereco.bairro(),
+                endereco.cidade(),
+                endereco.cep(),
+                endereco.uf()
         );
     }
 }
