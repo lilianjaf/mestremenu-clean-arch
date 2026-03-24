@@ -12,6 +12,7 @@ import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.CardapioReposi
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ItemCardapioRepository;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ObterUsuarioLogadoGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.RestauranteGateway;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorItemCardapioRule;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorPermissaoItemCardapioRule;
 
@@ -23,6 +24,7 @@ public class AlterarItemCardapioUseCaseImpl implements AlterarItemCardapioUseCas
     private final CardapioRepository cardapioRepository;
     private final RestauranteGateway restauranteGateway;
     private final ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
+    private final TransactionGateway transactionGateway;
     private final List<ValidadorPermissaoItemCardapioRule<ItemCardapioRuleContext>> permissaoRules;
     private final List<ValidadorItemCardapioRule<ItemCardapioRuleContext>> rules;
 
@@ -30,12 +32,14 @@ public class AlterarItemCardapioUseCaseImpl implements AlterarItemCardapioUseCas
                                           CardapioRepository cardapioRepository,
                                           RestauranteGateway restauranteGateway,
                                           ObterUsuarioLogadoGateway obterUsuarioLogadoGateway,
+                                          TransactionGateway transactionGateway,
                                           List<ValidadorPermissaoItemCardapioRule<ItemCardapioRuleContext>> permissaoRules,
                                           List<ValidadorItemCardapioRule<ItemCardapioRuleContext>> rules) {
         this.itemCardapioRepository = itemCardapioRepository;
         this.cardapioRepository = cardapioRepository;
         this.restauranteGateway = restauranteGateway;
         this.obterUsuarioLogadoGateway = obterUsuarioLogadoGateway;
+        this.transactionGateway = transactionGateway;
         this.permissaoRules = permissaoRules;
         this.rules = rules;
     }
@@ -73,17 +77,19 @@ public class AlterarItemCardapioUseCaseImpl implements AlterarItemCardapioUseCas
                 isNomeUnico
         );
 
-        permissaoRules.forEach(r -> r.validar(context));
-        rules.forEach(r -> r.validar(context));
+        return transactionGateway.execute(() -> {
+            permissaoRules.forEach(r -> r.validar(context));
+            rules.forEach(r -> r.validar(context));
 
-        item.atualizar(
-                dados.nome(),
-                dados.descricao(),
-                dados.preco(),
-                dados.disponibilidadeRestaurante(),
-                dados.caminhoFoto()
-        );
+            item.atualizar(
+                    dados.nome(),
+                    dados.descricao(),
+                    dados.preco(),
+                    dados.disponibilidadeRestaurante(),
+                    dados.caminhoFoto()
+            );
 
-        return itemCardapioRepository.salvar(item);
+            return itemCardapioRepository.salvar(item);
+        });
     }
 }

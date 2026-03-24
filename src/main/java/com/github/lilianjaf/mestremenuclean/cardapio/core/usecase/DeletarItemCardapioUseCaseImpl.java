@@ -10,6 +10,7 @@ import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.CardapioReposi
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ItemCardapioRepository;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ObterUsuarioLogadoGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.RestauranteGateway;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorPermissaoCardapioRule;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class DeletarItemCardapioUseCaseImpl implements DeletarItemCardapioUseCas
     private final CardapioRepository cardapioRepository;
     private final RestauranteGateway restauranteGateway;
     private final ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
+    private final TransactionGateway transactionGateway;
     private final List<ValidadorPermissaoCardapioRule<DeletarItemCardapioRuleContextDto>> permissaoRules;
     private final List<ValidadorPermissaoCardapioRule<DeletarItemCardapioRuleContextDto>> rules;
 
@@ -28,12 +30,14 @@ public class DeletarItemCardapioUseCaseImpl implements DeletarItemCardapioUseCas
                                          CardapioRepository cardapioRepository,
                                          RestauranteGateway restauranteGateway,
                                          ObterUsuarioLogadoGateway obterUsuarioLogadoGateway,
+                                         TransactionGateway transactionGateway,
                                          List<ValidadorPermissaoCardapioRule<DeletarItemCardapioRuleContextDto>> permissaoRules,
                                          List<ValidadorPermissaoCardapioRule<DeletarItemCardapioRuleContextDto>> rules) {
         this.itemCardapioRepository = itemCardapioRepository;
         this.cardapioRepository = cardapioRepository;
         this.restauranteGateway = restauranteGateway;
         this.obterUsuarioLogadoGateway = obterUsuarioLogadoGateway;
+        this.transactionGateway = transactionGateway;
         this.permissaoRules = permissaoRules;
         this.rules = rules;
     }
@@ -61,9 +65,11 @@ public class DeletarItemCardapioUseCaseImpl implements DeletarItemCardapioUseCas
                 isItemDoProprioRestaurante
         );
 
-        permissaoRules.forEach(r -> r.validar(context));
-        rules.forEach(r -> r.validar(context));
+        transactionGateway.execute(() -> {
+            permissaoRules.forEach(r -> r.validar(context));
+            rules.forEach(r -> r.validar(context));
 
-        itemCardapioRepository.deletar(idItem);
+            itemCardapioRepository.deletar(idItem);
+        });
     }
 }

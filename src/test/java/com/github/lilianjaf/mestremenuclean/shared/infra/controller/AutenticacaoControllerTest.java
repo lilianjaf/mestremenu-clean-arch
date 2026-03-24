@@ -1,8 +1,9 @@
 package com.github.lilianjaf.mestremenuclean.shared.infra.controller;
 
-import com.github.lilianjaf.mestremenuclean.shared.infra.security.LoginRequest;
-import com.github.lilianjaf.mestremenuclean.shared.infra.security.TokenResponse;
-import com.github.lilianjaf.mestremenuclean.shared.infra.security.TokenService;
+import com.github.lilianjaf.mestremenuclean.usuario.infra.controller.AutenticacaoController;
+import com.github.lilianjaf.mestremenuclean.usuario.infra.security.LoginRequest;
+import com.github.lilianjaf.mestremenuclean.usuario.infra.security.TokenResponse;
+import com.github.lilianjaf.mestremenuclean.usuario.infra.security.TokenService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

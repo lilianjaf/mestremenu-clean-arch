@@ -9,6 +9,7 @@ import com.github.lilianjaf.mestremenuclean.cardapio.core.exception.UsuarioLogad
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.CardapioRepository;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ObterUsuarioLogadoGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.RestauranteGateway;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorCardapioRule;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorPermissaoCardapioRule;
 
@@ -20,17 +21,20 @@ public class DeletarCardapioUseCaseImpl implements DeletarCardapioUseCase {
     private final CardapioRepository cardapioRepository;
     private final RestauranteGateway restauranteGateway;
     private final ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
+    private final TransactionGateway transactionGateway;
     private final List<ValidadorPermissaoCardapioRule<DeletarCardapioRuleContextDto>> permissaoRules;
     private final List<ValidadorCardapioRule<DeletarCardapioRuleContextDto>> rules;
 
     public DeletarCardapioUseCaseImpl(CardapioRepository cardapioRepository,
                                      RestauranteGateway restauranteGateway,
                                      ObterUsuarioLogadoGateway obterUsuarioLogadoGateway,
+                                     TransactionGateway transactionGateway,
                                      List<ValidadorPermissaoCardapioRule<DeletarCardapioRuleContextDto>> permissaoRules,
                                      List<ValidadorCardapioRule<DeletarCardapioRuleContextDto>> rules) {
         this.cardapioRepository = cardapioRepository;
         this.restauranteGateway = restauranteGateway;
         this.obterUsuarioLogadoGateway = obterUsuarioLogadoGateway;
+        this.transactionGateway = transactionGateway;
         this.permissaoRules = permissaoRules;
         this.rules = rules;
     }
@@ -55,9 +59,11 @@ public class DeletarCardapioUseCaseImpl implements DeletarCardapioUseCase {
                 isDonoDoRestaurante
         );
 
-        permissaoRules.forEach(r -> r.validar(context));
-        rules.forEach(r -> r.validar(context));
+        transactionGateway.execute(() -> {
+            permissaoRules.forEach(r -> r.validar(context));
+            rules.forEach(r -> r.validar(context));
 
-        cardapioRepository.deletar(idCardapio);
+            cardapioRepository.deletar(idCardapio);
+        });
     }
 }

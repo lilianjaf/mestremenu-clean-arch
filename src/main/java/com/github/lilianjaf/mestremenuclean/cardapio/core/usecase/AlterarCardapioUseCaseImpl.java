@@ -11,6 +11,7 @@ import com.github.lilianjaf.mestremenuclean.cardapio.core.exception.UsuarioLogad
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.CardapioRepository;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ObterUsuarioLogadoGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.RestauranteGateway;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.*;
 
 import java.util.List;
@@ -21,17 +22,20 @@ public class AlterarCardapioUseCaseImpl implements AlterarCardapioUseCase {
     private final CardapioRepository cardapioRepository;
     private final RestauranteGateway restauranteGateway;
     private final ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
+    private final TransactionGateway transactionGateway;
     private final List<ValidadorPermissaoCardapioRule<AlterarCardapioRuleContextDto>> permissaoRules;
     private final List<ValidadorCardapioRule<AlterarCardapioRuleContextDto>> rules;
 
     public AlterarCardapioUseCaseImpl(CardapioRepository cardapioRepository,
                                       RestauranteGateway restauranteGateway,
                                       ObterUsuarioLogadoGateway obterUsuarioLogadoGateway,
+                                      TransactionGateway transactionGateway,
                                       List<ValidadorPermissaoCardapioRule<AlterarCardapioRuleContextDto>> permissaoRules,
                                       List<ValidadorCardapioRule<AlterarCardapioRuleContextDto>> rules) {
         this.cardapioRepository = cardapioRepository;
         this.restauranteGateway = restauranteGateway;
         this.obterUsuarioLogadoGateway = obterUsuarioLogadoGateway;
+        this.transactionGateway = transactionGateway;
         this.permissaoRules = permissaoRules;
         this.rules = rules;
     }
@@ -57,25 +61,27 @@ public class AlterarCardapioUseCaseImpl implements AlterarCardapioUseCase {
         AlterarCardapioRuleContextDto context = new AlterarCardapioRuleContextDto(
                 usuarioLogado, restaurante, cardapio, dados, isCardapioDoProprioRestaurante, isNomeUnico);
 
-        permissaoRules.forEach(r -> r.validar(context));
-        rules.forEach(r -> r.validar(context));
+        return transactionGateway.execute(() -> {
+            permissaoRules.forEach(r -> r.validar(context));
+            rules.forEach(r -> r.validar(context));
 
-        List<ItemCardapio> novosItens = null;
-        if (dados.itens() != null) {
-            novosItens = dados.itens().stream()
-                    .map(item -> new ItemCardapio(
-                            item.nome(),
-                            item.descricao(),
-                            item.preco(),
-                            item.disponibilidadeRestaurante(),
-                            item.caminhoFoto(),
-                            cardapio.getId()
-                    ))
-                    .collect(Collectors.toList());
-        }
+            List<ItemCardapio> novosItens = null;
+            if (dados.itens() != null) {
+                novosItens = dados.itens().stream()
+                        .map(item -> new ItemCardapio(
+                                item.nome(),
+                                item.descricao(),
+                                item.preco(),
+                                item.disponibilidadeRestaurante(),
+                                item.caminhoFoto(),
+                                cardapio.getId()
+                        ))
+                        .collect(Collectors.toList());
+            }
 
-        cardapio.atualizar(dados.nome(), novosItens);
+            cardapio.atualizar(dados.nome(), novosItens);
 
-        return cardapioRepository.salvar(cardapio);
+            return cardapioRepository.salvar(cardapio);
+        });
     }
 }

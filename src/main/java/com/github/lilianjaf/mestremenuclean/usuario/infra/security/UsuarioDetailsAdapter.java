@@ -1,4 +1,4 @@
-package com.github.lilianjaf.mestremenuclean.shared.infra.security;
+package com.github.lilianjaf.mestremenuclean.usuario.infra.security;
 
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
 import org.springframework.security.core.GrantedAuthority;

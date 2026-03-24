@@ -6,6 +6,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.domain.TipoNativo;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.TipoUsuario;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
+import com.github.lilianjaf.mestremenuclean.usuario.infra.gateway.SpringSecurityUsuarioLogadoAdapter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,4 +1,4 @@
-package com.github.lilianjaf.mestremenuclean.shared.infra.gateway;
+package com.github.lilianjaf.mestremenuclean.usuario.infra.gateway;
 
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.ObterUsuarioLogadoGateway;

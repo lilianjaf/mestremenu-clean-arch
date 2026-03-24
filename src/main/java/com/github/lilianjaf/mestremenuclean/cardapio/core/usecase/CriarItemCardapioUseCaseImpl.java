@@ -12,6 +12,7 @@ import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.CardapioReposi
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ItemCardapioRepository;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ObterUsuarioLogadoGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.RestauranteGateway;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorItemCardapioRule;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorPermissaoItemCardapioRule;
 
@@ -23,6 +24,7 @@ public class CriarItemCardapioUseCaseImpl implements CriarItemCardapioUseCase {
     private final CardapioRepository cardapioRepository;
     private final ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
     private final RestauranteGateway restauranteGateway;
+    private final TransactionGateway transactionGateway;
     private final List<ValidadorPermissaoItemCardapioRule<ItemCardapioRuleContext>> permissionRules;
     private final List<ValidadorItemCardapioRule<ItemCardapioRuleContext>> rules;
 
@@ -30,12 +32,14 @@ public class CriarItemCardapioUseCaseImpl implements CriarItemCardapioUseCase {
                                        CardapioRepository cardapioRepository,
                                        ObterUsuarioLogadoGateway obterUsuarioLogadoGateway,
                                        RestauranteGateway restauranteGateway,
+                                       TransactionGateway transactionGateway,
                                        List<ValidadorPermissaoItemCardapioRule<ItemCardapioRuleContext>> permissionRules,
                                        List<ValidadorItemCardapioRule<ItemCardapioRuleContext>> rules) {
         this.itemCardapioRepository = itemCardapioRepository;
         this.cardapioRepository = cardapioRepository;
         this.obterUsuarioLogadoGateway = obterUsuarioLogadoGateway;
         this.restauranteGateway = restauranteGateway;
+        this.transactionGateway = transactionGateway;
         this.permissionRules = permissionRules;
         this.rules = rules;
     }
@@ -55,18 +59,20 @@ public class CriarItemCardapioUseCaseImpl implements CriarItemCardapioUseCase {
 
         CriarItemCardapioRuleContextDto context = new CriarItemCardapioRuleContextDto(usuarioLogado, restaurante, dados, nomeUnico);
 
-        permissionRules.forEach(r -> r.validar(context));
-        rules.forEach(r -> r.validar(context));
+        return transactionGateway.execute(() -> {
+            permissionRules.forEach(r -> r.validar(context));
+            rules.forEach(r -> r.validar(context));
 
-        ItemCardapio item = new ItemCardapio(
-                dados.nome(),
-                dados.descricao(),
-                dados.preco(),
-                dados.disponibilidadeRestaurante(),
-                dados.caminhoFoto(),
-                dados.idCardapio()
-        );
+            ItemCardapio item = new ItemCardapio(
+                    dados.nome(),
+                    dados.descricao(),
+                    dados.preco(),
+                    dados.disponibilidadeRestaurante(),
+                    dados.caminhoFoto(),
+                    dados.idCardapio()
+            );
 
-        return itemCardapioRepository.salvar(item);
+            return itemCardapioRepository.salvar(item);
+        });
     }
 }

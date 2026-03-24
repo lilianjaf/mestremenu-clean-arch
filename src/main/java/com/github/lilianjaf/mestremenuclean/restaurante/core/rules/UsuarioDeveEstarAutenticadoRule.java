@@ -1,8 +1,7 @@
 package com.github.lilianjaf.mestremenuclean.restaurante.core.rules;
 
-import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
-import com.github.lilianjaf.mestremenuclean.usuario.core.exception.UsuarioNaoAutenticadoException;
-import com.github.lilianjaf.mestremenuclean.usuario.core.rules.*;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Usuario;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.exception.UsuarioNaoAutenticadoException;
 
 public class UsuarioDeveEstarAutenticadoRule implements ValidadorCriacaoRestauranteRule, AtualizarRestauranteRule, InativarRestauranteRule, ListarRestaurantesRule, BuscarRestauranteRule {
     @Override
@@ -40,7 +39,7 @@ public class UsuarioDeveEstarAutenticadoRule implements ValidadorCriacaoRestaura
         }
     }
 
-    public void validar(UsuarioBase usuarioLogado) {
+    public void validar(Usuario usuarioLogado) {
         if (usuarioLogado == null) {
             lancarExcecao();
         }

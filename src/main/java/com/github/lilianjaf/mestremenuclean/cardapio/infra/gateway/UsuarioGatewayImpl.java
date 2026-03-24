@@ -32,7 +32,6 @@ public class UsuarioGatewayImpl implements UsuarioGateway {
             try {
                 tipo = TipoNativo.valueOf(dto.tipoNativo());
             } catch (IllegalArgumentException e) {
-                // Ignore unknown types
             }
         }
 
@@ -52,7 +51,6 @@ public class UsuarioGatewayImpl implements UsuarioGateway {
             try {
                 tipo = TipoNativo.valueOf(dto.tipoNativo());
             } catch (IllegalArgumentException e) {
-                // Ignore unknown types
             }
         }
 

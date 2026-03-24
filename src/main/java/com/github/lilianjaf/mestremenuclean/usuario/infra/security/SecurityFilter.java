@@ -1,4 +1,4 @@
-package com.github.lilianjaf.mestremenuclean.shared.infra.security;
+package com.github.lilianjaf.mestremenuclean.usuario.infra.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,9 +1,9 @@
 package com.github.lilianjaf.mestremenuclean.restaurante.core.rules;
 
-import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Usuario;
 
 public record ListarRestaurantesRuleContextDto(
-        UsuarioBase usuarioLogado
+        Usuario usuarioLogado
 ) {
     public boolean isUsuarioAutenticado() {
         return this.usuarioLogado != null;

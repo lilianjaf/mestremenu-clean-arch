@@ -1,4 +1,4 @@
-package com.github.lilianjaf.mestremenuclean.shared.infra.gateway;
+package com.github.lilianjaf.mestremenuclean.cardapio.infra.gateway;
 
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TransactionGateway;
 import org.springframework.stereotype.Component;
@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.function.Supplier;
 
 @Component
-public class TransactionGatewayImpl implements TransactionGateway, com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.TransactionGateway {
+public class TransactionGatewayImpl implements TransactionGateway {
 
     @Override
     @Transactional

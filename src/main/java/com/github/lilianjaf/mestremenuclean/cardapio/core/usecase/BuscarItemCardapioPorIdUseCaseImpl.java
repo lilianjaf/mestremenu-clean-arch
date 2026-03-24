@@ -7,6 +7,7 @@ import com.github.lilianjaf.mestremenuclean.cardapio.core.exception.CardapioExce
 import com.github.lilianjaf.mestremenuclean.cardapio.core.exception.UsuarioLogadoNaoEncontradoException;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ItemCardapioRepository;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ObterUsuarioLogadoGateway;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorPermissaoCardapioRule;
 
 import java.util.List;
@@ -16,13 +17,16 @@ public class BuscarItemCardapioPorIdUseCaseImpl implements BuscarItemCardapioPor
 
     private final ItemCardapioRepository itemCardapioRepository;
     private final ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
+    private final TransactionGateway transactionGateway;
     private final List<ValidadorPermissaoCardapioRule<BuscarItemCardapioPorIdRuleContextDto>> permissaoRules;
 
     public BuscarItemCardapioPorIdUseCaseImpl(ItemCardapioRepository itemCardapioRepository,
                                              ObterUsuarioLogadoGateway obterUsuarioLogadoGateway,
+                                             TransactionGateway transactionGateway,
                                              List<ValidadorPermissaoCardapioRule<BuscarItemCardapioPorIdRuleContextDto>> permissaoRules) {
         this.itemCardapioRepository = itemCardapioRepository;
         this.obterUsuarioLogadoGateway = obterUsuarioLogadoGateway;
+        this.transactionGateway = transactionGateway;
         this.permissaoRules = permissaoRules;
     }
 
@@ -33,9 +37,11 @@ public class BuscarItemCardapioPorIdUseCaseImpl implements BuscarItemCardapioPor
 
         BuscarItemCardapioPorIdRuleContextDto context = new BuscarItemCardapioPorIdRuleContextDto(usuarioLogado);
 
-        permissaoRules.forEach(rule -> rule.validar(context));
+        return transactionGateway.execute(() -> {
+            permissaoRules.forEach(rule -> rule.validar(context));
 
-        return itemCardapioRepository.findById(id)
-                .orElseThrow(() -> new CardapioException("Item do cardápio não encontrado."));
+            return itemCardapioRepository.findById(id)
+                    .orElseThrow(() -> new CardapioException("Item do cardápio não encontrado."));
+        });
     }
 }

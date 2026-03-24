@@ -1,4 +1,4 @@
-package com.github.lilianjaf.mestremenuclean.shared.infra.security;
+package com.github.lilianjaf.mestremenuclean.usuario.infra.security;
 
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.CodificadorDeSenha;
 import org.springframework.security.crypto.password.PasswordEncoder;

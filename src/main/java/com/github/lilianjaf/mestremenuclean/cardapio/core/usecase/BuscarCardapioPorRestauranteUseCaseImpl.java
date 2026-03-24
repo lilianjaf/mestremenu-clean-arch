@@ -6,6 +6,7 @@ import com.github.lilianjaf.mestremenuclean.cardapio.core.dto.BuscarCardapioPorR
 import com.github.lilianjaf.mestremenuclean.cardapio.core.exception.UsuarioLogadoNaoEncontradoException;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.CardapioRepository;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ObterUsuarioLogadoGateway;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorPermissaoCardapioRule;
 
 import java.util.List;
@@ -15,13 +16,16 @@ public class BuscarCardapioPorRestauranteUseCaseImpl implements BuscarCardapioPo
 
     private final CardapioRepository cardapioRepository;
     private final ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
+    private final TransactionGateway transactionGateway;
     private final List<ValidadorPermissaoCardapioRule<BuscarCardapioPorRestauranteRuleContextDto>> permissaoRules;
 
     public BuscarCardapioPorRestauranteUseCaseImpl(CardapioRepository cardapioRepository,
                                                   ObterUsuarioLogadoGateway obterUsuarioLogadoGateway,
+                                                  TransactionGateway transactionGateway,
                                                   List<ValidadorPermissaoCardapioRule<BuscarCardapioPorRestauranteRuleContextDto>> permissaoRules) {
         this.cardapioRepository = cardapioRepository;
         this.obterUsuarioLogadoGateway = obterUsuarioLogadoGateway;
+        this.transactionGateway = transactionGateway;
         this.permissaoRules = permissaoRules;
     }
 
@@ -32,8 +36,10 @@ public class BuscarCardapioPorRestauranteUseCaseImpl implements BuscarCardapioPo
 
         BuscarCardapioPorRestauranteRuleContextDto context = new BuscarCardapioPorRestauranteRuleContextDto(usuarioLogado);
 
-        permissaoRules.forEach(rule -> rule.validar(context));
+        return transactionGateway.execute(() -> {
+            permissaoRules.forEach(rule -> rule.validar(context));
 
-        return cardapioRepository.buscarPorIdRestaurante(idRestaurante);
+            return cardapioRepository.buscarPorIdRestaurante(idRestaurante);
+        });
     }
 }
