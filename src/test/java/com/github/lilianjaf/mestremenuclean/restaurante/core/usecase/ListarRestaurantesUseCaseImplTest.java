@@ -1,12 +1,12 @@
 package com.github.lilianjaf.mestremenuclean.restaurante.core.usecase;
 
 import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Restaurante;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Usuario;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.RestauranteRepository;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.ListarRestaurantesRule;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.ListarRestaurantesRuleContextDto;
-import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
-import com.github.lilianjaf.mestremenuclean.usuario.core.exception.UsuarioLogadoNaoEncontradoException;
-import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.ObterUsuarioLogadoGateway;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.exception.UsuarioLogadoNaoEncontradoException;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.ObterUsuarioLogadoRestauranteGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ class ListarRestaurantesUseCaseImplTest {
     private RestauranteRepository restauranteRepository;
 
     @Mock
-    private ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
+    private ObterUsuarioLogadoRestauranteGateway obterUsuarioLogadoRestauranteGateway;
 
     @Mock
     private ListarRestaurantesRule permissaoRule;
@@ -48,7 +48,7 @@ class ListarRestaurantesUseCaseImplTest {
     void setUp() {
         listarRestaurantesUseCase = new ListarRestaurantesUseCaseImpl(
                 restauranteRepository,
-                obterUsuarioLogadoGateway,
+                obterUsuarioLogadoRestauranteGateway,
                 List.of(permissaoRule),
                 List.of(regraDeNegocio)
         );
@@ -57,10 +57,10 @@ class ListarRestaurantesUseCaseImplTest {
     @Test
     @DisplayName("Deve listar todos os restaurantes com sucesso quando os dados forem válidos")
     void deveListarRestaurantesComSucesso() {
-        UsuarioBase usuarioLogado = mock(UsuarioBase.class);
+        Usuario usuarioLogado = mock(Usuario.class);
         List<Restaurante> restaurantes = List.of(mock(Restaurante.class));
 
-        when(obterUsuarioLogadoGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
+        when(obterUsuarioLogadoRestauranteGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
         when(restauranteRepository.buscarTodos()).thenReturn(restaurantes);
 
         List<Restaurante> resultado = listarRestaurantesUseCase.executar();
@@ -75,7 +75,7 @@ class ListarRestaurantesUseCaseImplTest {
     @Test
     @DisplayName("Deve lançar exceção quando o usuário logado não for encontrado")
     void deveLancarExcecaoQuandoUsuarioLogadoNaoEncontrado() {
-        when(obterUsuarioLogadoGateway.obterUsuarioLogado()).thenReturn(Optional.empty());
+        when(obterUsuarioLogadoRestauranteGateway.obterUsuarioLogado()).thenReturn(Optional.empty());
 
         assertThrows(UsuarioLogadoNaoEncontradoException.class, () -> listarRestaurantesUseCase.executar());
 
@@ -87,9 +87,9 @@ class ListarRestaurantesUseCaseImplTest {
     @Test
     @DisplayName("Deve lançar exceção quando uma regra de permissão for violada")
     void deveLancarExcecaoQuandoRegraDePermissaoForViolada() {
-        UsuarioBase usuarioLogado = mock(UsuarioBase.class);
+        Usuario usuarioLogado = mock(Usuario.class);
 
-        when(obterUsuarioLogadoGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
+        when(obterUsuarioLogadoRestauranteGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
         doThrow(new RuntimeException("Permissão negada")).when(permissaoRule).validar(any(ListarRestaurantesRuleContextDto.class));
 
         assertThrows(RuntimeException.class, () -> listarRestaurantesUseCase.executar());
@@ -100,9 +100,9 @@ class ListarRestaurantesUseCaseImplTest {
     @Test
     @DisplayName("Deve lançar exceção quando uma regra de negócio for violada")
     void deveLancarExcecaoQuandoRegraDeNegocioForViolada() {
-        UsuarioBase usuarioLogado = mock(UsuarioBase.class);
+        Usuario usuarioLogado = mock(Usuario.class);
 
-        when(obterUsuarioLogadoGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
+        when(obterUsuarioLogadoRestauranteGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
         doThrow(new RuntimeException("Regra de negócio violada")).when(regraDeNegocio).validar(any(ListarRestaurantesRuleContextDto.class));
 
         assertThrows(RuntimeException.class, () -> listarRestaurantesUseCase.executar());

@@ -1,7 +1,7 @@
 package com.github.lilianjaf.mestremenuclean.restaurante.core.rules;
 
 import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Restaurante;
-import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Usuario;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 class InativacaoRestauranteContextTest {
 
     @Mock
-    private UsuarioBase usuarioLogado;
+    private Usuario usuarioLogado;
 
     @Mock
     private Restaurante restaurante;

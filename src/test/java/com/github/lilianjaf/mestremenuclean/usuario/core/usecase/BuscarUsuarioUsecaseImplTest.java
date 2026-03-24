@@ -1,5 +1,6 @@
 package com.github.lilianjaf.mestremenuclean.usuario.core.usecase;
 
+import com.github.lilianjaf.mestremenuclean.usuario.core.domain.TipoNativo;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.TipoUsuario;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
 import com.github.lilianjaf.mestremenuclean.usuario.core.dto.UsuarioOutput;
@@ -65,6 +66,7 @@ class BuscarUsuarioUsecaseImplTest {
         when(usuarioBuscado.getLogin()).thenReturn("login.teste");
         when(usuarioBuscado.getTipoCustomizado()).thenReturn(tipoUsuario);
         when(tipoUsuario.getNome()).thenReturn("ADMIN");
+        when(tipoUsuario.getTipoNativo()).thenReturn(TipoNativo.CLIENTE);
         when(usuarioBuscado.getAtivo()).thenReturn(true);
 
         UsuarioOutput result = usecase.buscarPorId(id);

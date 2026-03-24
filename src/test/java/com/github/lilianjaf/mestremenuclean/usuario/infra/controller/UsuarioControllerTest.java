@@ -63,7 +63,7 @@ class UsuarioControllerTest {
     @DisplayName("Deve buscar um usuario com sucesso")
     void deveBuscarUsuarioComSucesso() {
         UUID id = UUID.randomUUID();
-        UsuarioOutput output = new UsuarioOutput(id, "Nome", "email@teste.com", "login", "CLIENTE", true);
+        UsuarioOutput output = new UsuarioOutput(id, "Nome", "email@teste.com", "login", "Cliente", "CLIENTE", true);
         when(buscarUsuarioUsecase.buscarPorId(id)).thenReturn(output);
 
         ResponseEntity<UsuarioResponseJson> response = usuarioController.buscarUsuario(id);

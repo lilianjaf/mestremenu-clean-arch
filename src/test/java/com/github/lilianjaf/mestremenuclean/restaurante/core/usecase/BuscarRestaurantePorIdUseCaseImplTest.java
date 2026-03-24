@@ -1,13 +1,13 @@
 package com.github.lilianjaf.mestremenuclean.restaurante.core.usecase;
 
 import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Restaurante;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Usuario;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.RestauranteRepository;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.BuscarRestauranteRule;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.BuscarRestauranteRuleContextDto;
-import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
-import com.github.lilianjaf.mestremenuclean.usuario.core.exception.DomainException;
-import com.github.lilianjaf.mestremenuclean.usuario.core.exception.UsuarioLogadoNaoEncontradoException;
-import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.ObterUsuarioLogadoGateway;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.exception.DomainException;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.exception.UsuarioLogadoNaoEncontradoException;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.ObterUsuarioLogadoRestauranteGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class BuscarRestaurantePorIdUseCaseImplTest {
     private RestauranteRepository restauranteRepository;
 
     @Mock
-    private ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
+    private ObterUsuarioLogadoRestauranteGateway obterUsuarioLogadoRestauranteGateway;
 
     @Mock
     private BuscarRestauranteRule permissaoRule;
@@ -49,7 +49,7 @@ class BuscarRestaurantePorIdUseCaseImplTest {
     void setUp() {
         buscarRestaurantePorIdUseCase = new BuscarRestaurantePorIdUseCaseImpl(
                 restauranteRepository,
-                obterUsuarioLogadoGateway,
+                obterUsuarioLogadoRestauranteGateway,
                 List.of(permissaoRule),
                 List.of(regraDeNegocio)
         );
@@ -59,10 +59,10 @@ class BuscarRestaurantePorIdUseCaseImplTest {
     @DisplayName("Deve buscar um restaurante por ID com sucesso quando os dados forem válidos")
     void deveBuscarRestaurantePorIdComSucesso() {
         UUID id = UUID.randomUUID();
-        UsuarioBase usuarioLogado = mock(UsuarioBase.class);
+        Usuario usuarioLogado = mock(Usuario.class);
         Restaurante restaurante = mock(Restaurante.class);
 
-        when(obterUsuarioLogadoGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
+        when(obterUsuarioLogadoRestauranteGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
         when(restauranteRepository.findById(id)).thenReturn(Optional.of(restaurante));
 
         Restaurante resultado = buscarRestaurantePorIdUseCase.executar(id);
@@ -78,7 +78,7 @@ class BuscarRestaurantePorIdUseCaseImplTest {
     void deveLancarExcecaoQuandoUsuarioLogadoNaoEncontrado() {
         UUID id = UUID.randomUUID();
 
-        when(obterUsuarioLogadoGateway.obterUsuarioLogado()).thenReturn(Optional.empty());
+        when(obterUsuarioLogadoRestauranteGateway.obterUsuarioLogado()).thenReturn(Optional.empty());
 
         assertThrows(UsuarioLogadoNaoEncontradoException.class, () -> buscarRestaurantePorIdUseCase.executar(id));
     }
@@ -86,9 +86,9 @@ class BuscarRestaurantePorIdUseCaseImplTest {
     @Test
     @DisplayName("Deve lançar exceção quando o ID do restaurante for nulo")
     void deveLancarExcecaoQuandoIdForNulo() {
-        UsuarioBase usuarioLogado = mock(UsuarioBase.class);
+        Usuario usuarioLogado = mock(Usuario.class);
 
-        when(obterUsuarioLogadoGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
+        when(obterUsuarioLogadoRestauranteGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
 
         assertThrows(DomainException.class, () -> buscarRestaurantePorIdUseCase.executar(null));
     }
@@ -97,9 +97,9 @@ class BuscarRestaurantePorIdUseCaseImplTest {
     @DisplayName("Deve lançar exceção quando o restaurante não for encontrado")
     void deveLancarExcecaoQuandoRestauranteNaoEncontrado() {
         UUID id = UUID.randomUUID();
-        UsuarioBase usuarioLogado = mock(UsuarioBase.class);
+        Usuario usuarioLogado = mock(Usuario.class);
 
-        when(obterUsuarioLogadoGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
+        when(obterUsuarioLogadoRestauranteGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
         when(restauranteRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(DomainException.class, () -> buscarRestaurantePorIdUseCase.executar(id));
@@ -109,10 +109,10 @@ class BuscarRestaurantePorIdUseCaseImplTest {
     @DisplayName("Deve lançar exceção quando uma regra de permissão for violada")
     void deveLancarExcecaoQuandoRegraDePermissaoForViolada() {
         UUID id = UUID.randomUUID();
-        UsuarioBase usuarioLogado = mock(UsuarioBase.class);
+        Usuario usuarioLogado = mock(Usuario.class);
         Restaurante restaurante = mock(Restaurante.class);
 
-        when(obterUsuarioLogadoGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
+        when(obterUsuarioLogadoRestauranteGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
         when(restauranteRepository.findById(id)).thenReturn(Optional.of(restaurante));
         doThrow(new RuntimeException("Permissão negada")).when(permissaoRule).validar(any(BuscarRestauranteRuleContextDto.class));
 
@@ -123,10 +123,10 @@ class BuscarRestaurantePorIdUseCaseImplTest {
     @DisplayName("Deve lançar exceção quando uma regra de negócio for violada")
     void deveLancarExcecaoQuandoRegraDeNegocioForViolada() {
         UUID id = UUID.randomUUID();
-        UsuarioBase usuarioLogado = mock(UsuarioBase.class);
+        Usuario usuarioLogado = mock(Usuario.class);
         Restaurante restaurante = mock(Restaurante.class);
 
-        when(obterUsuarioLogadoGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
+        when(obterUsuarioLogadoRestauranteGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
         when(restauranteRepository.findById(id)).thenReturn(Optional.of(restaurante));
         doThrow(new RuntimeException("Regra de negócio violada")).when(regraDeNegocio).validar(any(BuscarRestauranteRuleContextDto.class));
 
