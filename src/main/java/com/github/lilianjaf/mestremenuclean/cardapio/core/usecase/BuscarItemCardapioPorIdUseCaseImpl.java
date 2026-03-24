@@ -1,21 +1,40 @@
 package com.github.lilianjaf.mestremenuclean.cardapio.core.usecase;
 
 import com.github.lilianjaf.mestremenuclean.cardapio.core.domain.ItemCardapio;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.domain.Usuario;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.dto.BuscarItemCardapioPorIdRuleContextDto;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.exception.CardapioException;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.exception.UsuarioLogadoNaoEncontradoException;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ItemCardapioRepository;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ObterUsuarioLogadoGateway;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorPermissaoCardapioRule;
 
+import java.util.List;
 import java.util.UUID;
 
 public class BuscarItemCardapioPorIdUseCaseImpl implements BuscarItemCardapioPorIdUseCase {
 
     private final ItemCardapioRepository itemCardapioRepository;
+    private final ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
+    private final List<ValidadorPermissaoCardapioRule<BuscarItemCardapioPorIdRuleContextDto>> permissaoRules;
 
-    public BuscarItemCardapioPorIdUseCaseImpl(ItemCardapioRepository itemCardapioRepository) {
+    public BuscarItemCardapioPorIdUseCaseImpl(ItemCardapioRepository itemCardapioRepository,
+                                             ObterUsuarioLogadoGateway obterUsuarioLogadoGateway,
+                                             List<ValidadorPermissaoCardapioRule<BuscarItemCardapioPorIdRuleContextDto>> permissaoRules) {
         this.itemCardapioRepository = itemCardapioRepository;
+        this.obterUsuarioLogadoGateway = obterUsuarioLogadoGateway;
+        this.permissaoRules = permissaoRules;
     }
 
     @Override
     public ItemCardapio executar(UUID id) {
+        Usuario usuarioLogado = obterUsuarioLogadoGateway.obterUsuarioLogado()
+                .orElseThrow(() -> new UsuarioLogadoNaoEncontradoException("Usuário logado não encontrado"));
+
+        BuscarItemCardapioPorIdRuleContextDto context = new BuscarItemCardapioPorIdRuleContextDto(usuarioLogado);
+
+        permissaoRules.forEach(rule -> rule.validar(context));
+
         return itemCardapioRepository.findById(id)
                 .orElseThrow(() -> new CardapioException("Item do cardápio não encontrado."));
     }

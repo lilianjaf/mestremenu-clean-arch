@@ -69,6 +69,11 @@ public class ItemCardapioRepositoryJpaImpl implements ItemCardapioRepository {
     }
 
     @Override
+    public boolean existeNomeNoCardapioExcetoId(String nome, UUID idCardapio, UUID idItem) {
+        return springDataRepository.existsByNomeAndCardapioIdAndIdNot(nome, idCardapio, idItem);
+    }
+
+    @Override
     public void deletar(UUID id) {
         springDataRepository.deleteById(id);
     }

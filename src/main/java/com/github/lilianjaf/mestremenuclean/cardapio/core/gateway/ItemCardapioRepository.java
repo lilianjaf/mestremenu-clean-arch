@@ -11,5 +11,6 @@ public interface ItemCardapioRepository {
     Optional<ItemCardapio> findById(UUID id);
     List<ItemCardapio> buscarPorIdCardapio(UUID idCardapio);
     boolean existeNomeNoCardapio(String nome, UUID idCardapio);
+    boolean existeNomeNoCardapioExcetoId(String nome, UUID idCardapio, UUID idItem);
     void deletar(UUID id);
 }

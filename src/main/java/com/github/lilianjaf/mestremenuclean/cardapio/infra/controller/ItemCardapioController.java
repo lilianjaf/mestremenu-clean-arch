@@ -16,12 +16,12 @@ import java.util.UUID;
 public class ItemCardapioController {
 
     private final CriarItemCardapioUseCase criarUseCase;
-    private final EditarItemCardapioUseCase editarUseCase;
+    private final AlterarItemCardapioUseCase editarUseCase;
     private final DeletarItemCardapioUseCase deletarUseCase;
     private final BuscarItemCardapioPorIdUseCase buscarUseCase;
 
     public ItemCardapioController(CriarItemCardapioUseCase criarUseCase,
-                                 EditarItemCardapioUseCase editarUseCase,
+                                 AlterarItemCardapioUseCase editarUseCase,
                                  DeletarItemCardapioUseCase deletarUseCase,
                                  BuscarItemCardapioPorIdUseCase buscarUseCase) {
         this.criarUseCase = criarUseCase;

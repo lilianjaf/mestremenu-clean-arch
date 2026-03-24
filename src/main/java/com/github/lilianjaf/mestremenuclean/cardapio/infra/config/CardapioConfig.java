@@ -1,11 +1,13 @@
 package com.github.lilianjaf.mestremenuclean.cardapio.infra.config;
 
+import com.github.lilianjaf.mestremenuclean.cardapio.core.dto.*;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.*;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.*;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.usecase.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -16,26 +18,39 @@ public class CardapioConfig {
                                                            CardapioRepository cardapioRepository,
                                                            ObterUsuarioLogadoGateway obterUsuarioLogadoGateway,
                                                            RestauranteGateway restauranteGateway) {
-        List<ValidadorPermissaoItemCardapioRule<CriacaoItemCardapioContext>> permissionRules = List.of(
-                new ApenasDonoPodeCriarItemCardapioRule()
-        );
-        List<ValidadorItemCardapioRule<CriacaoItemCardapioContext>> businessRules = List.of(
-                new NomeItemCardapioNaoPodeSerDuplicadoNoCardapioRule(itemRepository)
-        );
+        List<ValidadorPermissaoItemCardapioRule<ItemCardapioRuleContext>> permissionRules = new ArrayList<>();
+        permissionRules.add(new ApenasDonoPodeCriarItemParaProprioRestauranteRule());
+        permissionRules.add(new ItemDeveTerRestauranteVinculadoRule());
+
+        List<ValidadorItemCardapioRule<ItemCardapioRuleContext>> businessRules = new ArrayList<>();
+        businessRules.add(new CamposObrigatoriosItemRule());
+        businessRules.add(new NomeItemDeveSerUnicoNoRestauranteRule());
+        businessRules.add(new PrecoItemDeveSerMaiorQueZeroRule());
+
         return new CriarItemCardapioUseCaseImpl(itemRepository, cardapioRepository, obterUsuarioLogadoGateway, restauranteGateway, permissionRules, businessRules);
     }
 
     @Bean
-    public EditarItemCardapioUseCase editarItemCardapioUseCase(ItemCardapioRepository itemRepository,
-                                                             CardapioRepository cardapioRepository,
-                                                             RestauranteGateway restauranteGateway,
-                                                             ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
-        return new EditarItemCardapioUseCaseImpl(
-                itemRepository, 
-                cardapioRepository, 
-                restauranteGateway, 
-                obterUsuarioLogadoGateway, 
-                new NomeItemCardapioNaoPodeSerDuplicadoNoCardapioRule(itemRepository)
+    public AlterarItemCardapioUseCase alterarItemCardapioUseCase(ItemCardapioRepository itemRepository,
+                                                                 CardapioRepository cardapioRepository,
+                                                                 RestauranteGateway restauranteGateway,
+                                                                 ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
+        List<ValidadorPermissaoItemCardapioRule<ItemCardapioRuleContext>> permissaoRules = new ArrayList<>();
+        permissaoRules.add(new ApenasDonoDoRestaurantePodeAlterarItemRule());
+        permissaoRules.add(new ItemDeveTerRestauranteVinculadoRule());
+
+        List<ValidadorItemCardapioRule<ItemCardapioRuleContext>> rules = new ArrayList<>();
+        rules.add(new CamposObrigatoriosItemRule());
+        rules.add(new NomeItemDeveSerUnicoNoRestauranteRule());
+        rules.add(new PrecoItemDeveSerMaiorQueZeroRule());
+
+        return new AlterarItemCardapioUseCaseImpl(
+                itemRepository,
+                cardapioRepository,
+                restauranteGateway,
+                obterUsuarioLogadoGateway,
+                permissaoRules,
+                rules
         );
     }
 
@@ -44,36 +59,63 @@ public class CardapioConfig {
                                                                CardapioRepository cardapioRepository,
                                                                RestauranteGateway restauranteGateway,
                                                                ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
-        return new DeletarItemCardapioUseCaseImpl(itemRepository, cardapioRepository, restauranteGateway, obterUsuarioLogadoGateway);
+        List<ValidadorPermissaoCardapioRule<DeletarItemCardapioRuleContextDto>> permissaoRules = List.of(
+                new ApenasUsuarioDonoPodeDeletarItemRule()
+        );
+        List<ValidadorPermissaoCardapioRule<DeletarItemCardapioRuleContextDto>> rules = List.of(
+                new ApenasDonoDoRestaurantePodeDeletarItemRule()
+        );
+        return new DeletarItemCardapioUseCaseImpl(itemRepository, cardapioRepository, restauranteGateway, obterUsuarioLogadoGateway, permissaoRules, rules);
     }
 
     @Bean
-    public BuscarItemCardapioPorIdUseCase buscarItemCardapioPorIdUseCase(ItemCardapioRepository itemRepository) {
-        return new BuscarItemCardapioPorIdUseCaseImpl(itemRepository);
+    public BuscarItemCardapioPorIdUseCase buscarItemCardapioPorIdUseCase(ItemCardapioRepository itemRepository,
+                                                                         ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
+        return new BuscarItemCardapioPorIdUseCaseImpl(
+                itemRepository,
+                obterUsuarioLogadoGateway,
+                List.of(UsuarioDeveEstarAutenticadoRule.paraBuscarItem())
+        );
     }
 
     @Bean
     public CriarCardapioUseCase criarCardapioUseCase(CardapioRepository cardapioRepository,
                                                    RestauranteGateway restauranteGateway,
                                                    ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
-        List<ValidadorPermissaoCardapioRule<CriacaoCardapioContext>> permissionRules = List.of(
-                new ApenasDonoPodeCriarCardapioRule()
+        List<ValidadorPermissaoCardapioRule<CriarCardapioRuleContextDto>> permissionRules = List.of(
+                new ApenasDonoPodeCriarCardapioParaProprioRestauranteRule()
         );
-        List<ValidadorCardapioRule<CriacaoCardapioContext>> businessRules = List.of(
-                new NomeCardapioNaoPodeSerDuplicadoRule(cardapioRepository)
+        List<ValidadorCardapioRule<CriarCardapioRuleContextDto>> businessRules = List.of(
+                new CriarCardapioDeveTerNomeRule(),
+                new CriarNomeCardapioDeveSerUnicoNoRestauranteRule(),
+                new CriarCardapioDeveTerPeloMenosUmItemRule(),
+                new CriarItensCardapioNaoPodemSerDuplicadosRule()
         );
         return new CriarCardapioUseCaseImpl(cardapioRepository, restauranteGateway, obterUsuarioLogadoGateway, permissionRules, businessRules);
     }
 
     @Bean
-    public EditarCardapioUseCase editarCardapioUseCase(CardapioRepository cardapioRepository,
-                                                     RestauranteGateway restauranteGateway,
-                                                     ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
-        return new EditarCardapioUseCaseImpl(
-                cardapioRepository, 
-                restauranteGateway, 
-                obterUsuarioLogadoGateway, 
-                new NomeCardapioNaoPodeSerDuplicadoRule(cardapioRepository)
+    public AlterarCardapioUseCase alterarCardapioUseCase(CardapioRepository cardapioRepository,
+                                                        RestauranteGateway restauranteGateway,
+                                                        ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
+        List<ValidadorPermissaoCardapioRule<AlterarCardapioRuleContextDto>> permissaoRules = List.of(
+                new ApenasUsuarioDonoPodeAlterarCardapioRule()
+        );
+
+        List<ValidadorCardapioRule<AlterarCardapioRuleContextDto>> rules = List.of(
+                new ApenasCardapioDoProprioRestaurantePodeSerAlteradoRule(),
+                new CardapioDeveTerNomeRule(),
+                new NomeCardapioDeveSerUnicoNoRestauranteRule(),
+                new CardapioDeveTerPeloMenosUmItemRule(),
+                new ItensCardapioNaoPodemSerDuplicadosRule()
+        );
+
+        return new AlterarCardapioUseCaseImpl(
+                cardapioRepository,
+                restauranteGateway,
+                obterUsuarioLogadoGateway,
+                permissaoRules,
+                rules
         );
     }
 
@@ -81,11 +123,22 @@ public class CardapioConfig {
     public DeletarCardapioUseCase deletarCardapioUseCase(CardapioRepository cardapioRepository,
                                                        RestauranteGateway restauranteGateway,
                                                        ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
-        return new DeletarCardapioUseCaseImpl(cardapioRepository, restauranteGateway, obterUsuarioLogadoGateway);
+        List<ValidadorPermissaoCardapioRule<DeletarCardapioRuleContextDto>> permissionRules = List.of(
+                new ApenasUsuarioDonoPodeDeletarCardapioRule()
+        );
+        List<ValidadorCardapioRule<DeletarCardapioRuleContextDto>> businessRules = List.of(
+                new ApenasCardapioDoProprioRestaurantePodeSerDeletadoRule()
+        );
+        return new DeletarCardapioUseCaseImpl(cardapioRepository, restauranteGateway, obterUsuarioLogadoGateway, permissionRules, businessRules);
     }
 
     @Bean
-    public BuscarCardapioPorRestauranteUseCase buscarCardapioPorRestauranteUseCase(CardapioRepository cardapioRepository) {
-        return new BuscarCardapioPorRestauranteUseCaseImpl(cardapioRepository);
+    public BuscarCardapioPorRestauranteUseCase buscarCardapioPorRestauranteUseCase(CardapioRepository cardapioRepository,
+                                                                                 ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
+        return new BuscarCardapioPorRestauranteUseCaseImpl(
+                cardapioRepository,
+                obterUsuarioLogadoGateway,
+                List.of(UsuarioDeveEstarAutenticadoRule.paraBuscarCardapio())
+        );
     }
 }

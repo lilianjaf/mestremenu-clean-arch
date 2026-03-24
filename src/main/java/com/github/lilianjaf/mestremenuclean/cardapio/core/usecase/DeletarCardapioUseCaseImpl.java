@@ -3,14 +3,16 @@ package com.github.lilianjaf.mestremenuclean.cardapio.core.usecase;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.domain.Cardapio;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.domain.Restaurante;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.domain.Usuario;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.dto.DeletarCardapioRuleContextDto;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.exception.CardapioException;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.exception.UsuarioLogadoNaoEncontradoException;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.CardapioRepository;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ObterUsuarioLogadoGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.RestauranteGateway;
-import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.UsuarioGateway;
-import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ApenasDonoDoRestaurantePodeManipularCardapioRule;
-import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ExclusaoCardapioContext;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorCardapioRule;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorPermissaoCardapioRule;
 
+import java.util.List;
 import java.util.UUID;
 
 public class DeletarCardapioUseCaseImpl implements DeletarCardapioUseCase {
@@ -18,13 +20,19 @@ public class DeletarCardapioUseCaseImpl implements DeletarCardapioUseCase {
     private final CardapioRepository cardapioRepository;
     private final RestauranteGateway restauranteGateway;
     private final ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
+    private final List<ValidadorPermissaoCardapioRule<DeletarCardapioRuleContextDto>> permissaoRules;
+    private final List<ValidadorCardapioRule<DeletarCardapioRuleContextDto>> rules;
 
     public DeletarCardapioUseCaseImpl(CardapioRepository cardapioRepository,
                                      RestauranteGateway restauranteGateway,
-                                     ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
+                                     ObterUsuarioLogadoGateway obterUsuarioLogadoGateway,
+                                     List<ValidadorPermissaoCardapioRule<DeletarCardapioRuleContextDto>> permissaoRules,
+                                     List<ValidadorCardapioRule<DeletarCardapioRuleContextDto>> rules) {
         this.cardapioRepository = cardapioRepository;
         this.restauranteGateway = restauranteGateway;
         this.obterUsuarioLogadoGateway = obterUsuarioLogadoGateway;
+        this.permissaoRules = permissaoRules;
+        this.rules = rules;
     }
 
     @Override
@@ -36,11 +44,19 @@ public class DeletarCardapioUseCaseImpl implements DeletarCardapioUseCase {
                 .orElseThrow(() -> new CardapioException("Restaurante do cardápio não encontrado."));
 
         Usuario usuarioLogado = obterUsuarioLogadoGateway.obterUsuarioLogado()
-                .orElseThrow(() -> new CardapioException("Usuário logado não encontrado."));
+                .orElseThrow(() -> new UsuarioLogadoNaoEncontradoException("Usuário logado não encontrado"));
 
-        ExclusaoCardapioContext context = new ExclusaoCardapioContext(usuarioLogado, restaurante, cardapio);
+        boolean isDonoDoRestaurante = restaurante.getIdDono().equals(usuarioLogado.getId());
 
-        ApenasDonoDoRestaurantePodeManipularCardapioRule.validar(context);
+        DeletarCardapioRuleContextDto context = new DeletarCardapioRuleContextDto(
+                usuarioLogado,
+                restaurante,
+                cardapio,
+                isDonoDoRestaurante
+        );
+
+        permissaoRules.forEach(r -> r.validar(context));
+        rules.forEach(r -> r.validar(context));
 
         cardapioRepository.deletar(idCardapio);
     }

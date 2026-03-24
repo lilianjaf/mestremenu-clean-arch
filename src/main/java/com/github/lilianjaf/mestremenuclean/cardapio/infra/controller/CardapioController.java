@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 public class CardapioController {
 
     private final CriarCardapioUseCase criarUseCase;
-    private final EditarCardapioUseCase editarUseCase;
+    private final AlterarCardapioUseCase editarUseCase;
     private final DeletarCardapioUseCase deletarUseCase;
     private final BuscarCardapioPorRestauranteUseCase buscarPorRestauranteUseCase;
 
     public CardapioController(CriarCardapioUseCase criarUseCase,
-                              EditarCardapioUseCase editarUseCase,
+                              AlterarCardapioUseCase editarUseCase,
                               DeletarCardapioUseCase deletarUseCase,
                               BuscarCardapioPorRestauranteUseCase buscarPorRestauranteUseCase) {
         this.criarUseCase = criarUseCase;
@@ -57,7 +57,7 @@ public class CardapioController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CardapioResponseJson> editar(@PathVariable UUID id, @RequestBody AtualizarCardapioJson json) {
-        DadosAtualizacaoCardapio dados = new DadosAtualizacaoCardapio(id, json.nome());
+        DadosAtualizacaoCardapio dados = new DadosAtualizacaoCardapio(id, json.nome(), List.of());
         Cardapio cardapio = editarUseCase.executar(dados);
         return ResponseEntity.ok(toResponseJson(cardapio));
     }

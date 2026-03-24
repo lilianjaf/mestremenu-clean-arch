@@ -3,6 +3,6 @@ package com.github.lilianjaf.mestremenuclean.cardapio.core.usecase;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.domain.ItemCardapio;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.dto.DadosAtualizacaoItemCardapio;
 
-public interface EditarItemCardapioUseCase {
+public interface AlterarItemCardapioUseCase {
     ItemCardapio executar(DadosAtualizacaoItemCardapio dados);
 }

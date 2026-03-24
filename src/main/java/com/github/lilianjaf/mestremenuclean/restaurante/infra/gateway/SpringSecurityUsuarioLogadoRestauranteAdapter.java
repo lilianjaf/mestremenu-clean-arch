@@ -21,6 +21,11 @@ public class SpringSecurityUsuarioLogadoRestauranteAdapter implements ObterUsuar
     @Override
     public Optional<Usuario> obterUsuarioLogado() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null) {
+            return Optional.empty();
+        }
+
         String username = authentication.getName();
 
         return usuario.buscarPorUsuario(username);

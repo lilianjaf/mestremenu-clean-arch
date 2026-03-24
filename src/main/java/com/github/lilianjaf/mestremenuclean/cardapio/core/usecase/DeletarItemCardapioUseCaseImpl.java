@@ -3,15 +3,16 @@ package com.github.lilianjaf.mestremenuclean.cardapio.core.usecase;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.domain.ItemCardapio;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.domain.Restaurante;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.domain.Usuario;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.dto.DeletarItemCardapioRuleContextDto;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.exception.CardapioException;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.exception.UsuarioLogadoNaoEncontradoException;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.CardapioRepository;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ItemCardapioRepository;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ObterUsuarioLogadoGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.RestauranteGateway;
-import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.UsuarioGateway;
-import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ApenasDonoDoRestaurantePodeManipularItemCardapioRule;
-import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ExclusaoItemCardapioContext;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorPermissaoCardapioRule;
 
+import java.util.List;
 import java.util.UUID;
 
 public class DeletarItemCardapioUseCaseImpl implements DeletarItemCardapioUseCase {
@@ -20,15 +21,21 @@ public class DeletarItemCardapioUseCaseImpl implements DeletarItemCardapioUseCas
     private final CardapioRepository cardapioRepository;
     private final RestauranteGateway restauranteGateway;
     private final ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
+    private final List<ValidadorPermissaoCardapioRule<DeletarItemCardapioRuleContextDto>> permissaoRules;
+    private final List<ValidadorPermissaoCardapioRule<DeletarItemCardapioRuleContextDto>> rules;
 
     public DeletarItemCardapioUseCaseImpl(ItemCardapioRepository itemCardapioRepository,
                                          CardapioRepository cardapioRepository,
                                          RestauranteGateway restauranteGateway,
-                                         ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
+                                         ObterUsuarioLogadoGateway obterUsuarioLogadoGateway,
+                                         List<ValidadorPermissaoCardapioRule<DeletarItemCardapioRuleContextDto>> permissaoRules,
+                                         List<ValidadorPermissaoCardapioRule<DeletarItemCardapioRuleContextDto>> rules) {
         this.itemCardapioRepository = itemCardapioRepository;
         this.cardapioRepository = cardapioRepository;
         this.restauranteGateway = restauranteGateway;
         this.obterUsuarioLogadoGateway = obterUsuarioLogadoGateway;
+        this.permissaoRules = permissaoRules;
+        this.rules = rules;
     }
 
     @Override
@@ -43,11 +50,19 @@ public class DeletarItemCardapioUseCaseImpl implements DeletarItemCardapioUseCas
                 .orElseThrow(() -> new CardapioException("Restaurante não encontrado."));
 
         Usuario usuarioLogado = obterUsuarioLogadoGateway.obterUsuarioLogado()
-                .orElseThrow(() -> new CardapioException("Usuário logado não encontrado."));
+                .orElseThrow(() -> new UsuarioLogadoNaoEncontradoException("Usuário logado não encontrado"));
 
-        ExclusaoItemCardapioContext context = new ExclusaoItemCardapioContext(usuarioLogado, restaurante, item);
+        boolean isItemDoProprioRestaurante = restaurante.getIdDono().equals(usuarioLogado.getId());
 
-        ApenasDonoDoRestaurantePodeManipularItemCardapioRule.validar(context);
+        DeletarItemCardapioRuleContextDto context = new DeletarItemCardapioRuleContextDto(
+                usuarioLogado,
+                restaurante,
+                item,
+                isItemDoProprioRestaurante
+        );
+
+        permissaoRules.forEach(r -> r.validar(context));
+        rules.forEach(r -> r.validar(context));
 
         itemCardapioRepository.deletar(idItem);
     }

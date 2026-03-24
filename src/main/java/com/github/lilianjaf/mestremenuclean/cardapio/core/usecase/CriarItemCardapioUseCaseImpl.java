@@ -3,14 +3,17 @@ package com.github.lilianjaf.mestremenuclean.cardapio.core.usecase;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.domain.ItemCardapio;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.domain.Restaurante;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.domain.Usuario;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.dto.CriarItemCardapioRuleContextDto;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.dto.ItemCardapioRuleContext;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.dto.DadosCriacaoItemCardapio;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.exception.CardapioException;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.exception.UsuarioLogadoNaoEncontradoException;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.CardapioRepository;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ItemCardapioRepository;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ObterUsuarioLogadoGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.RestauranteGateway;
-import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.UsuarioGateway;
-import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.*;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorItemCardapioRule;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorPermissaoItemCardapioRule;
 
 import java.util.List;
 
@@ -20,41 +23,40 @@ public class CriarItemCardapioUseCaseImpl implements CriarItemCardapioUseCase {
     private final CardapioRepository cardapioRepository;
     private final ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
     private final RestauranteGateway restauranteGateway;
-    private final List<ValidadorPermissaoItemCardapioRule<CriacaoItemCardapioContext>> permissionRules;
-    private final List<ValidadorItemCardapioRule<CriacaoItemCardapioContext>> businessRules;
+    private final List<ValidadorPermissaoItemCardapioRule<ItemCardapioRuleContext>> permissionRules;
+    private final List<ValidadorItemCardapioRule<ItemCardapioRuleContext>> rules;
 
     public CriarItemCardapioUseCaseImpl(ItemCardapioRepository itemCardapioRepository,
                                        CardapioRepository cardapioRepository,
                                        ObterUsuarioLogadoGateway obterUsuarioLogadoGateway,
                                        RestauranteGateway restauranteGateway,
-                                       List<ValidadorPermissaoItemCardapioRule<CriacaoItemCardapioContext>> permissionRules,
-                                       List<ValidadorItemCardapioRule<CriacaoItemCardapioContext>> businessRules) {
+                                       List<ValidadorPermissaoItemCardapioRule<ItemCardapioRuleContext>> permissionRules,
+                                       List<ValidadorItemCardapioRule<ItemCardapioRuleContext>> rules) {
         this.itemCardapioRepository = itemCardapioRepository;
         this.cardapioRepository = cardapioRepository;
         this.obterUsuarioLogadoGateway = obterUsuarioLogadoGateway;
         this.restauranteGateway = restauranteGateway;
         this.permissionRules = permissionRules;
-        this.businessRules = businessRules;
+        this.rules = rules;
     }
 
     @Override
     public ItemCardapio executar(DadosCriacaoItemCardapio dados) {
         Usuario usuarioLogado = obterUsuarioLogadoGateway.obterUsuarioLogado()
-                .orElseThrow(() -> new CardapioException("Usuário logado não encontrado."));
+                .orElseThrow(() -> new UsuarioLogadoNaoEncontradoException("Usuário logado não encontrado"));
 
         var cardapio = cardapioRepository.findById(dados.idCardapio())
                 .orElseThrow(() -> new CardapioException("Cardápio não encontrado."));
 
         Restaurante restaurante = restauranteGateway.buscarPorId(cardapio.getIdRestaurante())
-                .orElseThrow(() -> new CardapioException("Restaurante do cardápio não encontrado."));
+                .orElse(null);
 
-        CriacaoItemCardapioContext context = new CriacaoItemCardapioContext(usuarioLogado, restaurante, dados);
+        boolean nomeUnico = !itemCardapioRepository.existeNomeNoCardapio(dados.nome(), dados.idCardapio());
 
-        // Validation chain
+        CriarItemCardapioRuleContextDto context = new CriarItemCardapioRuleContextDto(usuarioLogado, restaurante, dados, nomeUnico);
+
         permissionRules.forEach(r -> r.validar(context));
-        ApenasDonoDoRestaurantePodeManipularItemCardapioRule.validar(context);
-        PrecoItemCardapioDeveSerPositivoRule.validar(dados.preco());
-        businessRules.forEach(r -> r.validar(context));
+        rules.forEach(r -> r.validar(context));
 
         ItemCardapio item = new ItemCardapio(
                 dados.nome(),

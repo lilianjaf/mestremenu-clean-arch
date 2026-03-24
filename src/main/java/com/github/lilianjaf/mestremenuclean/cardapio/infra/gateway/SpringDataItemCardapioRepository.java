@@ -9,4 +9,5 @@ import java.util.UUID;
 public interface SpringDataItemCardapioRepository extends JpaRepository<ItemCardapioEntity, UUID> {
     List<ItemCardapioEntity> findAllByCardapioId(UUID cardapioId);
     boolean existsByNomeAndCardapioId(String nome, UUID cardapioId);
+    boolean existsByNomeAndCardapioIdAndIdNot(String nome, UUID cardapioId, UUID id);
 }
