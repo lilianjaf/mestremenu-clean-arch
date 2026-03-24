@@ -1,7 +1,9 @@
-package com.github.lilianjaf.mestremenuclean.usuario.infra.gateway.mapper;
+package com.github.lilianjaf.mestremenuclean.shared.infra.gateway.mapper;
 
+import com.github.lilianjaf.mestremenuclean.shared.infra.gateway.entity.EnderecoEmbeddable;
+import com.github.lilianjaf.mestremenuclean.shared.infra.gateway.entity.TipoUsuarioEntity;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.*;
-import com.github.lilianjaf.mestremenuclean.usuario.infra.gateway.entity.UsuarioEntity;
+import com.github.lilianjaf.mestremenuclean.shared.infra.gateway.entity.UsuarioEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -106,10 +108,10 @@ class UsuarioEntityMapperTest {
     }
 
     private UsuarioEntity criarUsuarioEntity(TipoNativo tipoNativo) {
-        com.github.lilianjaf.mestremenuclean.usuario.infra.gateway.entity.EnderecoEmbeddable endereco =
-                new com.github.lilianjaf.mestremenuclean.usuario.infra.gateway.entity.EnderecoEmbeddable("Rua A", "123", "Ap 1", "Bairro X", "Cidade Y", "12345-678", "UF");
-        com.github.lilianjaf.mestremenuclean.usuario.infra.gateway.entity.TipoUsuarioEntity tipo =
-                new com.github.lilianjaf.mestremenuclean.usuario.infra.gateway.entity.TipoUsuarioEntity(UUID.randomUUID(), tipoNativo.name(), tipoNativo);
+        EnderecoEmbeddable endereco =
+                new EnderecoEmbeddable("Rua A", "123", "Ap 1", "Bairro X", "Cidade Y", "12345-678", "UF");
+        TipoUsuarioEntity tipo =
+                new TipoUsuarioEntity(UUID.randomUUID(), tipoNativo.name(), tipoNativo);
 
         return new UsuarioEntity(UUID.randomUUID(), "Teste", "teste@email.com", "teste", "senha", tipo, endereco, LocalDateTime.now(), true);
     }

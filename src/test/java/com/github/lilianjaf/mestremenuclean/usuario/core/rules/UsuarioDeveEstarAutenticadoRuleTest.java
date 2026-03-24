@@ -50,6 +50,7 @@ class UsuarioDeveEstarAutenticadoRuleTest {
     @Test
     @DisplayName("Deve validar com usuario buscado")
     void deveValidarComUsuarioBuscado() {
-        assertDoesNotThrow(() -> rule.validar(usuarioLogado, null));
+        ConsultaUsuarioContext context = new ConsultaUsuarioContext(usuarioLogado, null);
+        assertDoesNotThrow(() -> rule.validar(context));
     }
 }

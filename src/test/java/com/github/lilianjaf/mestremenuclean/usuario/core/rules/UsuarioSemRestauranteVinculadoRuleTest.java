@@ -39,6 +39,7 @@ class UsuarioSemRestauranteVinculadoRuleTest {
     @Test
     @DisplayName("Deve permitir quando usuario alvo eh dono mas nao tem restaurantes")
     void devePermitirQuandoDonoNaoTemRestaurantes() {
+        when(dono.isDono()).thenReturn(true);
         when(dono.getRestaurantes()).thenReturn(Collections.emptyList());
         InativacaoUsuarioContext context = new InativacaoUsuarioContext(null, dono);
         assertDoesNotThrow(() -> rule.validar(context));
@@ -47,6 +48,7 @@ class UsuarioSemRestauranteVinculadoRuleTest {
     @Test
     @DisplayName("Deve lancar excecao quando usuario alvo eh dono e tem restaurantes")
     void deveLancarExcecaoQuandoDonoTemRestaurantes() {
+        when(dono.isDono()).thenReturn(true);
         when(dono.getRestaurantes()).thenReturn(List.of(mock(Restaurante.class)));
         InativacaoUsuarioContext context = new InativacaoUsuarioContext(null, dono);
         assertThrows(UsuarioPossuiRestauranteAtivoException.class, () -> rule.validar(context));

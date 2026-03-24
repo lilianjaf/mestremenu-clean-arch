@@ -1,8 +1,8 @@
-package com.github.lilianjaf.mestremenuclean.usuario.infra.gateway.mapper;
+package com.github.lilianjaf.mestremenuclean.shared.infra.gateway.mapper;
 
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.TipoNativo;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.TipoUsuario;
-import com.github.lilianjaf.mestremenuclean.usuario.infra.gateway.entity.TipoUsuarioEntity;
+import com.github.lilianjaf.mestremenuclean.shared.infra.gateway.entity.TipoUsuarioEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

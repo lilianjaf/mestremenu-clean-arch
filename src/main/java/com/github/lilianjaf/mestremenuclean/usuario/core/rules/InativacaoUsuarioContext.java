@@ -7,6 +7,10 @@ public record InativacaoUsuarioContext(
         UsuarioBase usuarioLogado,
         UsuarioBase usuarioAlvo
 ) {
+    public boolean isUsuarioLogadoAutenticado() {
+        return usuarioLogado != null;
+    }
+
     public boolean isUsuarioLogadoDono() {
         return usuarioLogado instanceof Dono;
     }

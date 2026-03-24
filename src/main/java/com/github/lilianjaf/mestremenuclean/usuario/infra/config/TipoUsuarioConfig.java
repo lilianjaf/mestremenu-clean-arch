@@ -23,11 +23,9 @@ public class TipoUsuarioConfig {
                 tipoUsuarioRepository,
                 obterUsuarioLogadoGateway,
                 transactionGateway,
+                List.of(new UsuarioDeveEstarAutenticadoRule()),
                 List.of(
-                        new UsuarioDeveEstarAutenticadoRule(),
-                        new ApenasDonoPodeCriarTipoUsuarioRule()
-                ),
-                List.of(
+                        new ApenasDonoPodeCriarTipoUsuarioRule(),
                         new TipoUsuarioNomeDeveSerUnicoRule()
                 )
         );
@@ -37,8 +35,6 @@ public class TipoUsuarioConfig {
     public AtualizarTipoUsuarioUsecase atualizarTipoUsuarioUsecase(
             TipoUsuarioRepository tipoUsuarioRepository,
             TransactionGateway transactionGateway,
-            List<ValidadorAtualizacaoTipoUsuarioRule> rules,
-            List<ValidadorPermissaoRule> permissaoRules,
             ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
         return new AtualizarTipoUsuarioUsecaseImpl(
                 tipoUsuarioRepository,

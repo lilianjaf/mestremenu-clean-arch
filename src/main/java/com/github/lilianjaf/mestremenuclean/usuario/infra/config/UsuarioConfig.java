@@ -45,6 +45,7 @@ public class UsuarioConfig {
             ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
 
         List<ValidadorCriacaoUsuarioRule> permissaoRules = List.of(
+                new UsuarioDeveEstarAutenticadoRule(),
                 new ApenasDonoPodeCriarNovosUsuariosRule()
         );
 
@@ -71,12 +72,12 @@ public class UsuarioConfig {
             ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
 
         List<ValidadorConsultaUsuarioRule> permissaoRules = List.of(
-                new UsuarioDeveEstarAutenticadoRule(),
-                new ApenasDonoOuProprioUsuarioPodeConsultarRule()
+                new UsuarioDeveEstarAutenticadoRule()
         );
 
         List<ValidadorConsultaUsuarioRule> rules = List.of(
-                new ConsultaUsuarioDeveExistirRule()
+                new ConsultaUsuarioDeveExistirRule(),
+                new ApenasDonoOuProprioUsuarioPodeConsultarRule()
         );
 
         return new BuscarUsuarioUsecaseImpl(
@@ -94,12 +95,12 @@ public class UsuarioConfig {
             ObterUsuarioLogadoGateway obterUsuarioLogadoGateway) {
 
         List<ValidadorPermissaoAtualizacaoUsuarioRule> permissaoRules = List.of(
-                new UsuarioDeveEstarAutenticadoRule(),
-                new ApenasDonoOuProprioUsuarioPodeEditarRule()
+                new UsuarioDeveEstarAutenticadoRule()
         );
 
         List<ValidadorAtualizacaoUsuarioRule> rules = List.of(
                 new UsuarioDeveExistirRule(),
+                new ApenasDonoOuProprioUsuarioPodeEditarRule(),
                 new EmailUsuarioDeveSerUnicoRule()
         );
 

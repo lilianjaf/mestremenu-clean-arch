@@ -31,8 +31,8 @@ class ApenasDonoOuProprioUsuarioPodeEditarRuleTest {
     @DisplayName("Deve permitir edicao quando o usuario logado eh dono")
     void devePermitirEdicaoQuandoUsuarioLogadoEhDono() {
         Dono donoLogado = mock(Dono.class);
-        when(donoLogado.getId()).thenReturn(UUID.randomUUID());
-        assertDoesNotThrow(() -> rule.validar(donoLogado, usuarioSendoEditado));
+        AtualizacaoUsuarioContext context = new AtualizacaoUsuarioContext(usuarioSendoEditado, null, donoLogado);
+        assertDoesNotThrow(() -> rule.validar(context));
     }
 
     @Test
@@ -42,7 +42,8 @@ class ApenasDonoOuProprioUsuarioPodeEditarRuleTest {
         when(usuarioLogado.getId()).thenReturn(idComum);
         when(usuarioSendoEditado.getId()).thenReturn(idComum);
 
-        assertDoesNotThrow(() -> rule.validar(usuarioLogado, usuarioSendoEditado));
+        AtualizacaoUsuarioContext context = new AtualizacaoUsuarioContext(usuarioSendoEditado, null, usuarioLogado);
+        assertDoesNotThrow(() -> rule.validar(context));
     }
 
     @Test
@@ -51,12 +52,14 @@ class ApenasDonoOuProprioUsuarioPodeEditarRuleTest {
         when(usuarioLogado.getId()).thenReturn(UUID.randomUUID());
         when(usuarioSendoEditado.getId()).thenReturn(UUID.randomUUID());
 
-        assertThrows(EdicaoUsuarioNaoAutorizadaException.class, () -> rule.validar(usuarioLogado, usuarioSendoEditado));
+        AtualizacaoUsuarioContext context = new AtualizacaoUsuarioContext(usuarioSendoEditado, null, usuarioLogado);
+        assertThrows(EdicaoUsuarioNaoAutorizadaException.class, () -> rule.validar(context));
     }
 
     @Test
     @DisplayName("Deve permitir se o usuario sendo editado for nulo")
     void devePermitirSeUsuarioSendoEditadoForNulo() {
-        assertDoesNotThrow(() -> rule.validar(usuarioLogado, null));
+        AtualizacaoUsuarioContext context = new AtualizacaoUsuarioContext(null, null, usuarioLogado);
+        assertDoesNotThrow(() -> rule.validar(context));
     }
 }

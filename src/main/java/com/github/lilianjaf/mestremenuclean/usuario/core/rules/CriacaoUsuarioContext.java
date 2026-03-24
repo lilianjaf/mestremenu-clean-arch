@@ -17,6 +17,10 @@ public record CriacaoUsuarioContext(
         BooleanSupplier loginJaExiste,
         UsuarioBase usuarioLogado
 ) {
+    public boolean isUsuarioLogadoAutenticado() {
+        return usuarioLogado != null;
+    }
+
     public boolean isUsuarioLogadoDono() {
         return usuarioLogado instanceof Dono;
     }

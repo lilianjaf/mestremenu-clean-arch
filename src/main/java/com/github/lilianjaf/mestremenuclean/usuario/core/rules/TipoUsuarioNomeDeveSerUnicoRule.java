@@ -5,7 +5,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.exception.TipoUsuarioJa
 public class TipoUsuarioNomeDeveSerUnicoRule implements ValidadorCriacaoTipoUsuarioRule {
     @Override
     public void validar(CriacaoTipoUsuarioContext context) {
-        if (context.existeComMesmoNome()) {
+        if (context.isNomeJaCadastrado()) {
             throw new TipoUsuarioJaCadastradoException("Já existe um tipo de usuário cadastrado com o nome: " + context.nome());
         }
     }

@@ -9,6 +9,10 @@ public record AtualizacaoTipoUsuarioContext(
         TipoUsuario tipoComMesmoNome,
         UsuarioBase usuarioLogado
 ) {
+    public boolean isUsuarioLogadoAutenticado() {
+        return usuarioLogado != null;
+    }
+
     public boolean isUsuarioLogadoDono() {
         return usuarioLogado instanceof Dono;
     }

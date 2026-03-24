@@ -8,6 +8,10 @@ public record AtualizacaoUsuarioContext(
         UsuarioBase usuarioComMesmoEmail,
         UsuarioBase usuarioLogado
 ) {
+    public boolean isUsuarioLogadoAutenticado() {
+        return usuarioLogado != null;
+    }
+
     public boolean isConflitoDeEmail() {
         return usuarioComMesmoEmail != null &&
                 usuarioSendoEditado != null &&
@@ -26,5 +30,9 @@ public record AtualizacaoUsuarioContext(
 
     public boolean isDonoOuProprioUsuario() {
         return isUsuarioLogadoDono() || isProprioUsuario();
+    }
+
+    public boolean isUsuarioSendoEditadoExistente() {
+        return usuarioSendoEditado != null;
     }
 }

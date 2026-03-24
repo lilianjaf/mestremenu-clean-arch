@@ -1,13 +1,13 @@
-package com.github.lilianjaf.mestremenuclean.usuario.infra.gateway;
+package com.github.lilianjaf.mestremenuclean.shared.infra.gateway;
 
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.Cliente;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.Endereco;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.TipoNativo;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.TipoUsuario;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
-import com.github.lilianjaf.mestremenuclean.usuario.infra.gateway.entity.EnderecoEmbeddable;
-import com.github.lilianjaf.mestremenuclean.usuario.infra.gateway.entity.TipoUsuarioEntity;
-import com.github.lilianjaf.mestremenuclean.usuario.infra.gateway.entity.UsuarioEntity;
+import com.github.lilianjaf.mestremenuclean.shared.infra.gateway.entity.EnderecoEmbeddable;
+import com.github.lilianjaf.mestremenuclean.shared.infra.gateway.entity.TipoUsuarioEntity;
+import com.github.lilianjaf.mestremenuclean.shared.infra.gateway.entity.UsuarioEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

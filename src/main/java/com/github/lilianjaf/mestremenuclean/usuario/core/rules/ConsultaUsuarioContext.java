@@ -4,6 +4,10 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.domain.Dono;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
 
 public record ConsultaUsuarioContext(UsuarioBase usuarioLogado, UsuarioBase usuarioBuscado) {
+    public boolean isUsuarioLogadoAutenticado() {
+        return usuarioLogado != null;
+    }
+
     public boolean isUsuarioLogadoDono() {
         return usuarioLogado instanceof Dono;
     }
@@ -16,5 +20,9 @@ public record ConsultaUsuarioContext(UsuarioBase usuarioLogado, UsuarioBase usua
 
     public boolean isDonoOuProprioUsuario() {
         return isUsuarioLogadoDono() || isProprioUsuario();
+    }
+
+    public boolean isUsuarioBuscadoExistente() {
+        return usuarioBuscado != null;
     }
 }

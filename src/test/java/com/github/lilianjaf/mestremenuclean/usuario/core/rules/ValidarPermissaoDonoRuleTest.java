@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ValidarPermissaoDonoRuleTest {
@@ -25,6 +26,7 @@ class ValidarPermissaoDonoRuleTest {
     @DisplayName("Deve validar com sucesso quando usuario logado eh dono")
     void deveValidarComSucessoQuandoEhDono() {
         Dono donoLogado = mock(Dono.class);
+        when(donoLogado.isDono()).thenReturn(true);
         assertDoesNotThrow(() -> rule.validar(donoLogado));
     }
 

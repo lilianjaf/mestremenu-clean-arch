@@ -31,8 +31,8 @@ class ApenasDonoOuProprioUsuarioPodeConsultarRuleTest {
     @DisplayName("Deve permitir consulta quando usuario logado eh dono")
     void devePermitirConsultaQuandoUsuarioLogadoEhDono() {
         Dono donoLogado = mock(Dono.class);
-        when(donoLogado.getId()).thenReturn(UUID.randomUUID());
-        assertDoesNotThrow(() -> rule.validar(donoLogado, usuarioBuscado));
+        ConsultaUsuarioContext context = new ConsultaUsuarioContext(donoLogado, usuarioBuscado);
+        assertDoesNotThrow(() -> rule.validar(context));
     }
 
     @Test
@@ -42,7 +42,8 @@ class ApenasDonoOuProprioUsuarioPodeConsultarRuleTest {
         when(usuarioLogado.getId()).thenReturn(id);
         when(usuarioBuscado.getId()).thenReturn(id);
 
-        assertDoesNotThrow(() -> rule.validar(usuarioLogado, usuarioBuscado));
+        ConsultaUsuarioContext context = new ConsultaUsuarioContext(usuarioLogado, usuarioBuscado);
+        assertDoesNotThrow(() -> rule.validar(context));
     }
 
     @Test
@@ -51,12 +52,14 @@ class ApenasDonoOuProprioUsuarioPodeConsultarRuleTest {
         when(usuarioLogado.getId()).thenReturn(UUID.randomUUID());
         when(usuarioBuscado.getId()).thenReturn(UUID.randomUUID());
 
-        assertThrows(AcessoNegadoConsultaUsuarioException.class, () -> rule.validar(usuarioLogado, usuarioBuscado));
+        ConsultaUsuarioContext context = new ConsultaUsuarioContext(usuarioLogado, usuarioBuscado);
+        assertThrows(AcessoNegadoConsultaUsuarioException.class, () -> rule.validar(context));
     }
 
     @Test
     @DisplayName("Deve retornar sem erro se o usuario logado for nulo")
     void deveRetornarSeUsuarioLogadoForNulo() {
-        assertDoesNotThrow(() -> rule.validar(null, usuarioBuscado));
+        ConsultaUsuarioContext context = new ConsultaUsuarioContext(null, usuarioBuscado);
+        assertDoesNotThrow(() -> rule.validar(context));
     }
 }

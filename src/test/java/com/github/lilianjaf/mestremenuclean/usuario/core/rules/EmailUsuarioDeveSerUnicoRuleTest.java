@@ -28,7 +28,7 @@ class EmailUsuarioDeveSerUnicoRuleTest {
     @Test
     @DisplayName("Deve permitir quando nao existe usuario com mesmo email")
     void devePermitirQuandoNaoExisteUsuarioComMesmoEmail() {
-        AtualizacaoUsuarioContext context = new AtualizacaoUsuarioContext(usuarioSendoEditado, null);
+        AtualizacaoUsuarioContext context = new AtualizacaoUsuarioContext(usuarioSendoEditado, null, null);
         assertDoesNotThrow(() -> rule.validar(context));
     }
 
@@ -38,7 +38,7 @@ class EmailUsuarioDeveSerUnicoRuleTest {
         UUID id = UUID.randomUUID();
         when(usuarioSendoEditado.getId()).thenReturn(id);
         when(usuarioComMesmoEmail.getId()).thenReturn(id);
-        AtualizacaoUsuarioContext context = new AtualizacaoUsuarioContext(usuarioSendoEditado, usuarioComMesmoEmail);
+        AtualizacaoUsuarioContext context = new AtualizacaoUsuarioContext(usuarioSendoEditado, usuarioComMesmoEmail, null);
 
         assertDoesNotThrow(() -> rule.validar(context));
     }
@@ -48,7 +48,7 @@ class EmailUsuarioDeveSerUnicoRuleTest {
     void deveLancarExcecaoQuandoEmailEmUsoPorOutro() {
         when(usuarioSendoEditado.getId()).thenReturn(UUID.randomUUID());
         when(usuarioComMesmoEmail.getId()).thenReturn(UUID.randomUUID());
-        AtualizacaoUsuarioContext context = new AtualizacaoUsuarioContext(usuarioSendoEditado, usuarioComMesmoEmail);
+        AtualizacaoUsuarioContext context = new AtualizacaoUsuarioContext(usuarioSendoEditado, usuarioComMesmoEmail, null);
 
         assertThrows(EmailUsuarioJaEmUsoException.class, () -> rule.validar(context));
     }

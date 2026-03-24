@@ -5,7 +5,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.exception.UsuarioNaoEnc
 public class UsuarioDeveExistirRule implements ValidadorAtualizacaoUsuarioRule {
     @Override
     public void validar(AtualizacaoUsuarioContext context) {
-        if (context.usuarioSendoEditado() == null) {
+        if (!context.isUsuarioSendoEditadoExistente()) {
             throw new UsuarioNaoEncontradoException("Usuário não encontrado.");
         }
     }

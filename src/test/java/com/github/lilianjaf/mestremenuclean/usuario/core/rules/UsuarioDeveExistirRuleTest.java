@@ -22,14 +22,14 @@ class UsuarioDeveExistirRuleTest {
     @Test
     @DisplayName("Deve permitir quando usuario sendo editado existe")
     void devePermitirQuandoUsuarioExiste() {
-        AtualizacaoUsuarioContext context = new AtualizacaoUsuarioContext(usuarioSendoEditado, null);
+        AtualizacaoUsuarioContext context = new AtualizacaoUsuarioContext(usuarioSendoEditado, null, null);
         assertDoesNotThrow(() -> rule.validar(context));
     }
 
     @Test
     @DisplayName("Deve lancar excecao quando usuario sendo editado eh nulo")
     void deveLancarExcecaoQuandoUsuarioNaoExiste() {
-        AtualizacaoUsuarioContext context = new AtualizacaoUsuarioContext(null, null);
+        AtualizacaoUsuarioContext context = new AtualizacaoUsuarioContext(null, null, null);
         assertThrows(UsuarioNaoEncontradoException.class, () -> rule.validar(context));
     }
 }

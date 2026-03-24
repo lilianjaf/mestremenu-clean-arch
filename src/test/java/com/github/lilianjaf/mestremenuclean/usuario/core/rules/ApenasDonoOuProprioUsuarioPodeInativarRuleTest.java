@@ -31,7 +31,6 @@ class ApenasDonoOuProprioUsuarioPodeInativarRuleTest {
     @DisplayName("Deve permitir inativacao quando usuario logado eh dono")
     void devePermitirInativacaoQuandoUsuarioLogadoEhDono() {
         Dono donoLogado = mock(Dono.class);
-        when(donoLogado.getId()).thenReturn(UUID.randomUUID());
         InativacaoUsuarioContext context = new InativacaoUsuarioContext(donoLogado, usuarioAlvo);
         assertDoesNotThrow(() -> rule.validar(context));
     }

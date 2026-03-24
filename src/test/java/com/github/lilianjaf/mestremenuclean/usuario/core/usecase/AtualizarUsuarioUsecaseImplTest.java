@@ -76,7 +76,7 @@ class AtualizarUsuarioUsecaseImplTest {
 
         usecase.atualizarComEndereco(id, novoNome, novoEmail, "Rua A", "123", "Ap 1", "Bairro X", "Cidade Y", "12345678", "UF");
 
-        verify(permissaoRule).validar(usuarioLogado, usuarioSendoEditado);
+        verify(permissaoRule).validar(any(AtualizacaoUsuarioContext.class));
         verify(rule).validar(any(AtualizacaoUsuarioContext.class));
         verify(usuarioSendoEditado).atualizarDadosBasicos(novoNome, novoEmail);
         verify(usuarioSendoEditado).atualizarEndereco(any(Endereco.class));
@@ -98,7 +98,7 @@ class AtualizarUsuarioUsecaseImplTest {
 
         usecase.atualizarSemEndereco(id, novoNome, novoEmail);
 
-        verify(permissaoRule).validar(usuarioLogado, usuarioSendoEditado);
+        verify(permissaoRule).validar(any(AtualizacaoUsuarioContext.class));
         verify(rule).validar(any(AtualizacaoUsuarioContext.class));
         verify(usuarioSendoEditado).atualizarDadosBasicos(novoNome, novoEmail);
         verify(repository).salvar(usuarioSendoEditado);

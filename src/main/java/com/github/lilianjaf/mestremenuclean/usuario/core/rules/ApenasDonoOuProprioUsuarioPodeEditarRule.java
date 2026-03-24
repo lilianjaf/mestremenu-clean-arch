@@ -4,7 +4,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.domain.Dono;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
 import com.github.lilianjaf.mestremenuclean.usuario.core.exception.EdicaoUsuarioNaoAutorizadaException;
 
-public class ApenasDonoOuProprioUsuarioPodeEditarRule implements ValidadorPermissaoAtualizacaoUsuarioRule {
+public class ApenasDonoOuProprioUsuarioPodeEditarRule implements ValidadorPermissaoAtualizacaoUsuarioRule, ValidadorAtualizacaoUsuarioRule {
     @Override
     public void validar(AtualizacaoUsuarioContext context) {
         if (context.usuarioSendoEditado() == null) {

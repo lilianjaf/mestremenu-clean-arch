@@ -28,7 +28,8 @@ class NomeTipoUsuarioDeveSerUnicoRuleTest {
     @Test
     @DisplayName("Deve permitir quando nao existe outro tipo com mesmo nome")
     void devePermitirQuandoNaoExisteOutroComMesmoNome() {
-        assertDoesNotThrow(() -> rule.validar(tipoAtual, null));
+        AtualizacaoTipoUsuarioContext context = new AtualizacaoTipoUsuarioContext(tipoAtual, null, null);
+        assertDoesNotThrow(() -> rule.validar(context));
     }
 
     @Test
@@ -38,7 +39,8 @@ class NomeTipoUsuarioDeveSerUnicoRuleTest {
         when(tipoAtual.getId()).thenReturn(id);
         when(tipoComMesmoNome.getId()).thenReturn(id);
 
-        assertDoesNotThrow(() -> rule.validar(tipoAtual, tipoComMesmoNome));
+        AtualizacaoTipoUsuarioContext context = new AtualizacaoTipoUsuarioContext(tipoAtual, tipoComMesmoNome, null);
+        assertDoesNotThrow(() -> rule.validar(context));
     }
 
     @Test
@@ -48,6 +50,7 @@ class NomeTipoUsuarioDeveSerUnicoRuleTest {
         when(tipoComMesmoNome.getId()).thenReturn(UUID.randomUUID());
         when(tipoComMesmoNome.getNome()).thenReturn("VIP");
 
-        assertThrows(NomeTipoUsuarioJaEmUsoException.class, () -> rule.validar(tipoAtual, tipoComMesmoNome));
+        AtualizacaoTipoUsuarioContext context = new AtualizacaoTipoUsuarioContext(tipoAtual, tipoComMesmoNome, null);
+        assertThrows(NomeTipoUsuarioJaEmUsoException.class, () -> rule.validar(context));
     }
 }

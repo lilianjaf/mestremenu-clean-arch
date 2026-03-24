@@ -30,8 +30,7 @@ public class BuscarUsuarioUsecaseImpl implements BuscarUsuarioUsecase {
     @Override
     public UsuarioOutput buscarPorId(UUID id) {
         UsuarioBase usuarioLogado = obterUsuarioLogadoGateway.obterUsuarioLogado().orElse(null);
-        UsuarioBase usuarioBuscado = repository.findById(id)
-                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado."));
+        UsuarioBase usuarioBuscado = repository.findById(id).orElse(null);
 
         ConsultaUsuarioContext context = new ConsultaUsuarioContext(usuarioLogado, usuarioBuscado);
 

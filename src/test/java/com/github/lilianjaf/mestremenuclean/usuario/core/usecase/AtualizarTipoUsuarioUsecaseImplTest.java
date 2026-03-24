@@ -7,6 +7,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.exception.TipoUsuarioNa
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.ObterUsuarioLogadoGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TipoUsuarioRepository;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TransactionGateway;
+import com.github.lilianjaf.mestremenuclean.usuario.core.rules.AtualizacaoTipoUsuarioContext;
 import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidadorAtualizacaoTipoUsuarioRule;
 import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidadorPermissaoRule;
 import org.junit.jupiter.api.BeforeEach;
@@ -76,7 +77,7 @@ class AtualizarTipoUsuarioUsecaseImplTest {
         usecase.atualizar(id, novoNome);
 
         verify(permissaoRule).validar(usuarioLogado);
-        verify(rule).validar(tipoExistente, null);
+        verify(rule).validar(any(AtualizacaoTipoUsuarioContext.class));
         verify(repository).salvar(tipoExistente);
         assertEquals(novoNome, tipoExistente.getNome());
     }

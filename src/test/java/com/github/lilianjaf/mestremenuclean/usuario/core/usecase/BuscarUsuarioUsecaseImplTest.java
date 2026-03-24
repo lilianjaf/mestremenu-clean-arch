@@ -6,6 +6,7 @@ import com.github.lilianjaf.mestremenuclean.usuario.core.dto.UsuarioOutput;
 import com.github.lilianjaf.mestremenuclean.usuario.core.exception.UsuarioNaoEncontradoException;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.ObterUsuarioLogadoGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
+import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ConsultaUsuarioContext;
 import com.github.lilianjaf.mestremenuclean.usuario.core.rules.ValidadorConsultaUsuarioRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -71,8 +72,8 @@ class BuscarUsuarioUsecaseImplTest {
         assertNotNull(result);
         assertEquals(id, result.id());
         assertEquals("Nome Teste", result.nome());
-        verify(permissaoRule).validar(usuarioLogado, usuarioBuscado);
-        verify(rule).validar(usuarioLogado, usuarioBuscado);
+        verify(permissaoRule).validar(any(ConsultaUsuarioContext.class));
+        verify(rule).validar(any(ConsultaUsuarioContext.class));
     }
 
     @Test
