@@ -43,10 +43,10 @@ class CriarUsuarioUsecaseImplTest {
     private ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
 
     @Mock
-    private ValidadorCriacaoUsuarioRule permissaoRule;
+    private ValidadorCriacaoUsuarioRule validadorPermissao;
 
     @Mock
-    private ValidadorCriacaoUsuarioRule rule;
+    private ValidadorCriacaoUsuarioRule validadorCriacao;
 
     private CriarUsuarioUsecaseImpl usecase;
 
@@ -58,8 +58,8 @@ class CriarUsuarioUsecaseImplTest {
                 codificadorDeSenha,
                 transactionGateway,
                 obterUsuarioLogadoGateway,
-                List.of(permissaoRule),
-                List.of(rule)
+                List.of(validadorPermissao),
+                List.of(validadorCriacao)
         );
 
         lenient().when(transactionGateway.execute(any(Supplier.class))).thenAnswer(invocation -> {
@@ -90,8 +90,8 @@ class CriarUsuarioUsecaseImplTest {
         );
 
         assertNotNull(result);
-        verify(permissaoRule).validar(any(CriacaoUsuarioContext.class));
-        verify(rule).validar(any(CriacaoUsuarioContext.class));
+        verify(validadorPermissao).validar(any(CriacaoUsuarioContext.class));
+        verify(validadorCriacao).validar(any(CriacaoUsuarioContext.class));
         verify(usuarioRepository).salvar(any(UsuarioBase.class));
     }
 

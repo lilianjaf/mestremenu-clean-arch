@@ -38,10 +38,10 @@ class CriarTipoUsuarioUsecaseImplTest {
     private TransactionGateway transactionGateway;
 
     @Mock
-    private ValidadorPermissaoRule permissaoRule;
+    private ValidadorPermissaoRule validadorPermissao;
 
     @Mock
-    private ValidadorCriacaoTipoUsuarioRule rule;
+    private ValidadorCriacaoTipoUsuarioRule validadorCriacao;
 
     private CriarTipoUsuarioUsecaseImpl usecase;
 
@@ -51,8 +51,8 @@ class CriarTipoUsuarioUsecaseImplTest {
                 repository,
                 obterUsuarioLogadoGateway,
                 transactionGateway,
-                List.of(permissaoRule),
-                List.of(rule)
+                List.of(validadorPermissao),
+                List.of(validadorCriacao)
         );
 
         when(transactionGateway.execute(any(Supplier.class))).thenAnswer(invocation -> {
@@ -77,8 +77,8 @@ class CriarTipoUsuarioUsecaseImplTest {
         assertNotNull(result);
         assertEquals(nome, result.getNome());
         assertEquals(tipoNativo, result.getTipoNativo());
-        verify(permissaoRule).validar(usuarioLogado);
-        verify(rule).validar(any(CriacaoTipoUsuarioContext.class));
+        verify(validadorPermissao).validar(usuarioLogado);
+        verify(validadorCriacao).validar(any(CriacaoTipoUsuarioContext.class));
         verify(repository).salvar(any(TipoUsuario.class));
     }
 }

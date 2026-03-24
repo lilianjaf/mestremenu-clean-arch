@@ -5,10 +5,10 @@ import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.Restaurante
 import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.InativacaoRestauranteContext;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.InativarRestauranteRule;
-import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
-import com.github.lilianjaf.mestremenuclean.usuario.core.exception.DomainException;
-import com.github.lilianjaf.mestremenuclean.usuario.core.exception.UsuarioLogadoNaoEncontradoException;
-import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.ObterUsuarioLogadoGateway;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Usuario;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.exception.DomainException;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.exception.UsuarioLogadoNaoEncontradoException;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.ObterUsuarioLogadoRestauranteGateway;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,18 +16,18 @@ import java.util.UUID;
 public class InativarRestauranteUseCaseImpl implements InativarRestauranteUseCase {
 
     private final RestauranteRepository restauranteRepository;
-    private final ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
+    private final ObterUsuarioLogadoRestauranteGateway obterUsuarioLogadoRestauranteGateway;
     private final TransactionGateway transactionGateway;
     private final List<InativarRestauranteRule> permissaoRules;
     private final List<InativarRestauranteRule> rules;
 
     public InativarRestauranteUseCaseImpl(RestauranteRepository restauranteRepository,
-                                         ObterUsuarioLogadoGateway obterUsuarioLogadoGateway,
+                                         ObterUsuarioLogadoRestauranteGateway obterUsuarioLogadoRestauranteGateway,
                                          TransactionGateway transactionGateway,
                                          List<InativarRestauranteRule> permissaoRules,
                                          List<InativarRestauranteRule> rules) {
         this.restauranteRepository = restauranteRepository;
-        this.obterUsuarioLogadoGateway = obterUsuarioLogadoGateway;
+        this.obterUsuarioLogadoRestauranteGateway = obterUsuarioLogadoRestauranteGateway;
         this.transactionGateway = transactionGateway;
         this.permissaoRules = permissaoRules;
         this.rules = rules;
@@ -39,7 +39,7 @@ public class InativarRestauranteUseCaseImpl implements InativarRestauranteUseCas
             throw new DomainException("ID do restaurante não pode ser nulo para inativação.");
         }
 
-        UsuarioBase usuarioLogado = obterUsuarioLogadoGateway.obterUsuarioLogado()
+        Usuario usuarioLogado = obterUsuarioLogadoRestauranteGateway.obterUsuarioLogado()
                 .orElseThrow(() -> new UsuarioLogadoNaoEncontradoException("Usuário logado não encontrado"));
 
         Restaurante restaurante = restauranteRepository.findById(id)

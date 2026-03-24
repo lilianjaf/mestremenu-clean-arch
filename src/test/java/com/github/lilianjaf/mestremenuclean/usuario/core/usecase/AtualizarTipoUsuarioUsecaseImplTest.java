@@ -39,10 +39,10 @@ class AtualizarTipoUsuarioUsecaseImplTest {
     private ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
 
     @Mock
-    private ValidadorAtualizacaoTipoUsuarioRule rule;
+    private ValidadorAtualizacaoTipoUsuarioRule validadorAtualizacao;
 
     @Mock
-    private ValidadorPermissaoRule permissaoRule;
+    private ValidadorPermissaoRule validadorPermissao;
 
     private AtualizarTipoUsuarioUsecaseImpl usecase;
 
@@ -51,8 +51,8 @@ class AtualizarTipoUsuarioUsecaseImplTest {
         usecase = new AtualizarTipoUsuarioUsecaseImpl(
                 repository,
                 transactionGateway,
-                List.of(rule),
-                List.of(permissaoRule),
+                List.of(validadorAtualizacao),
+                List.of(validadorPermissao),
                 obterUsuarioLogadoGateway
         );
     }
@@ -76,8 +76,8 @@ class AtualizarTipoUsuarioUsecaseImplTest {
 
         usecase.atualizar(id, novoNome);
 
-        verify(permissaoRule).validar(usuarioLogado);
-        verify(rule).validar(any(AtualizacaoTipoUsuarioContext.class));
+        verify(validadorPermissao).validar(usuarioLogado);
+        verify(validadorAtualizacao).validar(any(AtualizacaoTipoUsuarioContext.class));
         verify(repository).salvar(tipoExistente);
         assertEquals(novoNome, tipoExistente.getNome());
     }
@@ -99,7 +99,7 @@ class AtualizarTipoUsuarioUsecaseImplTest {
 
         assertThrows(TipoUsuarioNaoEncontradoException.class, () -> usecase.atualizar(id, novoNome));
 
-        verify(permissaoRule).validar(usuarioLogado);
+        verify(validadorPermissao).validar(usuarioLogado);
         verify(repository, never()).salvar(any());
     }
 }

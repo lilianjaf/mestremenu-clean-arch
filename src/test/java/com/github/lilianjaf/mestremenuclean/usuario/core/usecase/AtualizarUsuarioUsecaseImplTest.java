@@ -37,10 +37,10 @@ class AtualizarUsuarioUsecaseImplTest {
     private ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
 
     @Mock
-    private ValidadorPermissaoAtualizacaoUsuarioRule permissaoRule;
+    private ValidadorPermissaoAtualizacaoUsuarioRule validadorPermissao;
 
     @Mock
-    private ValidadorAtualizacaoUsuarioRule rule;
+    private ValidadorAtualizacaoUsuarioRule validadorAtualizacao;
 
     private AtualizarUsuarioUsecaseImpl usecase;
 
@@ -50,8 +50,8 @@ class AtualizarUsuarioUsecaseImplTest {
                 repository,
                 transactionGateway,
                 obterUsuarioLogadoGateway,
-                List.of(permissaoRule),
-                List.of(rule)
+                List.of(validadorPermissao),
+                List.of(validadorAtualizacao)
         );
 
         doAnswer(invocation -> {
@@ -76,8 +76,8 @@ class AtualizarUsuarioUsecaseImplTest {
 
         usecase.atualizarComEndereco(id, novoNome, novoEmail, "Rua A", "123", "Ap 1", "Bairro X", "Cidade Y", "12345678", "UF");
 
-        verify(permissaoRule).validar(any(AtualizacaoUsuarioContext.class));
-        verify(rule).validar(any(AtualizacaoUsuarioContext.class));
+        verify(validadorPermissao).validar(any(AtualizacaoUsuarioContext.class));
+        verify(validadorAtualizacao).validar(any(AtualizacaoUsuarioContext.class));
         verify(usuarioSendoEditado).atualizarDadosBasicos(novoNome, novoEmail);
         verify(usuarioSendoEditado).atualizarEndereco(any(Endereco.class));
         verify(repository).salvar(usuarioSendoEditado);
@@ -98,8 +98,8 @@ class AtualizarUsuarioUsecaseImplTest {
 
         usecase.atualizarSemEndereco(id, novoNome, novoEmail);
 
-        verify(permissaoRule).validar(any(AtualizacaoUsuarioContext.class));
-        verify(rule).validar(any(AtualizacaoUsuarioContext.class));
+        verify(validadorPermissao).validar(any(AtualizacaoUsuarioContext.class));
+        verify(validadorAtualizacao).validar(any(AtualizacaoUsuarioContext.class));
         verify(usuarioSendoEditado).atualizarDadosBasicos(novoNome, novoEmail);
         verify(repository).salvar(usuarioSendoEditado);
         verify(usuarioSendoEditado, never()).atualizarEndereco(any());

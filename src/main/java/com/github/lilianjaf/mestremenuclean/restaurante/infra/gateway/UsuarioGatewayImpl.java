@@ -1,9 +1,11 @@
 package com.github.lilianjaf.mestremenuclean.restaurante.infra.gateway;
 
-import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.TipoNativo;
-import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Usuario;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.TipoUsuario;
+import com.github.lilianjaf.mestremenuclean.usuario.core.api.UsuarioModuleFacade;
+import com.github.lilianjaf.mestremenuclean.usuario.core.api.UsuarioIntegrationDto;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.UsuarioGateway;
-import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Usuario;
+
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -12,24 +14,39 @@ import java.util.UUID;
 @Component
 public class UsuarioGatewayImpl implements UsuarioGateway {
 
-    private final UsuarioRepository usuarioRepository;
+    private final UsuarioModuleFacade usuarioFacade;
 
-    public UsuarioGatewayImpl(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
+    public UsuarioGatewayImpl(UsuarioModuleFacade usuarioFacade) {
+        this.usuarioFacade = usuarioFacade;
     }
 
     @Override
-    public Optional<Usuario> buscarPorId(UUID id) {
-        return usuarioRepository.findById(id).map(usuarioBase -> {
-            TipoNativo tipoNativoRestaurante = null;
-            if (usuarioBase.getTipoCustomizado() != null && usuarioBase.getTipoCustomizado().getTipoNativo() != null) {
-                try {
-                    tipoNativoRestaurante = TipoNativo.valueOf(usuarioBase.getTipoCustomizado().getTipoNativo().name());
-                } catch (IllegalArgumentException e) {
-                    // Ignore or handle unknown types
-                }
-            }
-            return new Usuario(usuarioBase.getId(), tipoNativoRestaurante);
-        });
+    public Optional<Usuario> buscarUsuarioPorId(UUID usuarioId) {
+        UsuarioIntegrationDto dto = usuarioFacade.buscarUsuarioParaIntegracao(usuarioId);
+
+        if (dto == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of (new Usuario(
+                dto.id(),
+                dto.ativo(),
+                new TipoUsuario(dto.nomeDoTipo(), dto.tipoNativo())
+        ));
+    }
+
+    @Override
+    public Optional<Usuario> buscarPorUsuario(String username) {
+        UsuarioIntegrationDto dto = usuarioFacade.buscarPorUsuario(username);
+
+        if (dto == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of (new Usuario(
+                dto.id(),
+                dto.ativo(),
+                new TipoUsuario(dto.nomeDoTipo(), dto.tipoNativo())
+        ));
     }
 }

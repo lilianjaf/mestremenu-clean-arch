@@ -41,10 +41,10 @@ class DeletarTipoUsuarioUsecaseImplTest {
     private ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
 
     @Mock
-    private ValidadorExclusaoTipoUsuarioRule permissaoRule;
+    private ValidadorExclusaoTipoUsuarioRule validadorPermissao;
 
     @Mock
-    private ValidadorExclusaoTipoUsuarioRule rule;
+    private ValidadorExclusaoTipoUsuarioRule validadorExclusao;
 
     private DeletarTipoUsuarioUsecaseImpl usecase;
 
@@ -55,8 +55,8 @@ class DeletarTipoUsuarioUsecaseImplTest {
                 usuarioRepository,
                 transactionGateway,
                 obterUsuarioLogadoGateway,
-                List.of(permissaoRule),
-                List.of(rule)
+                List.of(validadorPermissao),
+                List.of(validadorExclusao)
         );
 
         doAnswer(invocation -> {
@@ -78,8 +78,8 @@ class DeletarTipoUsuarioUsecaseImplTest {
 
         usecase.deletar(id);
 
-        verify(permissaoRule).validar(any(ExclusaoTipoUsuarioContext.class));
-        verify(rule).validar(any(ExclusaoTipoUsuarioContext.class));
+        verify(validadorPermissao).validar(any(ExclusaoTipoUsuarioContext.class));
+        verify(validadorExclusao).validar(any(ExclusaoTipoUsuarioContext.class));
         verify(tipoUsuarioRepository).deletar(tipo);
     }
 }

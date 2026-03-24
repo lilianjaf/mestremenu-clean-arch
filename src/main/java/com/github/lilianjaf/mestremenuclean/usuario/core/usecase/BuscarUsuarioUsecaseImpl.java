@@ -43,12 +43,19 @@ public class BuscarUsuarioUsecaseImpl implements BuscarUsuarioUsecase {
                 usuarioBuscado.getEmail(),
                 usuarioBuscado.getLogin(),
                 usuarioBuscado.getTipoCustomizado().getNome(),
+                usuarioBuscado.getTipoCustomizado().getTipoNativo().name(),
                 usuarioBuscado.getAtivo());
     }
 
     @Override
     public UsuarioBase buscarEntidade(UUID id) {
         return repository.findById(id)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado."));
+    }
+
+    @Override
+    public UsuarioOutput buscarPorUsername(String username) {
+        return repository.findUserByLogin(username)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado."));
     }
 }

@@ -36,10 +36,10 @@ class InativarUsuarioUsecaseImplTest {
     private ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
 
     @Mock
-    private ValidadorInativacaoUsuarioRule permissaoRule;
+    private ValidadorInativacaoUsuarioRule validadorPermissao;
 
     @Mock
-    private ValidadorInativacaoUsuarioRule rule;
+    private ValidadorInativacaoUsuarioRule validadorInativacao;
 
     private InativarUsuarioUsecaseImpl usecase;
 
@@ -50,8 +50,8 @@ class InativarUsuarioUsecaseImplTest {
                 repository,
                 transactionGateway,
                 obterUsuarioLogadoGateway,
-                List.of(permissaoRule),
-                List.of(rule)
+                List.of(validadorPermissao),
+                List.of(validadorInativacao)
         );
 
         doAnswer(invocation -> {
@@ -73,8 +73,8 @@ class InativarUsuarioUsecaseImplTest {
 
         usecase.inativar(id);
 
-        verify(permissaoRule).validar(any(InativacaoUsuarioContext.class));
-        verify(rule).validar(any(InativacaoUsuarioContext.class));
+        verify(validadorPermissao).validar(any(InativacaoUsuarioContext.class));
+        verify(validadorInativacao).validar(any(InativacaoUsuarioContext.class));
         verify(usuarioAlvo).desativar();
         verify(repository).salvar(usuarioAlvo);
     }

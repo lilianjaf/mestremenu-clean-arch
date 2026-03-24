@@ -1,5 +1,6 @@
 package com.github.lilianjaf.mestremenuclean.usuario.infra.config;
 
+import com.github.lilianjaf.mestremenuclean.usuario.core.api.UsuarioModuleFacade;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.CodificadorDeSenha;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.ObterUsuarioLogadoGateway;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TipoUsuarioRepository;
@@ -137,5 +138,10 @@ public class UsuarioConfig {
                 permissaoRules,
                 rules
         );
+    }
+
+    @Bean
+    public UsuarioModuleFacade usuarioModuleFacade(BuscarUsuarioUsecase buscarUsuarioUsecase) {
+        return new UsuarioModuleFacadeImpl(buscarUsuarioUsecase);
     }
 }

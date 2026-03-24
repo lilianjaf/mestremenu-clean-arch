@@ -1,38 +1,38 @@
 package com.github.lilianjaf.mestremenuclean.restaurante.core.usecase;
 
 import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Restaurante;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Usuario;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.exception.UsuarioLogadoNaoEncontradoException;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.ObterUsuarioLogadoRestauranteGateway;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.gateway.RestauranteRepository;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.ListarRestaurantesRule;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.ListarRestaurantesRuleContextDto;
-import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
-import com.github.lilianjaf.mestremenuclean.usuario.core.exception.UsuarioLogadoNaoEncontradoException;
-import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.ObterUsuarioLogadoGateway;
 
 import java.util.List;
 
 public class ListarRestaurantesUseCaseImpl implements ListarRestaurantesUseCase {
 
     private final RestauranteRepository restauranteRepository;
-    private final ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
+    private final ObterUsuarioLogadoRestauranteGateway obterUsuarioLogadoRestauranteGateway;
     private final List<ListarRestaurantesRule> permissaoRules;
     private final List<ListarRestaurantesRule> rules;
 
     public ListarRestaurantesUseCaseImpl(RestauranteRepository restauranteRepository,
-                                         ObterUsuarioLogadoGateway obterUsuarioLogadoGateway,
+                                         ObterUsuarioLogadoRestauranteGateway obterUsuarioLogadoRestauranteGateway,
                                          List<ListarRestaurantesRule> permissaoRules,
                                          List<ListarRestaurantesRule> rules) {
         this.restauranteRepository = restauranteRepository;
-        this.obterUsuarioLogadoGateway = obterUsuarioLogadoGateway;
+        this.obterUsuarioLogadoRestauranteGateway = obterUsuarioLogadoRestauranteGateway;
         this.permissaoRules = permissaoRules;
         this.rules = rules;
     }
 
     @Override
     public List<Restaurante> executar() {
-        UsuarioBase usuarioLogado = obterUsuarioLogadoGateway.obterUsuarioLogado()
+        Usuario usuarioLogado = obterUsuarioLogadoRestauranteGateway.obterUsuarioLogado()
                 .orElseThrow(() -> new UsuarioLogadoNaoEncontradoException("Usuário logado não encontrado"));
 
-        ListarRestaurantesRuleContextDto context = new ListarRestaurantesRuleContextDto(usuarioLogado);
+        ListarRestaurantesRuleContextDto context = new ListarRestaurantesRuleContextDto(null);
 
         permissaoRules.forEach(rule -> rule.validar(context));
         rules.forEach(rule -> rule.validar(context));

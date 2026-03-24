@@ -42,7 +42,7 @@ class CriarUsuarioPublicoUseCaseImplTest {
     private CodificadorDeSenha codificadorDeSenha;
 
     @Mock
-    private ValidadorCriacaoUsuarioPublicoRule rule;
+    private ValidadorCriacaoUsuarioPublicoRule validadorCriacao;
 
     private CriarUsuarioPublicoUseCaseImpl usecase;
 
@@ -51,7 +51,7 @@ class CriarUsuarioPublicoUseCaseImplTest {
         usecase = new CriarUsuarioPublicoUseCaseImpl(
                 usuarioRepository,
                 tipoUsuarioRepository,
-                List.of(rule),
+                List.of(validadorCriacao),
                 transactionGateway,
                 codificadorDeSenha
         );
@@ -81,7 +81,7 @@ class CriarUsuarioPublicoUseCaseImplTest {
         );
 
         assertNotNull(result);
-        verify(rule).validar(any(CriacaoUsuarioPublicoContext.class));
+        verify(validadorCriacao).validar(any(CriacaoUsuarioPublicoContext.class));
         verify(codificadorDeSenha).codificar(senhaPura);
         verify(usuarioRepository).salvar(any(UsuarioBase.class));
     }

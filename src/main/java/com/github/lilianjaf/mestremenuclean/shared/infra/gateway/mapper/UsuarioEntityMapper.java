@@ -4,6 +4,7 @@ import com.github.lilianjaf.mestremenuclean.shared.infra.gateway.entity.Endereco
 import com.github.lilianjaf.mestremenuclean.shared.infra.gateway.entity.TipoUsuarioEntity;
 import com.github.lilianjaf.mestremenuclean.shared.infra.gateway.entity.UsuarioEntity;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.*;
+import com.github.lilianjaf.mestremenuclean.usuario.core.dto.UsuarioOutput;
 
 import java.util.ArrayList;
 
@@ -115,6 +116,20 @@ public class UsuarioEntityMapper {
                 tipoDomain,
                 enderecoDomain,
                 entity.getDataUltimaAlteracao(),
+                entity.getAtivo()
+        );
+    }
+
+    public static UsuarioOutput toOutput(UsuarioEntity entity) {
+        if (entity == null) return null;
+
+        return new UsuarioOutput(
+                entity.getId(),
+                entity.getNome(),
+                entity.getEmail(),
+                entity.getLogin(),
+                entity.getTipoCustomizado().getNome(),
+                entity.getTipoCustomizado().getTipoNativo().name(),
                 entity.getAtivo()
         );
     }

@@ -4,6 +4,7 @@ import com.github.lilianjaf.mestremenuclean.shared.infra.gateway.entity.UsuarioE
 import com.github.lilianjaf.mestremenuclean.shared.infra.gateway.mapper.UsuarioEntityMapper;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
+import com.github.lilianjaf.mestremenuclean.usuario.core.dto.UsuarioOutput;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
@@ -49,6 +50,12 @@ public class UsuarioRepositoryJpaImpl implements UsuarioRepository {
     public Optional<UsuarioBase> findByLogin(String login) {
         return jpaRepository.findByLogin(login)
                 .map(UsuarioEntityMapper::toDomain);
+    }
+
+    @Override
+    public Optional<UsuarioOutput> findUserByLogin(String login) {
+        return jpaRepository.findByLogin(login)
+                .map(UsuarioEntityMapper::toOutput);
     }
 
     @Override

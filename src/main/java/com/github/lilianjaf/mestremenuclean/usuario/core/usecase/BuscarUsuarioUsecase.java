@@ -8,4 +8,5 @@ import java.util.UUID;
 public interface BuscarUsuarioUsecase {
     UsuarioOutput buscarPorId(UUID id);
     UsuarioBase buscarEntidade(UUID id);
+    UsuarioOutput buscarPorUsername(String username);
 }

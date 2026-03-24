@@ -3,20 +3,25 @@ package com.github.lilianjaf.mestremenuclean.restaurante.core.domain;
 import java.util.UUID;
 
 public class Usuario {
-    
-    private final UUID id;
-    private final TipoNativo tipoNativo;
+    private UUID id;
+    private boolean ativo;
+    private TipoUsuario tipoCustomizado;
 
-    public Usuario(UUID id, TipoNativo tipoNativo) {
+    public Usuario(UUID id, boolean ativo, TipoUsuario tipoCustomizado) {
         this.id = id;
-        this.tipoNativo = tipoNativo;
+        this.ativo = ativo;
+        this.tipoCustomizado = tipoCustomizado;
     }
 
     public UUID getId() {
         return id;
     }
 
-    public TipoNativo getTipoNativo() {
-        return tipoNativo;
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public boolean isDono() {
+        return tipoCustomizado.getTipoNativo().equals(TipoNativo.DONO);
     }
 }

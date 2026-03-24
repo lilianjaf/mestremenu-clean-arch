@@ -66,6 +66,7 @@ public class UsuarioController {
                 dadosUsuario.email(),
                 dadosUsuario.login(),
                 dadosUsuario.tipoPerfil(),
+                dadosUsuario.tipoNativo(),
                 dadosUsuario.ativo()
         );
 

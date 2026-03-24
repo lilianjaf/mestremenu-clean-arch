@@ -32,10 +32,10 @@ class BuscarUsuarioUsecaseImplTest {
     private ObterUsuarioLogadoGateway obterUsuarioLogadoGateway;
 
     @Mock
-    private ValidadorConsultaUsuarioRule permissaoRule;
+    private ValidadorConsultaUsuarioRule validadorPermissao;
 
     @Mock
-    private ValidadorConsultaUsuarioRule rule;
+    private ValidadorConsultaUsuarioRule validadorConsulta;
 
     private BuscarUsuarioUsecaseImpl usecase;
 
@@ -44,8 +44,8 @@ class BuscarUsuarioUsecaseImplTest {
         usecase = new BuscarUsuarioUsecaseImpl(
                 repository,
                 obterUsuarioLogadoGateway,
-                List.of(permissaoRule),
-                List.of(rule)
+                List.of(validadorPermissao),
+                List.of(validadorConsulta)
         );
     }
 
@@ -72,8 +72,8 @@ class BuscarUsuarioUsecaseImplTest {
         assertNotNull(result);
         assertEquals(id, result.id());
         assertEquals("Nome Teste", result.nome());
-        verify(permissaoRule).validar(any(ConsultaUsuarioContext.class));
-        verify(rule).validar(any(ConsultaUsuarioContext.class));
+        verify(validadorPermissao).validar(any(ConsultaUsuarioContext.class));
+        verify(validadorConsulta).validar(any(ConsultaUsuarioContext.class));
     }
 
     @Test

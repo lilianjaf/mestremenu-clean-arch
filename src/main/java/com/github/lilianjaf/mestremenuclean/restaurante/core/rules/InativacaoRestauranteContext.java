@@ -1,14 +1,18 @@
 package com.github.lilianjaf.mestremenuclean.restaurante.core.rules;
 
 import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Restaurante;
-import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
+import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Usuario;
 
 import java.util.Objects;
 
 public record InativacaoRestauranteContext(
-        UsuarioBase usuarioLogado,
+        Usuario usuarioLogado,
         Restaurante restaurante
 ) {
+    public boolean isUsuarioAutenticado() {
+        return usuarioLogado != null;
+    }
+
     public boolean isUsuarioDonoDoRestaurante() {
         return usuarioLogado != null &&
                usuarioLogado.isDono() &&

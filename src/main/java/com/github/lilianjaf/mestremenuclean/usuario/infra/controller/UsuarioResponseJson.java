@@ -8,6 +8,7 @@ public record UsuarioResponseJson(
         String email,
         String login,
         String tipoPerfil,
+        String tipoNativo,
         Boolean ativo
 ) {
 }
