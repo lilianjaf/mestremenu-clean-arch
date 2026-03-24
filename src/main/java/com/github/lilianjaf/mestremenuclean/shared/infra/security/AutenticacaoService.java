@@ -1,7 +1,6 @@
-package com.github.lilianjaf.mestremenuclean.usuario.infra.security;
+package com.github.lilianjaf.mestremenuclean.shared.infra.security;
 
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
-
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

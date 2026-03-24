@@ -1,7 +1,8 @@
-package com.github.lilianjaf.mestremenuclean.usuario.infra.gateway.entity;
+package com.github.lilianjaf.mestremenuclean.shared.infra.gateway.entity;
 
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.TipoNativo;
 import jakarta.persistence.*;
+
 import java.util.UUID;
 
 @Entity

@@ -1,4 +1,4 @@
-package com.github.lilianjaf.mestremenuclean.usuario.infra.gateway.entity;
+package com.github.lilianjaf.mestremenuclean.shared.infra.gateway.entity;
 
 import jakarta.persistence.*;
 import org.springframework.data.domain.Persistable;

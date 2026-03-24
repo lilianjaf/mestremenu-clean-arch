@@ -1,11 +1,11 @@
 {
 	"info": {
-		"_postman_id": "cc72729a-7ac3-423f-a768-ca3a6678dd46",
-		"name": "MestreMenu Clean Arch (Automated) Copy 2",
-		"description": "Coleção com captura automática de Tokens e UUIDs.",
+		"_postman_id": "d8fd0ecc-c0a1-412c-8f28-332e78927710",
+		"name": "MestreMenu Clean Arch",
+		"description": "Coleção do meu projeto de arquitetura limpa.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "51456633",
-		"_collection_link": "https://lilianjaf-a6429169-5766243.postman.co/workspace/Lilian-Ferreira's-Workspace~6fb41077-ed84-4dda-811e-7caa3fd93e45/collection/51456633-cc72729a-7ac3-423f-a768-ca3a6678dd46?action=share&source=collection_link&creator=51456633"
+		"_collection_link": "https://lilianjaf-a6429169-5766243.postman.co/workspace/Lilian-Ferreira's-Workspace~6fb41077-ed84-4dda-811e-7caa3fd93e45/collection/51456633-d8fd0ecc-c0a1-412c-8f28-332e78927710?action=share&source=collection_link&creator=51456633"
 	},
 	"item": [
 		{
@@ -48,58 +48,6 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"login\": \"admin\",\n    \"senha\": \"admin\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/login",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Login Cliente",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code deve ser 200 OK\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"pm.test(\"Deve extrair e salvar o token\", function () {",
-									"    if (pm.response.code === 200) {",
-									"        var jsonData = pm.response.json();",
-									"        var token = jsonData.token || jsonData.accessToken || pm.response.text();",
-									"        pm.collectionVariables.set(\"cliente_jwt_token\", token);",
-									"    }",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"login\": \"visitante123\",\n    \"senha\": \"senhaForte123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/login",
@@ -186,6 +134,9 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [
 							{
@@ -193,6 +144,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"login\": \"visitante123\",\n    \"senha\": \"123\"\n}"
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/publico/usuarios",
 							"host": [
@@ -204,13 +159,6 @@
 								"publico",
 								"usuarios"
 							]
-						},
-						"auth": {
-							"type": "noauth"
-						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"login\": \"visitante123\",\n    \"senha\": \"123\"\n}"
 						}
 					},
 					"response": []
@@ -231,6 +179,9 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [
 							{
@@ -238,6 +189,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"V\",\n    \"email\": \"v@email.com\",\n    \"login\": \"v123\",\n    \"senha\": \"123\",\n    \"endereco\": {\n        \"logradouro\": \"Rua\"\n    }\n}"
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/publico/usuarios",
 							"host": [
@@ -249,13 +204,6 @@
 								"publico",
 								"usuarios"
 							]
-						},
-						"auth": {
-							"type": "noauth"
-						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nome\": \"V\",\n    \"email\": \"v@email.com\",\n    \"login\": \"v123\",\n    \"senha\": \"123\",\n    \"endereco\": {\n        \"logradouro\": \"Rua\"\n    }\n}"
 						}
 					},
 					"response": []
@@ -276,6 +224,9 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [
 							{
@@ -283,6 +234,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"V\",\n    \"email\": \"visitante@email.com\",\n    \"login\": \"visitante123\",\n    \"senha\": \"123\",\n    \"endereco\": {\n        \"logradouro\": \"Rua das Flores\",\n        \"numero\": \"123\",\n        \"bairro\": \"Centro\",\n        \"cidade\": \"Atibaia\",\n        \"cep\": \"12940-000\",\n        \"uf\": \"SP\"\n    }\n}"
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/publico/usuarios",
 							"host": [
@@ -294,13 +249,6 @@
 								"publico",
 								"usuarios"
 							]
-						},
-						"auth": {
-							"type": "noauth"
-						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nome\": \"V\",\n    \"email\": \"visitante@email.com\",\n    \"login\": \"visitante123\",\n    \"senha\": \"123\",\n    \"endereco\": {\n        \"logradouro\": \"Rua das Flores\",\n        \"numero\": \"123\",\n        \"bairro\": \"Centro\",\n        \"cidade\": \"Atibaia\",\n        \"cep\": \"12940-000\",\n        \"uf\": \"SP\"\n    }\n}"
 						}
 					},
 					"response": []
@@ -459,6 +407,9 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "PUT",
 						"header": [
 							{
@@ -466,6 +417,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"TESTE\"\n}"
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/tipos-usuario/{{tipo_usuario_id}}",
 							"host": [
@@ -477,13 +432,6 @@
 								"tipos-usuario",
 								"{{tipo_usuario_id}}"
 							]
-						},
-						"auth": {
-							"type": "noauth"
-						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nome\": \"TESTE\"\n}"
 						}
 					},
 					"response": []
@@ -504,6 +452,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{cliente_jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [
 							{
@@ -511,6 +469,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"TESTE\"\n}"
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/tipos-usuario/{{tipo_usuario_id}}",
 							"host": [
@@ -522,20 +484,6 @@
 								"tipos-usuario",
 								"{{tipo_usuario_id}}"
 							]
-						},
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{cliente_jwt_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nome\": \"TESTE\"\n}"
 						}
 					},
 					"response": []
@@ -563,6 +511,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"TESTE_INEXISTENTE\"\n}"
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/tipos-usuario/00000000-0000-0000-0000-000000000000",
 							"host": [
@@ -574,10 +526,6 @@
 								"tipos-usuario",
 								"00000000-0000-0000-0000-000000000000"
 							]
-						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nome\": \"TESTE_INEXISTENTE\"\n}"
 						}
 					},
 					"response": []
@@ -605,6 +553,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"SUPER_GERENTE\"\n}"
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/tipos-usuario/{{tipo_aux_id}}",
 							"host": [
@@ -616,10 +568,6 @@
 								"tipos-usuario",
 								"{{tipo_aux_id}}"
 							]
-						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nome\": \"SUPER_GERENTE\"\n}"
 						}
 					},
 					"response": []
@@ -640,6 +588,9 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [
 							{
@@ -647,6 +598,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"NOVO\",\n    \"tipoNativo\": \"CLIENTE\"\n}"
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/tipos-usuario",
 							"host": [
@@ -657,13 +612,6 @@
 								"v1",
 								"tipos-usuario"
 							]
-						},
-						"auth": {
-							"type": "noauth"
-						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nome\": \"NOVO\",\n    \"tipoNativo\": \"CLIENTE\"\n}"
 						}
 					},
 					"response": []
@@ -684,24 +632,6 @@
 						}
 					],
 					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/v1/tipos-usuario",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"tipos-usuario"
-							]
-						},
 						"auth": {
 							"type": "bearer",
 							"bearer": [
@@ -712,9 +642,27 @@
 								}
 							]
 						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"nome\": \"NOVO\",\n    \"tipoNativo\": \"CLIENTE\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/tipos-usuario",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tipos-usuario"
+							]
 						}
 					},
 					"response": []
@@ -742,6 +690,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"SUPER_GERENTE\",\n    \"tipoNativo\": \"CLIENTE\"\n}"
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/tipos-usuario",
 							"host": [
@@ -752,10 +704,6 @@
 								"v1",
 								"tipos-usuario"
 							]
-						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nome\": \"SUPER_GERENTE\",\n    \"tipoNativo\": \"CLIENTE\"\n}"
 						}
 					},
 					"response": []
@@ -917,6 +865,9 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -930,9 +881,6 @@
 								"usuarios",
 								"{{usuario_id}}"
 							]
-						},
-						"auth": {
-							"type": "noauth"
 						}
 					},
 					"response": []
@@ -953,6 +901,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{cliente_jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -965,16 +923,6 @@
 								"v1",
 								"usuarios",
 								"{{usuario_id}}"
-							]
-						},
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{cliente_jwt_token}}",
-									"type": "string"
-								}
 							]
 						}
 					},
@@ -1029,6 +977,9 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "PUT",
 						"header": [
 							{
@@ -1036,6 +987,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Teste\"\n}"
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/usuarios/{{usuario_id}}",
 							"host": [
@@ -1047,13 +1002,6 @@
 								"usuarios",
 								"{{usuario_id}}"
 							]
-						},
-						"auth": {
-							"type": "noauth"
-						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nome\": \"Teste\"\n}"
 						}
 					},
 					"response": []
@@ -1074,6 +1022,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{cliente_jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [
 							{
@@ -1081,6 +1039,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Teste\"\n}"
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/usuarios/{{usuario_id}}",
 							"host": [
@@ -1092,20 +1054,6 @@
 								"usuarios",
 								"{{usuario_id}}"
 							]
-						},
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{cliente_jwt_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nome\": \"Teste\"\n}"
 						}
 					},
 					"response": []
@@ -1133,6 +1081,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Teste\"\n}"
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/usuarios/00000000-0000-0000-0000-000000000000",
 							"host": [
@@ -1144,10 +1096,6 @@
 								"usuarios",
 								"00000000-0000-0000-0000-000000000000"
 							]
-						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nome\": \"Teste\"\n}"
 						}
 					},
 					"response": []
@@ -1175,6 +1123,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Teste\",\n    \"email\": \"visitante@email.com\"\n}"
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/usuarios/{{usuario_id}}",
 							"host": [
@@ -1186,10 +1138,6 @@
 								"usuarios",
 								"{{usuario_id}}"
 							]
-						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nome\": \"Teste\",\n    \"email\": \"visitante@email.com\"\n}"
 						}
 					},
 					"response": []
@@ -1210,6 +1158,9 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [
 							{
@@ -1217,6 +1168,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Teste\"\n}"
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/usuarios",
 							"host": [
@@ -1227,13 +1182,6 @@
 								"v1",
 								"usuarios"
 							]
-						},
-						"auth": {
-							"type": "noauth"
-						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nome\": \"Teste\"\n}"
 						}
 					},
 					"response": []
@@ -1254,24 +1202,6 @@
 						}
 					],
 					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/v1/usuarios",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"usuarios"
-							]
-						},
 						"auth": {
 							"type": "bearer",
 							"bearer": [
@@ -1282,9 +1212,27 @@
 								}
 							]
 						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"nome\": \"Teste\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/usuarios",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"usuarios"
+							]
 						}
 					},
 					"response": []
@@ -1312,6 +1260,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"testando@email.com\",\n    \"login\": \"testando\",\n    \"senha\": \"123\",\n    \"tipoNativo\": \"DONO\",\n    \"endereco\": {\n        \"logradouro\": \"Rua\",\n        \"numero\": \"1\",\n        \"bairro\": \"B\",\n        \"cidade\": \"C\",\n        \"cep\": \"1\",\n        \"uf\": \"SP\"\n    }\n}"
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/usuarios",
 							"host": [
@@ -1322,10 +1274,6 @@
 								"v1",
 								"usuarios"
 							]
-						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"testando@email.com\",\n    \"login\": \"testando\",\n    \"senha\": \"123\",\n    \"tipoNativo\": \"DONO\",\n    \"endereco\": {\n        \"logradouro\": \"Rua\",\n        \"numero\": \"1\",\n        \"bairro\": \"B\",\n        \"cidade\": \"C\",\n        \"cep\": \"1\",\n        \"uf\": \"SP\"\n    }\n}"
 						}
 					},
 					"response": []
@@ -1353,6 +1301,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"O\",\n    \"email\": \"testando@email.com\",\n    \"login\": \"testando\",\n    \"senha\": \"123\",\n    \"tipoNativo\": \"DONO\",\n    \"endereco\": {\n        \"logradouro\": \"Rua\"\n    }\n}"
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/usuarios",
 							"host": [
@@ -1363,10 +1315,6 @@
 								"v1",
 								"usuarios"
 							]
-						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nome\": \"O\",\n    \"email\": \"testando@email.com\",\n    \"login\": \"testando\",\n    \"senha\": \"123\",\n    \"tipoNativo\": \"DONO\",\n    \"endereco\": {\n        \"logradouro\": \"Rua\"\n    }\n}"
 						}
 					},
 					"response": []
@@ -1394,6 +1342,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"O\",\n    \"email\": \"o@email.com\",\n    \"login\": \"ologin\",\n    \"senha\": \"123\",\n    \"tipoNativo\": \"INEXISTENTE\",\n    \"endereco\": {\n        \"logradouro\": \"Rua\",\n        \"numero\": \"1\",\n        \"bairro\": \"B\",\n        \"cidade\": \"C\",\n        \"cep\": \"1\",\n        \"uf\": \"SP\"\n    }\n}"
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/usuarios",
 							"host": [
@@ -1404,10 +1356,6 @@
 								"v1",
 								"usuarios"
 							]
-						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nome\": \"O\",\n    \"email\": \"o@email.com\",\n    \"login\": \"ologin\",\n    \"senha\": \"123\",\n    \"tipoNativo\": \"INEXISTENTE\",\n    \"endereco\": {\n        \"logradouro\": \"Rua\",\n        \"numero\": \"1\",\n        \"bairro\": \"B\",\n        \"cidade\": \"C\",\n        \"cep\": \"1\",\n        \"uf\": \"SP\"\n    }\n}"
 						}
 					},
 					"response": []
@@ -1435,6 +1383,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"O\",\n    \"email\": \"visitante@email.com\",\n    \"login\": \"visitante123\",\n    \"senha\": \"123\",\n    \"tipoNativo\": \"DONO\",\n    \"endereco\": {\n        \"logradouro\": \"Rua\",\n        \"numero\": \"1\",\n        \"bairro\": \"B\",\n        \"cidade\": \"C\",\n        \"cep\": \"1\",\n        \"uf\": \"SP\"\n    }\n}"
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/usuarios",
 							"host": [
@@ -1445,10 +1397,6 @@
 								"v1",
 								"usuarios"
 							]
-						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nome\": \"O\",\n    \"email\": \"visitante@email.com\",\n    \"login\": \"visitante123\",\n    \"senha\": \"123\",\n    \"tipoNativo\": \"DONO\",\n    \"endereco\": {\n        \"logradouro\": \"Rua\",\n        \"numero\": \"1\",\n        \"bairro\": \"B\",\n        \"cidade\": \"C\",\n        \"cep\": \"1\",\n        \"uf\": \"SP\"\n    }\n}"
 						}
 					},
 					"response": []
@@ -1502,6 +1450,9 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
@@ -1515,9 +1466,6 @@
 								"usuarios",
 								"{{usuario_id}}"
 							]
-						},
-						"auth": {
-							"type": "noauth"
 						}
 					},
 					"response": []
@@ -1538,6 +1486,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{cliente_jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
@@ -1550,16 +1508,6 @@
 								"v1",
 								"usuarios",
 								"{{usuario_id}}"
-							]
-						},
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{cliente_jwt_token}}",
-									"type": "string"
-								}
 							]
 						}
 					},
@@ -1614,6 +1562,9 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
@@ -1627,9 +1578,6 @@
 								"tipos-usuario",
 								"{{tipo_usuario_id}}"
 							]
-						},
-						"auth": {
-							"type": "noauth"
 						}
 					},
 					"response": []
@@ -1650,6 +1598,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{cliente_jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
@@ -1662,16 +1620,6 @@
 								"v1",
 								"tipos-usuario",
 								"{{tipo_usuario_id}}"
-							]
-						},
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{cliente_jwt_token}}",
-									"type": "string"
-								}
 							]
 						}
 					},
@@ -1820,6 +1768,10 @@
 		},
 		{
 			"key": "tipo_usuario_em_uso_id",
+			"value": ""
+		},
+		{
+			"key": "tipo_aux_id",
 			"value": ""
 		}
 	]

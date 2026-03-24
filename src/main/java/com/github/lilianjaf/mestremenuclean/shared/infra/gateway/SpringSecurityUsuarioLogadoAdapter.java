@@ -1,4 +1,4 @@
-package com.github.lilianjaf.mestremenuclean.usuario.infra.gateway;
+package com.github.lilianjaf.mestremenuclean.shared.infra.gateway;
 
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.ObterUsuarioLogadoGateway;
@@ -12,10 +12,10 @@ import java.util.Optional;
 @Component
 public class SpringSecurityUsuarioLogadoAdapter implements ObterUsuarioLogadoGateway {
 
-    private final UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepositoryJpa;
 
-    public SpringSecurityUsuarioLogadoAdapter(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
+    public SpringSecurityUsuarioLogadoAdapter(UsuarioRepository usuarioRepositoryJpa) {
+        this.usuarioRepositoryJpa = usuarioRepositoryJpa;
     }
 
     @Override
@@ -23,6 +23,6 @@ public class SpringSecurityUsuarioLogadoAdapter implements ObterUsuarioLogadoGat
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        return usuarioRepository.findByLogin(username);
+        return usuarioRepositoryJpa.findByLogin(username);
     }
 }

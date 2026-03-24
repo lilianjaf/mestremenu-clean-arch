@@ -1,9 +1,9 @@
-package com.github.lilianjaf.mestremenuclean.usuario.infra.gateway;
+package com.github.lilianjaf.mestremenuclean.shared.infra.gateway;
 
+import com.github.lilianjaf.mestremenuclean.shared.infra.gateway.entity.UsuarioEntity;
+import com.github.lilianjaf.mestremenuclean.shared.infra.gateway.mapper.UsuarioEntityMapper;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.UsuarioRepository;
-import com.github.lilianjaf.mestremenuclean.usuario.infra.gateway.entity.UsuarioEntity;
-import com.github.lilianjaf.mestremenuclean.usuario.infra.gateway.mapper.UsuarioEntityMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ import java.util.UUID;
 public class UsuarioRepositoryJpaImpl implements UsuarioRepository {
 
     private final SpringDataUsuarioRepository jpaRepository;
-    private final SpringDataTipoUsuarioRepository  jpaTipoUsuarioRepository;
+    private final SpringDataTipoUsuarioRepository jpaTipoUsuarioRepository;
 
     public UsuarioRepositoryJpaImpl(SpringDataUsuarioRepository jpaRepository, SpringDataTipoUsuarioRepository jpaTipoUsuarioRepository) {
         this.jpaRepository = jpaRepository;

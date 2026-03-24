@@ -1,4 +1,4 @@
-package com.github.lilianjaf.mestremenuclean.usuario.infra.gateway;
+package com.github.lilianjaf.mestremenuclean.shared.infra.gateway;
 
 import com.github.lilianjaf.mestremenuclean.usuario.core.gateway.TransactionGateway;
 import org.springframework.stereotype.Component;

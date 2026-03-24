@@ -1,6 +1,7 @@
-package com.github.lilianjaf.mestremenuclean.usuario.infra.gateway;
+package com.github.lilianjaf.mestremenuclean.shared.infra.gateway;
 
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.Cliente;
+import com.github.lilianjaf.mestremenuclean.usuario.core.domain.Endereco;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.TipoNativo;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.TipoUsuario;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
@@ -45,7 +46,7 @@ class SpringSecurityUsuarioLogadoAdapterTest {
         SecurityContextHolder.setContext(securityContext);
 
         TipoUsuario tipo = new TipoUsuario(UUID.randomUUID(), "CLIENTE", TipoNativo.CLIENTE);
-        com.github.lilianjaf.mestremenuclean.usuario.core.domain.Endereco endereco = new com.github.lilianjaf.mestremenuclean.usuario.core.domain.Endereco("Rua A", "123", null, "Bairro X", "Cidade Y", "12345678", "UF");
+        Endereco endereco = new Endereco("Rua A", "123", null, "Bairro X", "Cidade Y", "12345678", "UF");
         UsuarioBase usuario = new Cliente(UUID.randomUUID(), "Teste", "teste@email.com", username, "senha", tipo, endereco, null, true);
         when(usuarioRepository.findByLogin(username)).thenReturn(Optional.of(usuario));
 

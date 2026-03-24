@@ -1,4 +1,4 @@
-package com.github.lilianjaf.mestremenuclean.usuario.infra.controller;
+package com.github.lilianjaf.mestremenuclean.shared.infra.controller;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;

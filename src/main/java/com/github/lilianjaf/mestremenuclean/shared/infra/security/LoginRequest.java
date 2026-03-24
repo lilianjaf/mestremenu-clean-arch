@@ -1,4 +1,4 @@
-package com.github.lilianjaf.mestremenuclean.usuario.infra.security;
+package com.github.lilianjaf.mestremenuclean.shared.infra.security;
 
 import jakarta.validation.constraints.NotBlank;
 
