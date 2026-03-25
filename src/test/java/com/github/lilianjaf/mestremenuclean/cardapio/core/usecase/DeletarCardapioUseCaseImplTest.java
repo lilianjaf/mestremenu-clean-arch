@@ -10,6 +10,7 @@ import com.github.lilianjaf.mestremenuclean.cardapio.core.exception.UsuarioLogad
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.CardapioRepository;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ObterUsuarioLogadoGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.RestauranteGateway;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorCardapioRule;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorPermissaoCardapioRule;
 import org.junit.jupiter.api.DisplayName;
@@ -46,6 +47,9 @@ class DeletarCardapioUseCaseImplTest {
     @Mock
     private ValidadorCardapioRule<DeletarCardapioRuleContextDto> businessRule;
 
+    @Mock
+    private TransactionGateway transactionGateway;
+
     private DeletarCardapioUseCaseImpl deletarCardapioUseCase;
 
     @org.junit.jupiter.api.BeforeEach
@@ -54,6 +58,7 @@ class DeletarCardapioUseCaseImplTest {
                 cardapioRepository,
                 restauranteGateway,
                 obterUsuarioLogadoGateway,
+                transactionGateway,
                 List.of(permissaoRule),
                 List.of(businessRule)
         );
@@ -72,6 +77,11 @@ class DeletarCardapioUseCaseImplTest {
         when(cardapioRepository.findById(idCardapio)).thenReturn(Optional.of(cardapio));
         when(restauranteGateway.buscarPorId(idRestaurante)).thenReturn(Optional.of(restaurante));
         when(obterUsuarioLogadoGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
+        doAnswer(invocation -> {
+            Runnable runnable = invocation.getArgument(0);
+            runnable.run();
+            return null;
+        }).when(transactionGateway).execute(any(Runnable.class));
 
         deletarCardapioUseCase.executar(idCardapio);
 

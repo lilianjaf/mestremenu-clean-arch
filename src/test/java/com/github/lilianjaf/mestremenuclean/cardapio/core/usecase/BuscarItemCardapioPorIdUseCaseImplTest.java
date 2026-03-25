@@ -8,6 +8,7 @@ import com.github.lilianjaf.mestremenuclean.cardapio.core.exception.CardapioExce
 import com.github.lilianjaf.mestremenuclean.cardapio.core.exception.UsuarioLogadoNaoEncontradoException;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ItemCardapioRepository;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ObterUsuarioLogadoGateway;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorPermissaoCardapioRule;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -38,6 +40,9 @@ class BuscarItemCardapioPorIdUseCaseImplTest {
     @Mock
     private ValidadorPermissaoCardapioRule<BuscarItemCardapioPorIdRuleContextDto> permissaoRule;
 
+    @Mock
+    private TransactionGateway transactionGateway;
+
     private BuscarItemCardapioPorIdUseCaseImpl buscarItemCardapioPorIdUseCase;
 
     @org.junit.jupiter.api.BeforeEach
@@ -45,6 +50,7 @@ class BuscarItemCardapioPorIdUseCaseImplTest {
         buscarItemCardapioPorIdUseCase = new BuscarItemCardapioPorIdUseCaseImpl(
                 itemCardapioRepository,
                 obterUsuarioLogadoGateway,
+                transactionGateway,
                 List.of(permissaoRule)
         );
     }
@@ -58,6 +64,10 @@ class BuscarItemCardapioPorIdUseCaseImplTest {
 
         when(obterUsuarioLogadoGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
         when(itemCardapioRepository.findById(idItem)).thenReturn(Optional.of(itemEsperado));
+        when(transactionGateway.execute(any(Supplier.class))).thenAnswer(invocation -> {
+            Supplier<?> supplier = invocation.getArgument(0);
+            return supplier.get();
+        });
 
         ItemCardapio resultado = buscarItemCardapioPorIdUseCase.executar(idItem);
 
@@ -87,6 +97,10 @@ class BuscarItemCardapioPorIdUseCaseImplTest {
 
         when(obterUsuarioLogadoGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
         when(itemCardapioRepository.findById(idItem)).thenReturn(Optional.empty());
+        when(transactionGateway.execute(any(Supplier.class))).thenAnswer(invocation -> {
+            Supplier<?> supplier = invocation.getArgument(0);
+            return supplier.get();
+        });
 
         assertThrows(CardapioException.class, () -> buscarItemCardapioPorIdUseCase.executar(idItem));
 

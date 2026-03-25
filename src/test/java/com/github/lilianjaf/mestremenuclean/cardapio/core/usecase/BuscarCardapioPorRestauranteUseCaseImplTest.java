@@ -7,6 +7,7 @@ import com.github.lilianjaf.mestremenuclean.cardapio.core.dto.BuscarCardapioPorR
 import com.github.lilianjaf.mestremenuclean.cardapio.core.exception.UsuarioLogadoNaoEncontradoException;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.CardapioRepository;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ObterUsuarioLogadoGateway;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorPermissaoCardapioRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -38,6 +40,9 @@ class BuscarCardapioPorRestauranteUseCaseImplTest {
     @Mock
     private ValidadorPermissaoCardapioRule<BuscarCardapioPorRestauranteRuleContextDto> permissaoRule;
 
+    @Mock
+    private TransactionGateway transactionGateway;
+
     private BuscarCardapioPorRestauranteUseCaseImpl buscarCardapioPorRestauranteUseCase;
 
     @BeforeEach
@@ -45,6 +50,7 @@ class BuscarCardapioPorRestauranteUseCaseImplTest {
         buscarCardapioPorRestauranteUseCase = new BuscarCardapioPorRestauranteUseCaseImpl(
                 cardapioRepository,
                 obterUsuarioLogadoGateway,
+                transactionGateway,
                 List.of(permissaoRule)
         );
     }
@@ -58,6 +64,10 @@ class BuscarCardapioPorRestauranteUseCaseImplTest {
 
         when(obterUsuarioLogadoGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
         when(cardapioRepository.buscarPorIdRestaurante(idRestaurante)).thenReturn(cardapiosEsperados);
+        when(transactionGateway.execute(any(Supplier.class))).thenAnswer(invocation -> {
+            Supplier<?> supplier = invocation.getArgument(0);
+            return supplier.get();
+        });
 
         List<Cardapio> resultado = buscarCardapioPorRestauranteUseCase.executar(idRestaurante);
 

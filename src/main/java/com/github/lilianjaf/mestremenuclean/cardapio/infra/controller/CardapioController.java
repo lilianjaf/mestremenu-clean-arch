@@ -57,7 +57,7 @@ public class CardapioController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CardapioResponseJson> editar(@PathVariable UUID id, @RequestBody AtualizarCardapioJson json) {
-        DadosAtualizacaoCardapio dados = new DadosAtualizacaoCardapio(id, json.nome(), List.of());
+        DadosAtualizacaoCardapio dados = new DadosAtualizacaoCardapio(id, json.nome(), null);
         Cardapio cardapio = editarUseCase.executar(dados);
         return ResponseEntity.ok(toResponseJson(cardapio));
     }

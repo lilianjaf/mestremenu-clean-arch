@@ -12,6 +12,7 @@ import com.github.lilianjaf.mestremenuclean.cardapio.core.exception.UsuarioLogad
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.CardapioRepository;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ObterUsuarioLogadoGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.RestauranteGateway;
+import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorCardapioRule;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorPermissaoCardapioRule;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -50,6 +52,9 @@ class AlterarCardapioUseCaseImplTest {
     @Mock
     private ValidadorCardapioRule<AlterarCardapioRuleContextDto> businessRule;
 
+    @Mock
+    private TransactionGateway transactionGateway;
+
     private AlterarCardapioUseCaseImpl alterarCardapioUseCase;
 
     @org.junit.jupiter.api.BeforeEach
@@ -58,6 +63,7 @@ class AlterarCardapioUseCaseImplTest {
                 cardapioRepository,
                 restauranteGateway,
                 obterUsuarioLogadoGateway,
+                transactionGateway,
                 List.of(permissaoRule),
                 List.of(businessRule)
         );
@@ -80,6 +86,10 @@ class AlterarCardapioUseCaseImplTest {
         when(restauranteGateway.buscarPorId(idRestaurante)).thenReturn(Optional.of(restaurante));
         when(obterUsuarioLogadoGateway.obterUsuarioLogado()).thenReturn(Optional.of(usuarioLogado));
         when(cardapioRepository.existeNomeParaRestaurante("Menu Novo", idRestaurante)).thenReturn(false);
+        when(transactionGateway.execute(any(Supplier.class))).thenAnswer(invocation -> {
+            Supplier<?> supplier = invocation.getArgument(0);
+            return supplier.get();
+        });
         when(cardapioRepository.salvar(any(Cardapio.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         Cardapio resultado = alterarCardapioUseCase.executar(dados);

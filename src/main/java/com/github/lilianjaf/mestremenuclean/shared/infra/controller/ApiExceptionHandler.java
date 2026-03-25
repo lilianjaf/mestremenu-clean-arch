@@ -49,7 +49,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
-    @ExceptionHandler({RegraDeNegocioException.class, DomainException.class})
+    @ExceptionHandler({DomainException.class,
+        com.github.lilianjaf.mestremenuclean.cardapio.core.exception.DomainException.class,
+        com.github.lilianjaf.mestremenuclean.restaurante.core.exception.DomainException.class
+    })
     public ProblemDetail handleRegraDeNegocio(RuntimeException ex) {
         log.warn("Violação de regra de negócio/domínio: {}", ex.getMessage());
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());

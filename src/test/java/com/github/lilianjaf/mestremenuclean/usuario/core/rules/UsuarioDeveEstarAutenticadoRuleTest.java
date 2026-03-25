@@ -1,5 +1,6 @@
 package com.github.lilianjaf.mestremenuclean.usuario.core.rules;
 
+import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Usuario;
 import com.github.lilianjaf.mestremenuclean.restaurante.core.rules.ListarRestaurantesRuleContextDto;
 import com.github.lilianjaf.mestremenuclean.usuario.core.domain.UsuarioBase;
 import com.github.lilianjaf.mestremenuclean.usuario.core.exception.UsuarioNaoAutenticadoException;
@@ -21,20 +22,6 @@ class UsuarioDeveEstarAutenticadoRuleTest {
     private UsuarioBase usuarioLogado;
 
     private final UsuarioDeveEstarAutenticadoRule rule = new UsuarioDeveEstarAutenticadoRule();
-
-    @Test
-    @DisplayName("Deve validar contexto de listagem de restaurantes com sucesso")
-    void deveValidarContextoListagemComSucesso() {
-        ListarRestaurantesRuleContextDto context = new ListarRestaurantesRuleContextDto(usuarioLogado);
-        assertDoesNotThrow(() -> rule.validar(context));
-    }
-
-    @Test
-    @DisplayName("Deve lancar excecao no contexto de listagem quando usuario nao esta autenticado")
-    void deveLancarExcecaoNoContextoListagemQuandoUsuarioNaoEstaAutenticado() {
-        ListarRestaurantesRuleContextDto context = new ListarRestaurantesRuleContextDto(null);
-        assertThrows(UsuarioNaoAutenticadoException.class, () -> rule.validar(context));
-    }
 
     @Test
     @DisplayName("Deve validar com sucesso quando usuario esta autenticado")

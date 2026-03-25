@@ -36,6 +36,10 @@ public record AlterarCardapioRuleContextDto(
         return dados.itens() != null && !dados.itens().isEmpty();
     }
 
+    public boolean alterouItens() {
+        return dados.itens() != null;
+    }
+
     public boolean hasItensDuplicados() {
         if (dados.itens() == null) return false;
         Set<String> nomesItens = new HashSet<>();
