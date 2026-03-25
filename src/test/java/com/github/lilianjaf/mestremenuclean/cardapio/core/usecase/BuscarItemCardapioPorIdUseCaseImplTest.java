@@ -10,6 +10,7 @@ import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ItemCardapioRe
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ObterUsuarioLogadoGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorPermissaoCardapioRule;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,7 +46,7 @@ class BuscarItemCardapioPorIdUseCaseImplTest {
 
     private BuscarItemCardapioPorIdUseCaseImpl buscarItemCardapioPorIdUseCase;
 
-    @org.junit.jupiter.api.BeforeEach
+    @BeforeEach
     void setUp() {
         buscarItemCardapioPorIdUseCase = new BuscarItemCardapioPorIdUseCaseImpl(
                 itemCardapioRepository,

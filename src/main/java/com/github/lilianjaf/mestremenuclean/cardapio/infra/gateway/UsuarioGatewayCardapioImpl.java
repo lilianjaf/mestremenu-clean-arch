@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 import java.util.UUID;
 
-@Component("cardapioUsuarioGatewayImpl")
-public class UsuarioGatewayImpl implements UsuarioGateway {
+@Component
+public class UsuarioGatewayCardapioImpl implements UsuarioGateway {
 
     private final UsuarioModuleFacade usuarioFacade;
 
-    public UsuarioGatewayImpl(UsuarioModuleFacade usuarioFacade) {
+    public UsuarioGatewayCardapioImpl(UsuarioModuleFacade usuarioFacade) {
         this.usuarioFacade = usuarioFacade;
     }
 

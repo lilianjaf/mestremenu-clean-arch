@@ -6,7 +6,7 @@ import com.github.lilianjaf.mestremenuclean.restaurante.core.domain.Usuario;
 public record AtualizarRestauranteRuleContextDto(
         Usuario usuarioLogado,
         Restaurante restaurante
-) {
+) implements RestauranteContextBase {
     public boolean isUsuarioAutenticado() {
         return usuarioLogado != null;
     }

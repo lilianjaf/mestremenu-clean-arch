@@ -1,10 +1,10 @@
 package com.github.lilianjaf.mestremenuclean.shared.infra.controller;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import com.github.lilianjaf.mestremenuclean.usuario.core.exception.DomainException;
 import com.github.lilianjaf.mestremenuclean.usuario.core.exception.RegistroNaoEncontradoException;
-import com.github.lilianjaf.mestremenuclean.usuario.core.exception.RegraDeNegocioException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
@@ -17,6 +17,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,6 +78,20 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         if (rootCause instanceof PropertyBindingException) {
             return handlePropertyBindingException((PropertyBindingException) rootCause, headers, status, request);
+        } else if (ex.getCause() instanceof InvalidFormatException invalidExp && invalidExp.getTargetType().isEnum()) {
+            String enumValues = Arrays.toString(invalidExp.getTargetType().getEnumConstants());
+            String message = String.format("Valor '%s' não suportado. Os valores aceitos são: %s",
+                    invalidExp.getValue(), enumValues);
+
+            ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                    HttpStatus.BAD_REQUEST,
+                    "The request body contains invalid data."
+            );
+            problemDetail.setDetail(message);
+            // You can add extra properties to the JSON response
+            problemDetail.setProperty("invalidValue", invalidExp.getValue());
+            problemDetail.setProperty("acceptedValues", invalidExp.getTargetType().getEnumConstants());
+            return handleExceptionInternal(ex, problemDetail, headers, status, request) ;
         }
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, "Corpo da requisição inválido. Verifique a sintaxe do JSON.");

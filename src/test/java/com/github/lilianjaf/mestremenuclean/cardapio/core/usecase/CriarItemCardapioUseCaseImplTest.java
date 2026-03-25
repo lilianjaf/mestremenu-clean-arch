@@ -16,6 +16,7 @@ import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.RestauranteGat
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorItemCardapioRule;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorPermissaoItemCardapioRule;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -62,7 +63,7 @@ class CriarItemCardapioUseCaseImplTest {
 
     private CriarItemCardapioUseCaseImpl criarItemCardapioUseCase;
 
-    @org.junit.jupiter.api.BeforeEach
+    @BeforeEach
     void setUp() {
         criarItemCardapioUseCase = new CriarItemCardapioUseCaseImpl(
                 itemCardapioRepository,

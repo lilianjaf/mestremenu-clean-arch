@@ -1,25 +1,20 @@
 package com.github.lilianjaf.mestremenuclean.cardapio.core.usecase;
 
 import com.github.lilianjaf.mestremenuclean.cardapio.core.domain.Cardapio;
-import com.github.lilianjaf.mestremenuclean.cardapio.core.domain.TipoNativo;
-import com.github.lilianjaf.mestremenuclean.cardapio.core.domain.Usuario;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.dto.DadosCriacaoCardapio;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.dto.DadosCriacaoItemCardapio;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.exception.CriacaoCardapioNaoAutorizadaException;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.CardapioRepository;
-import com.github.lilianjaf.mestremenuclean.restaurante.core.api.RestauranteIntegrationDto;
-import com.github.lilianjaf.mestremenuclean.restaurante.core.api.RestauranteModuleFacade;
-import com.github.lilianjaf.mestremenuclean.usuario.core.api.UsuarioIntegrationDto;
-import com.github.lilianjaf.mestremenuclean.usuario.core.api.UsuarioModuleFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -27,12 +22,12 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-@org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+@AutoConfigureMockMvc
+@Sql("/sql/setup_cardapio_test.sql")
 class CriarCardapioUseCaseIT {
 
     @Autowired
@@ -41,31 +36,14 @@ class CriarCardapioUseCaseIT {
     @Autowired
     private CardapioRepository cardapioRepository;
 
-    @MockBean
-    private RestauranteModuleFacade restauranteFacade;
-
-    @MockBean
-    private UsuarioModuleFacade usuarioFacade;
-
-    private UUID idDono;
-    private UUID idRestaurante;
-    private String username = "dono.restaurante";
+    private final UUID idDono = UUID.fromString("8c9c7e0c-84d4-4a4e-862d-0b70c3c54d3d");
+    private final UUID idRestaurante = UUID.fromString("00000000-0000-0000-0000-000000000001");
+    private final String username = "admin";
 
     @BeforeEach
     void setUp() {
-        idDono = UUID.randomUUID();
-        idRestaurante = UUID.randomUUID();
-
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(username, null, List.of())
-        );
-
-        when(usuarioFacade.buscarPorUsuario(username)).thenReturn(
-                new UsuarioIntegrationDto(idDono, "Dono", "DONO", true)
-        );
-
-        when(restauranteFacade.buscarPorId(idRestaurante)).thenReturn(
-                new RestauranteIntegrationDto(idRestaurante, idDono, true)
         );
     }
 
@@ -89,9 +67,9 @@ class CriarCardapioUseCaseIT {
     @Test
     @DisplayName("Deve lançar exceção e não persistir quando o usuário não for o dono do restaurante")
     void deveLancarExcecaoQuandoUsuarioNaoForDono() {
-        UUID outroIdDono = UUID.randomUUID();
-        when(usuarioFacade.buscarPorUsuario(username)).thenReturn(
-                new UsuarioIntegrationDto(outroIdDono, "Outro", "DONO", true)
+        // Altera o usuário para um que não é dono (pode ser um usuário aleatório mas autenticado)
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken("outro.usuario", null, List.of())
         );
 
         DadosCriacaoItemCardapio itemDto = new DadosCriacaoItemCardapio(
@@ -116,3 +94,4 @@ class CriarCardapioUseCaseIT {
         assertThrows(RuntimeException.class, () -> usecase.executar(dados));
     }
 }
+

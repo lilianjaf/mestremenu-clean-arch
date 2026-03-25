@@ -14,6 +14,7 @@ import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.ObterUsuarioLo
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.RestauranteGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.gateway.TransactionGateway;
 import com.github.lilianjaf.mestremenuclean.cardapio.core.rules.ValidadorPermissaoCardapioRule;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,7 +58,7 @@ class DeletarItemCardapioUseCaseImplTest {
 
     private DeletarItemCardapioUseCaseImpl deletarItemCardapioUseCase;
 
-    @org.junit.jupiter.api.BeforeEach
+    @BeforeEach
     void setUp() {
         deletarItemCardapioUseCase = new DeletarItemCardapioUseCaseImpl(
                 itemCardapioRepository,
