@@ -15,6 +15,10 @@ public record DeletarCardapioRuleContextDto(
         return usuarioLogado != null && usuarioLogado.getTipoNativo() == TipoNativo.DONO;
     }
 
+    public boolean isUsuarioDonoDoRestaurante() {
+        return usuarioLogado != null && restaurante != null && usuarioLogado.getId().equals(restaurante.getIdDono());
+    }
+
     public boolean isCardapioDoProprioRestaurante() {
         return isCardapioDoProprioRestaurante;
     }

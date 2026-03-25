@@ -9,5 +9,8 @@ public class ApenasUsuarioDonoPodeDeletarCardapioRule implements ValidadorPermis
         if (!context.isUsuarioTipoDono()) {
             throw new AcessoNegadoDelecaoCardapioException("Acesso negado: apenas usuários com perfil DONO podem deletar cardápios.");
         }
+        if (!context.isUsuarioDonoDoRestaurante()) {
+            throw new AcessoNegadoDelecaoCardapioException("Acesso negado: apenas o usuário dono do restaurante pode deletar cardápios.");
+        }
     }
 }

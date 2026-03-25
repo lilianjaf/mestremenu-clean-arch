@@ -18,4 +18,8 @@ public record DeletarItemCardapioRuleContextDto(
     public boolean isItemDoProprioRestaurante() {
         return isItemDoProprioRestaurante;
     }
+
+    public boolean isUsuarioDonoDoRestaurante() {
+        return usuarioLogado != null && restaurante != null && usuarioLogado.getId().equals(restaurante.getIdDono());
+    }
 }

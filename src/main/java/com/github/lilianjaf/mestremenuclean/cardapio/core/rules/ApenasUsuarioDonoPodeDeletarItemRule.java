@@ -9,5 +9,9 @@ public class ApenasUsuarioDonoPodeDeletarItemRule implements ValidadorPermissaoC
         if (!context.isUsuarioTipoDono()) {
             throw new AcessoNegadoDelecaoItemException("Acesso negado: apenas usuários com perfil DONO podem deletar itens de cardápio.");
         }
+
+        if (!context.isUsuarioDonoDoRestaurante()) {
+            throw new AcessoNegadoDelecaoItemException("Acesso negado: apenas o usuário dono do restaurante pode deletar itens de cardápio.");
+        }
     }
 }
